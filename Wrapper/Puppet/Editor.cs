@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.IO;
 
 namespace Puppet
 {
@@ -6,17 +6,19 @@ namespace Puppet
     {
         public static void StartPlayMode()
         {
-            throw new NotImplementedException();
+            Driver.Instance.StartPlayMode();
         }
 
-        public static void StoptPlayMode()
+        public static void StopPlayMode()
         {
-            throw new NotImplementedException();
+            Driver.Instance.StopPlayMode();
         }
 
         public static void MakeScreenshot(string fileName, string folderName)
         {
-            throw new NotImplementedException();
+            var path = Path.Combine(Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), folderName)).FullName, fileName + ".png");
+
+            Driver.Instance.TakeScreenshot(path);
         }
     }
 }

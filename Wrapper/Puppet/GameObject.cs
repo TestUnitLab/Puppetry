@@ -1,41 +1,57 @@
-﻿using System;
+﻿using Puppet.Conditions;
 
 namespace Puppet
 {
     public class GameObject
     {
-        private string _name;
-        private string _parent;
+        internal string Name;
+        internal string Parent;
 
         public GameObject(string name)
         {
-            _name = name;
+            Name = name;
         }
 
         public GameObject(string name, string parent)
         {
-            _name = name;
-            _parent = parent;
+            Name = name;
+            Parent = parent;
         }
 
         public void Click()
         {
-            throw new NotImplementedException();
+            Driver.Instance.Click(Name, Parent);
         }
 
-        public void SendKeys()
+        public void SendKeys(string value)
         {
-            throw new NotImplementedException();
+            Driver.Instance.SendKeys(value, Name, Parent);
         }
 
         public bool Exists()
         {
-            throw new NotImplementedException();
+            return Driver.Instance.Exist(Name, Parent);
         }
 
-        public bool IsDisplayed()
+        public bool IsActive()
         {
-            throw new NotImplementedException();
+            return Driver.Instance.Active(Name, Parent);
+        }
+
+        public void Should(Condition condition)
+        {
+            Wait.For(() => condition.Invoke(this),
+                () =>
+                    $"Timed out after {Configuration.TimeoutMs / 1000} seconds while waiting for Condition: {condition}",
+                Configuration.TimeoutMs);
+        }
+
+        public void ShouldNot(Condition condition)
+        {
+            Wait.For(() => !condition.Invoke(this),
+                () =>
+                    $"Timed out after {Configuration.TimeoutMs / 1000} seconds while waiting for Condition Not fulfilled: {condition}",
+                Configuration.TimeoutMs);
         }
     }
 }

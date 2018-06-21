@@ -11,39 +11,35 @@ namespace PuppetDriver.Editor
             Identificator = Guid.NewGuid().ToString();
         }
 
-        public void SendKeys(string name, string parent)
+        public void SendKeys(string value, string name, string parent)
         {
-            throw new NotImplementedException();
         }
 
         public void Click(string name, string parent)
         {
-            throw new NotImplementedException();
         }
 
         public bool Exists(string name, string parent)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Active(string name, string parent)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public void StartPlayMode()
         {
-            throw new NotImplementedException();
+
         }
 
         public void StopPlayMode()
         {
-            throw new NotImplementedException();
         }
 
         public void MakeScreenshot(string fullPath)
         {
-            throw new NotImplementedException();
         }
     }
 }

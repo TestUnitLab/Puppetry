@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using PuppetDriver.Editor;
 
 namespace PuppetDriver
 {
@@ -7,6 +8,7 @@ namespace PuppetDriver
     {
         static void Main(string[] args)
         {
+            ConnectionManager.AddEditor(new UnrealEngineEditor());
             BuildWebHost(args).Run();
             //Parallel.Invoke(() => BuildWebHost(args).Run(), StartTcpListner);
         }

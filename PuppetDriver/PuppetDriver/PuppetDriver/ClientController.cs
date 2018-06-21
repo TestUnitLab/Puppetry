@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -15,24 +16,24 @@ namespace PuppetDriver
             string gameObjectName = null;
             string gameObjectParentName = null;
 
-            var request = JsonConvert.DeserializeObject<Dictionary<string, string>>(context.Request.Body.ToString());
+            var request = JsonConvert.DeserializeObject<Dictionary<string, string>>(new StreamReader(context.Request.Body).ReadToEnd());
 
             var response = new Dictionary<string, string>();
-            response.Add("errorMessage", string.Empty);
+            response.Add("errormessage", string.Empty);
 
             if (!request.ContainsKey("method"))
             {
-                response.Add("statusCode", "11");
-                response["errorMessage"] = "Node method is missed";
+                response.Add("statuscode", "11");
+                response["errormessage"] = "Node method is missed";
                 response.Add("result", "fail");
                 return context.Response.WriteAsync(JsonConvert.SerializeObject(response, Formatting.Indented));
             }
 
-            switch (request["method"])
+            switch (request["method"].ToLowerInvariant())
             {
-                case "createSession":
+                case "createsession":
                     sessionId = ConnectionManager.StartSession();
-                    response.Add("statusCode", "0");
+                    response.Add("statuscode", "0");
                     response.Add("result", sessionId);
                     break;
 
@@ -43,18 +44,19 @@ namespace PuppetDriver
                     if (request.ContainsKey("parent")) gameObjectParentName = request["parent"];
 
                     handler.Click(gameObjectName, gameObjectParentName);
-                    response.Add("statusCode", "0");
+                    response.Add("statuscode", "0");
                     response.Add("result", "success");
                     break;
 
-                case "sendKeys":
+                case "sendkeys":
                     sessionId = request["session"];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
+                    var value = request["value"];
                     gameObjectName = request["name"];
                     if (request.ContainsKey("parent")) gameObjectParentName = request["parent"];
 
-                    handler.SendKeys(gameObjectName, gameObjectParentName);
-                    response.Add("statusCode", "0");
+                    handler.SendKeys(value, gameObjectName, gameObjectParentName);
+                    response.Add("statuscode", "0");
                     response.Add("result", "success");
                     break;
 
@@ -65,7 +67,7 @@ namespace PuppetDriver
                     if (request.ContainsKey("parent")) gameObjectParentName = request["parent"];
 
                     var isExisted = handler.Exists(gameObjectName, gameObjectParentName);
-                    response.Add("statusCode", "0");
+                    response.Add("statuscode", "0");
                     response.Add("result", isExisted.ToString().ToLowerInvariant());
                     break;
 
@@ -76,40 +78,49 @@ namespace PuppetDriver
                     if (request.ContainsKey("parent")) gameObjectParentName = request["parent"];
 
                     var isActive = handler.Active(gameObjectName, gameObjectParentName);
-                    response.Add("statusCode", "0");
+                    response.Add("statuscode", "0");
                     response.Add("result", isActive.ToString().ToLowerInvariant());
                     break;
 
-                case "startPlayMode":
+                case "startplaymode":
                     sessionId = request["session"];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
 
                     handler.StartPlayMode();
-                    response.Add("statusCode", "0");
+                    response.Add("statuscode", "0");
                     response.Add("result", "success");
                     break;
 
-                case "stopPlayMode":
+                case "stopplaymode":
                     sessionId = request["session"];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
 
                     handler.StopPlayMode();
-                    response.Add("statusCode", "0");
+                    response.Add("statuscode", "0");
                     response.Add("result", "success");
                     break;
 
-                case "takeScreenshot":
+                case "takescreenshot":
                     sessionId = request["session"];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
                     var fullPath = request["path"];
 
                     handler.MakeScreenshot(fullPath);
-                    response.Add("statusCode", "0");
+                    response.Add("statuscode", "0");
                     response.Add("result", "success");
                     break;
+
+                case "killsession":
+                    sessionId = request["session"];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    ConnectionManager.ReleaseEditorHandler(sessionId);
+                    response.Add("statuscode", "0");
+                    response.Add("result", "success");
+                    break;
+
                 default:
-                    response.Add("statusCode", "5");
-                    response["errorMessage"] = $"Method: '{request["method"]}' is not suppoerted";
+                    response.Add("statuscode", "5");
+                    response["errormessage"] = $"Method: '{request["method"]}' is not suppoerted";
                     response.Add("result", "fail");
                     break;
             }

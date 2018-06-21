@@ -7,7 +7,7 @@ namespace PuppetDriver.Editor
 
         void Click(string name, string parent);
 
-        void SendKeys(string name, string parent);
+        void SendKeys(string value, string name, string parent);
 
         bool Exists(string name, string parent);
 
