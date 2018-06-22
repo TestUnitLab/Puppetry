@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Puppet.PuppetDriver;
+using System.IO;
 
 namespace Puppet
 {
@@ -19,6 +20,11 @@ namespace Puppet
             var path = Path.Combine(Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), folderName)).FullName, fileName + ".png");
 
             Driver.Instance.TakeScreenshot(path);
+        }
+
+        public static void KillSession()
+        {
+            Driver.Instance.KillSession();
         }
     }
 }

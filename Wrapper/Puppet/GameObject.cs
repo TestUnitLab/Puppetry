@@ -1,4 +1,5 @@
 ﻿using Puppet.Conditions;
+using Puppet.PuppetDriver;
 
 namespace Puppet
 {

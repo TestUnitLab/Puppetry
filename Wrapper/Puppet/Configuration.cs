@@ -2,14 +2,14 @@
 
 namespace Puppet
 {
-    public class Configuration
+    public static class Configuration
     {
         internal static string BaseUrl;
         internal static string Port;
         internal static int TimeoutMs;
         internal static DriverTypes DriverType;
 
-        public void Set(Settings setting, object value)
+        public static void Set(Settings setting, object value)
         {
             switch (setting)
             {

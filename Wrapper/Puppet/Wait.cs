@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Puppet
 {
-    public static class Wait
+    internal static class Wait
     {
         public static void For(Func<bool> condition, string errorMessage, int waitTimeout)
         {

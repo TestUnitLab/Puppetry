@@ -11,17 +11,17 @@
 
         protected override string DescribeExpected()
         {
-            return $"Exists {true}";
+            return $"Present {true}";
         }
 
         protected override string DescribeActual()
         {
-            return $"Exists {false}";
+            return $"Present {false}";
         }
     }
 
     public static partial class Be
     {
-        public static Condition Existing => new Present();
+        public static Condition Present => new Present();
     }
 }

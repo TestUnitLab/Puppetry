@@ -10,4 +10,10 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="DriverContracts">
+      <HintPath>..\..\..\Wrapper\DriverContracts\bin\Debug\netcoreapp2.0\DriverContracts.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

@@ -10,17 +10,17 @@
 
         protected override string DescribeExpected()
         {
-            return $"Enabled {true}";
+            return $"Active {true}";
         }
 
         protected override string DescribeActual()
         {
-            return $"Enabled {false}";
+            return $"Active {false}";
         }
     }
 
     public static partial class Be
     {
-        public static Condition Enabled => new Active();
+        public static Condition Active => new Active();
     }
 }

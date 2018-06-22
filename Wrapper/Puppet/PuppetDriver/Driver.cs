@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Puppet
+namespace Puppet.PuppetDriver
 {
     internal static class Driver
     {

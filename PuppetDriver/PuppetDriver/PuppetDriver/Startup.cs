@@ -20,7 +20,7 @@ namespace PuppetDriver
 
             app.Run(async (context) =>
             {
-                var clientController = new ClientController();
+                var clientController = new PuppeteerController();
                 await clientController.ProcessRequest(context);
             });
         }
