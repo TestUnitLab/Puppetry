@@ -1,7 +1,8 @@
-﻿using Puppet.Conditions;
-using Puppet.PuppetDriver;
+﻿using Puppeteer.Conditions;
+using Puppeteer.PuppetDriver;
+using Puppeteer.Utils;
 
-namespace Puppet
+namespace Puppeteer.Puppet
 {
     public class GameObject
     {

@@ -1,26 +1,27 @@
-﻿namespace Puppet.Conditions
+﻿namespace Puppeteer.Conditions
 {
-    internal class Active : Condition
+    internal class Present : Condition
     {
         public override bool Invoke<T>(T gameObject)
         {
             _curentGameObject = gameObject;
-            return gameObject.IsActive();
+
+            return gameObject.Exists();
         }
 
         protected override string DescribeExpected()
         {
-            return $"Active {true}";
+            return $"Present {true}";
         }
 
         protected override string DescribeActual()
         {
-            return $"Active {false}";
+            return $"Present {false}";
         }
     }
 
     public static partial class Be
     {
-        public static Condition Active => new Active();
+        public static Condition Present => new Present();
     }
 }

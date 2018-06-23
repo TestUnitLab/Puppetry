@@ -1,4 +1,6 @@
-﻿namespace Puppet.Conditions
+﻿using Puppeteer.Puppet;
+
+namespace Puppeteer.Conditions
 {
     public abstract class Condition
     {

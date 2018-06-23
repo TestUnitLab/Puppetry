@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace Puppet
+namespace Puppeteer.Utils
 {
     internal static class Wait
     {

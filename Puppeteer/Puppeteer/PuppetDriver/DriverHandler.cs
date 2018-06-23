@@ -5,7 +5,7 @@ using RestSharp;
 
 using static DriverContracts.Contracts;
 
-namespace Puppet.PuppetDriver
+namespace Puppeteer.PuppetDriver
 {
     internal class DriverHandler : IDisposable
     {

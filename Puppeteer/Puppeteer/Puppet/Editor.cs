@@ -1,7 +1,7 @@
-﻿using Puppet.PuppetDriver;
+﻿using Puppeteer.PuppetDriver;
 using System.IO;
 
-namespace Puppet
+namespace Puppeteer.Puppet
 {
     public static class Editor
     {
@@ -25,6 +25,7 @@ namespace Puppet
         public static void KillSession()
         {
             Driver.Instance.KillSession();
+            Driver.Clear();
         }
     }
 }

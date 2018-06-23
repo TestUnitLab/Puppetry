@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Puppet
+namespace Puppeteer
 {
     public static class Configuration
     {

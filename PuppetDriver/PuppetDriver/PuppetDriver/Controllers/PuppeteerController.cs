@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using PuppetDriver.Editor;
 using static DriverContracts.Contracts;
 
-namespace PuppetDriver
+namespace PuppetDriver.Controllers
 {
     internal class PuppeteerController
     {

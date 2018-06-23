@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Puppet.PuppetDriver
+namespace Puppeteer.PuppetDriver
 {
     internal static class Driver
     {
@@ -17,6 +17,11 @@ namespace Puppet.PuppetDriver
 
                 return _handler.Value;
             }
+        }
+
+        internal static void Clear()
+        {
+            _handler.Value = null;
         }
     }
 }

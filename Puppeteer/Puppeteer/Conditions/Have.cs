@@ -1,4 +1,4 @@
-﻿namespace Puppet.Conditions
+﻿namespace Puppeteer.Conditions
 {
     public static partial class Have
     {

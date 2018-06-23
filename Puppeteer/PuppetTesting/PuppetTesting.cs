@@ -1,11 +1,12 @@
 using NUnit.Framework;
-using Puppet;
-using Puppet.Conditions;
+using Puppeteer;
+using Puppeteer.Puppet;
+using Puppeteer.Conditions;
 
 namespace PuppetTesting
 {
     [TestFixture]
-    public class UnitTest1
+    public class PuppetTesting
     {
         [SetUp]
         public void Init()
@@ -15,7 +16,7 @@ namespace PuppetTesting
         }
 
         [Test]
-        public void Test1()
+        public void CheckAllMethods()
         {
             var gameObject = new GameObject("Name", "Parent");
             gameObject.Click();
