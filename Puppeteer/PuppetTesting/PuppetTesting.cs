@@ -6,6 +6,7 @@ using Puppeteer.Conditions;
 namespace PuppetTesting
 {
     [TestFixture]
+    [Parallelizable(ParallelScope.All)]
     public class PuppetTesting
     {
         [SetUp]
@@ -22,13 +23,28 @@ namespace PuppetTesting
             gameObject.Click();
             gameObject.SendKeys("qwerty");
             var isExist = gameObject.Exists();
-            Assert.IsFalse(isExist);
+            Assert.IsTrue(isExist);
             var isActive = gameObject.IsActive();
-            Assert.IsFalse(isActive);
-            gameObject.ShouldNot(Be.Present);
-            gameObject.ShouldNot(Be.Active);
+            Assert.IsTrue(isActive);
+            gameObject.Should(Be.Present);
+            gameObject.Should(Be.Active);
             Editor.MakeScreenshot(TestContext.CurrentContext.Test.FullName, "FailedTests");
          }
+
+        [Test]
+        public void CheckAllMethods2()
+        {
+            var gameObject = new GameObject("Name", "Parent");
+            gameObject.Click();
+            gameObject.SendKeys("qwerty");
+            var isExist = gameObject.Exists();
+            Assert.IsTrue(isExist);
+            var isActive = gameObject.IsActive();
+            Assert.IsTrue(isActive);
+            gameObject.Should(Be.Present);
+            gameObject.Should(Be.Active);
+            Editor.MakeScreenshot(TestContext.CurrentContext.Test.FullName, "FailedTests");
+        }
 
         [TearDown]
         public void CleanUp()

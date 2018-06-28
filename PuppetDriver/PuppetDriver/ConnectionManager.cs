@@ -83,6 +83,9 @@ namespace PuppetDriver
                         if (result) return sessionId;
                     }
                 }
+
+                if (MappingEditorsToSessions.Count ==  AvailableEditorsCount)
+                    return "Error: All editors are busy at the moment";
             }
 
             return "Error: Some error was occured during creating session";

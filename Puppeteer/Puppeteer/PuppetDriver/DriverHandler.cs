@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Newtonsoft.Json;
 using RestSharp;
 
+using Puppeteer.Exceptions;
 using static PuppetContracts.Contracts;
 
 namespace Puppeteer.PuppetDriver
@@ -24,12 +26,15 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
-            if (json[Parameters.Result] != ActionResults.Success)
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+            if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception($"GameObject with name: {name} and parent: {parent ?? "null"} was not clicked");
         }
 
@@ -42,12 +47,15 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
-            if (json[Parameters.Result] != ActionResults.Success)
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+            if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception($"Keys {value} were not sent to GameObject with name: {name} and parent: {parent ?? "null"}");
         }
 
@@ -59,14 +67,15 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
 
             bool result;
-            return (bool.TryParse(json[Parameters.Result], out result) && result);
+            return (bool.TryParse(response[Parameters.Result], out result) && result);
         }
 
         internal bool Active(string name, string parent = null)
@@ -77,14 +86,17 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
 
             bool result;
-            return (bool.TryParse(json[Parameters.Result], out result) && result);
+            return (bool.TryParse(response[Parameters.Result], out result) && result);
         }
 
         internal void StartPlayMode()
@@ -93,12 +105,13 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Method, Methods.StartPlayMode);
             request.Add(Parameters.Session, _sessionId);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
-            if (json[Parameters.Result] != ActionResults.Success)
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
+            if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception($"PlayMode was not started");
         }
 
@@ -108,12 +121,13 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Method, Methods.StopPlayMode);
             request.Add(Parameters.Session, _sessionId);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
-            if (json[Parameters.Result] != ActionResults.Success)
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
+            if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception($"PlayMode was not stopped");
         }
 
@@ -124,12 +138,13 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Session, _sessionId);
             request.Add(Parameters.Path, path);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
-            if (json[Parameters.Result] != ActionResults.Success)
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
+            if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception($"PlayMode was not stopped");
         }
 
@@ -139,13 +154,14 @@ namespace Puppeteer.PuppetDriver
             request.Add(Parameters.Method, Methods.KillSession);
             request.Add(Parameters.Session, _sessionId);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
 
-            if (json[Parameters.Result] != ActionResults.Success)
+            if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception($"Session was not Killed");
         }
 
@@ -154,12 +170,20 @@ namespace Puppeteer.PuppetDriver
             var request = new Dictionary<string, string>();
             request.Add(Parameters.Method, Methods.CreateSession);
 
-            var response = Post(request);
-            if (!string.IsNullOrEmpty(response.ErrorMessage))
-                throw new Exception(response.ErrorMessage);
+            var restResponse = Post(request);
+            if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
+                throw new Exception(restResponse.ErrorMessage);
 
-            var json = JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Content);
-            _sessionId = json[Parameters.Result];
+            var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
+            ValidateResponseStructure(response);
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new SessionCreationException($"Session Creation was failed. {response[Parameters.ErrorMessage]}");
+            _sessionId = response[Parameters.Result];
+        }
+
+        public void Dispose()
+        {
+            KillSession();
         }
 
         private IRestResponse Post(Dictionary<string, string> request)
@@ -173,9 +197,10 @@ namespace Puppeteer.PuppetDriver
             return restClient.Execute(restRequest);
         }
 
-        public void Dispose()
+        private void ValidateResponseStructure(Dictionary<string, string> response)
         {
-            KillSession();
+            if (!response.ContainsKey(Parameters.StatusCode) || !response.ContainsKey(Parameters.Result))
+                throw new UnexpectedResponseException($"PuppetDriver sent unexpected response: {response}");
         }
     }
 }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
+
 using Newtonsoft.Json;
 
 using PuppetDriver.Editor;
@@ -46,8 +48,17 @@ namespace PuppetDriver.Controllers
             {
                 case Methods.CreateSession:
                     sessionId = ConnectionManager.StartSession();
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, sessionId);
+                    if (sessionId.Contains("Error"))
+                    {
+                        response.Add(Parameters.StatusCode, ErrorCodes.SessionCreationFailed.ToString());
+                        response.Add(Parameters.Result, ActionResults.Fail);
+                        response[Parameters.ErrorMessage] = sessionId;
+                    }
+                    else
+                    {
+                        response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
+                        response.Add(Parameters.Result, sessionId);
+                    }
                     break;
 
                 case Methods.Click:
@@ -59,6 +70,7 @@ namespace PuppetDriver.Controllers
                     result = handler.Click(gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.SendKeys:
@@ -71,6 +83,7 @@ namespace PuppetDriver.Controllers
                     result = handler.SendKeys(value, gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.Exist:
@@ -82,6 +95,7 @@ namespace PuppetDriver.Controllers
                     result = handler.Exists(gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.Active:
@@ -93,6 +107,7 @@ namespace PuppetDriver.Controllers
                     result = handler.Active(gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.StartPlayMode:
@@ -102,6 +117,7 @@ namespace PuppetDriver.Controllers
                     result = handler.StartPlayMode();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.StopPlayMode:
@@ -111,6 +127,7 @@ namespace PuppetDriver.Controllers
                     result = handler.StopPlayMode();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.TakeScreenshot:
@@ -121,6 +138,7 @@ namespace PuppetDriver.Controllers
                     result = handler.MakeScreenshot(fullPath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.KillSession:

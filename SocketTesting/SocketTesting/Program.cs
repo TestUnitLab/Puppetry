@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 
 public class Program
 {
@@ -50,7 +49,7 @@ public class Program
                         else if (request.ContainsKey("method") && (request["method"] == "exist" || request["method"] == "active"))
                         {
                             response.Add("method", request["method"]);
-                            response.Add("result", "false");
+                            response.Add("result", "true");
                             client.Client.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response, Formatting.Indented) + EndOfMessage));
                             response.Clear();
                             Console.WriteLine("Bool method processed");
