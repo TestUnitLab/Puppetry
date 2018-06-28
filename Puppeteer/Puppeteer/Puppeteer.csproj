@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DriverContracts\DriverContracts.csproj" />
+    <Reference Include="PuppetContracts">
+      <HintPath>..\..\PuppetContracts\PuppetContracts\bin\$(Configuration)\netcoreapp2.0\PuppetContracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

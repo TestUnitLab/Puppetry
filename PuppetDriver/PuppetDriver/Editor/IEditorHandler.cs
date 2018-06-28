@@ -5,18 +5,18 @@ namespace PuppetDriver.Editor
     {
         string Identificator { get;}
 
-        void Click(string name, string parent);
+        EditorResponse Click(string name, string parent);
 
-        void SendKeys(string value, string name, string parent);
+        EditorResponse SendKeys(string value, string name, string parent);
 
-        bool Exists(string name, string parent);
+        EditorResponse Exists(string name, string parent);
 
-        bool Active(string name, string parent);
+        EditorResponse Active(string name, string parent);
 
-        void StartPlayMode();
+        EditorResponse StartPlayMode();
 
-        void StopPlayMode();
+        EditorResponse StopPlayMode();
 
-        void MakeScreenshot(string fullPath);
+        EditorResponse MakeScreenshot(string fullPath);
     }
 }

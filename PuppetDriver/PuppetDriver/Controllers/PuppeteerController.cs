@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 using PuppetDriver.Editor;
-using static DriverContracts.Contracts;
+using static PuppetContracts.Contracts;
 
 namespace PuppetDriver.Controllers
 {
@@ -16,6 +16,7 @@ namespace PuppetDriver.Controllers
         { 
             string sessionId;
             IEditorHandler handler;
+            EditorResponse result;
             string gameObjectName = null;
             string gameObjectParentName = null;
 
@@ -55,9 +56,9 @@ namespace PuppetDriver.Controllers
                     gameObjectName = request[Parameters.Name];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    handler.Click(gameObjectName, gameObjectParentName);
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, ActionResults.Success);
+                    result = handler.Click(gameObjectName, gameObjectParentName);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
                     break;
 
                 case Methods.SendKeys:
@@ -67,9 +68,9 @@ namespace PuppetDriver.Controllers
                     gameObjectName = request[Parameters.Name];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    handler.SendKeys(value, gameObjectName, gameObjectParentName);
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, ActionResults.Success);
+                    result = handler.SendKeys(value, gameObjectName, gameObjectParentName);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
                     break;
 
                 case Methods.Exist:
@@ -78,9 +79,9 @@ namespace PuppetDriver.Controllers
                     gameObjectName = request[Parameters.Name];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    var isExisted = handler.Exists(gameObjectName, gameObjectParentName);
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, isExisted.ToString().ToLowerInvariant());
+                    result = handler.Exists(gameObjectName, gameObjectParentName);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
                     break;
 
                 case Methods.Active:
@@ -89,27 +90,27 @@ namespace PuppetDriver.Controllers
                     gameObjectName = request[Parameters.Name];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    var isActive = handler.Active(gameObjectName, gameObjectParentName);
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, isActive.ToString().ToLowerInvariant());
+                    result = handler.Active(gameObjectName, gameObjectParentName);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
                     break;
 
                 case Methods.StartPlayMode:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
 
-                    handler.StartPlayMode();
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, ActionResults.Success);
+                    result = handler.StartPlayMode();
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
                     break;
 
                 case Methods.StopPlayMode:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
 
-                    handler.StopPlayMode();
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, ActionResults.Success);
+                    result = handler.StopPlayMode();
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
                     break;
 
                 case Methods.TakeScreenshot:
@@ -117,9 +118,9 @@ namespace PuppetDriver.Controllers
                     handler = ConnectionManager.GetEditorHandler(sessionId);
                     var fullPath = request[Parameters.Path];
 
-                    handler.MakeScreenshot(fullPath);
-                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
-                    response.Add(Parameters.Result, ActionResults.Success);
+                    result = handler.MakeScreenshot(fullPath);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
                     break;
 
                 case Methods.KillSession:

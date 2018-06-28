@@ -22,11 +22,13 @@ namespace PuppetTesting
             gameObject.Click();
             gameObject.SendKeys("qwerty");
             var isExist = gameObject.Exists();
+            Assert.IsFalse(isExist);
             var isActive = gameObject.IsActive();
-            gameObject.Should(Be.Present);
+            Assert.IsFalse(isActive);
+            gameObject.ShouldNot(Be.Present);
             gameObject.ShouldNot(Be.Active);
             Editor.MakeScreenshot(TestContext.CurrentContext.Test.FullName, "FailedTests");
-        }
+         }
 
         [TearDown]
         public void CleanUp()

@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DriverContracts\DriverContracts.csproj" />
     <ProjectReference Include="..\Puppeteer\Puppeteer.csproj" />
   </ItemGroup>
 

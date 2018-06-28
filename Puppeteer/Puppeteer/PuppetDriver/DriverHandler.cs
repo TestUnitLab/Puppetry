@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using RestSharp;
 
-using static DriverContracts.Contracts;
+using static PuppetContracts.Contracts;
 
 namespace Puppeteer.PuppetDriver
 {
