@@ -33,7 +33,7 @@ public class Program
                         if (request.ContainsKey("method") && request["method"] == "registereditor")
                         {
                             response.Add("method", "registereditor");
-                            response.Add("editortype", "ue4");
+                            response.Add("result", "ue4");
                             client.Client.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response, Formatting.Indented) + EndOfMessage));
                             response.Clear();
                             Console.WriteLine("registerrequest method processed");
@@ -113,5 +113,4 @@ public class Program
 
         return retVal;
     }
-
 }

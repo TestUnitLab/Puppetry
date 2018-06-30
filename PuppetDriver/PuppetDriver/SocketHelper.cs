@@ -64,6 +64,7 @@ namespace PuppetDriver
                 }
             }
 
+            Console.WriteLine(data);
             return data.Replace(Contracts.EndOfMessage, string.Empty);
         }
     }

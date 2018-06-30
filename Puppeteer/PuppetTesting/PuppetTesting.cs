@@ -6,7 +6,7 @@ using Puppeteer.Conditions;
 namespace PuppetTesting
 {
     [TestFixture]
-    [Parallelizable(ParallelScope.All)]
+    //[Parallelizable(ParallelScope.All)]
     public class PuppetTesting
     {
         [SetUp]

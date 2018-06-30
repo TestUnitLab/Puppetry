@@ -32,7 +32,6 @@ namespace PuppetContracts
             public const string Name = "name";
             public const string Parent = "parent";
             public const string Path = "path";
-            public const string EditorType = "editortype";
         }
 
         public static class ErrorCodes

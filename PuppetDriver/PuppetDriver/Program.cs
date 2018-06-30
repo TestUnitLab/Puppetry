@@ -50,7 +50,12 @@ namespace PuppetDriver
                                 var response = SocketHelper.SendMessage(client, new Dictionary<string, string> { { Parameters.Method, Methods.RegisterEditor } });
                                 if (response.ContainsKey(Parameters.Method) && response[Parameters.Method] == Methods.RegisterEditor)
                                 {
-                                    if (response[Parameters.EditorType] == EditorTypes.UnrealEngine4)
+                                    if (response[Parameters.Result] == EditorTypes.UnrealEngine4)
+                                    {
+                                        editor = new UnrealEngineEditor(client);
+                                        ConnectionManager.AddEditor(editor);
+                                    }
+                                    else if (response[Parameters.Result] == EditorTypes.Unity)
                                     {
                                         editor = new UnrealEngineEditor(client);
                                         ConnectionManager.AddEditor(editor);
@@ -68,7 +73,7 @@ namespace PuppetDriver
                                     if (!pong.ContainsKey(Parameters.Method) || pong[Parameters.Method] != Methods.Pong)
                                         throw new Exception("Unexpected response from socket");
 
-                                    Thread.Sleep(3000);
+                                    Thread.Sleep(5000);
                                 }
                             }
                             catch (SocketException e)
@@ -83,7 +88,13 @@ namespace PuppetDriver
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
-                            
+                            catch (NullReferenceException e)
+                            {
+                                Console.WriteLine(e);
+                                client.Close();
+                                Console.WriteLine("Socket connection closed.");
+                            }
+
                         });
 
                     childSocketThread.Start();
