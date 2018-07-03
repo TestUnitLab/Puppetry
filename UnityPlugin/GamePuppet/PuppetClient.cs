@@ -6,7 +6,7 @@ using System.Threading;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Plugins.GamePuppet
+namespace GamePuppet
 {
     [InitializeOnLoad]
     public class PuppetClientLoader
@@ -16,7 +16,7 @@ namespace Assets.Plugins.GamePuppet
             Debug.Log("PuppetClient Up and running");
             EditorApplication.update += StartPuppetClient;
 
-            //EditorApplication.playModeStateChanged += InstantiateGOAPI;
+            EditorApplication.playModeStateChanged += InstantiatePuppetProcessor;
         }
 
         private static void StartPuppetClient()
@@ -33,14 +33,14 @@ namespace Assets.Plugins.GamePuppet
             childSocketThread.Start();
         }
 
-        /*private static void InstantiateGOAPI(PlayModeStateChange state)
+        private static void InstantiatePuppetProcessor(PlayModeStateChange state)
         {
             if (state == PlayModeStateChange.EnteredPlayMode)
             {
-                var api = GameObjectUtils.CreateWithComponent<GameObjectAPI>();
-                UnityEngine.Object.DontDestroyOnLoad(api);
+                var puppetProcessor = new GameObject().AddComponent<PuppetProcessor>();
+                UnityEngine.Object.DontDestroyOnLoad(puppetProcessor);
             }
-        }*/
+        }
     }
 
     public class PuppetClient : IDisposable
@@ -69,39 +69,9 @@ namespace Assets.Plugins.GamePuppet
                         {
                             var message = ReadData(client).Replace(EndOfMessage, string.Empty);
                             var request = JsonUtility.FromJson<PuppetDriverRequest>(message);
-                            if (request.method == "registereditor")
-                            {
-                                Debug.Log("Processing: " + message);
-                                response.method = "registereditor";
-                                response.result = "unity";
-                                client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
-                                response.Clear();
-                            }
-                            else if (request.method == "sendkeys" || request.method == "click" || request.method == "startplaymode" || request.method == "stopplaymode" || request.method == "takescreenshot")
-                            {
-                                Debug.Log("Processing: " + message);
-                                response.method = request.method;
-                                response.result = "success";
-                                client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
-                                response.Clear();
-                            }
-                            else if (request.method == "exist" || request.method == "active")
-                            {
-                                Debug.Log("Processing: " + message);
-                                response.method = request.method;
-                                response.result = "true";
-                                client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
-                                response.Clear();
-                            }
-
-                            else if (request.method == "ping")
-                            {
-                                response.method = "pong";
-                                client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
-                                response.Clear();
-                            }
-                            else
-                                Debug.Log(message);
+                            response = PuppetRequestHandler.HandlePuppetDriverRequest(request);
+                            client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
+                            response.Clear();
                         }
                     }
                     catch (Exception e)
@@ -129,11 +99,9 @@ namespace Assets.Plugins.GamePuppet
 
             NetworkStream stream = client.GetStream();
 
-
             byte[] myReadBuffer = new byte[1024];
-            StringBuilder myCompleteMessage = new StringBuilder();
+            var myCompleteMessage = new StringBuilder();
             int numberOfBytesRead = 0;
-
 
             do
             {

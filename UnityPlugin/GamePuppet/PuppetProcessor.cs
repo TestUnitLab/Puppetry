@@ -62,17 +62,17 @@ namespace GamePuppet
                 return FindGameObjectIncludingInactive(nameOrPath);
             }
 
-            var parentGO = FindGameObjectIncludingInactive(parentName);
-            if (parentGO != null)
+            var parentgameObject = FindGameObjectIncludingInactive(parentName);
+            if (parentgameObject != null)
             {
                 if (nameOrPath.Contains("/"))
                 {
-                    var transform = parentGO.transform.Find(nameOrPath);
+                    var transform = parentgameObject.transform.Find(nameOrPath);
                     return transform != null ? transform.gameObject : null;
                 }
                 else
                 {
-                    return FindGameObjectIncludingInactive(parentGO, nameOrPath);
+                    return FindGameObjectIncludingInactive(parentgameObject, nameOrPath);
                 }
             }
             else
