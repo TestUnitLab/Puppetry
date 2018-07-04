@@ -29,14 +29,18 @@ namespace PuppetDriver
             {
                 lock (socket)
                 {
-                    var response = new Dictionary<string, string>();
-                    socket.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(request, Formatting.Indented) + Contracts.EndOfMessage));
-                    if (socket.Poll(-1, SelectMode.SelectRead))
+                    while (true)
                     {
-                        response = JsonConvert.DeserializeObject<Dictionary<string, string>>(ReadMessage(socket));
-                    }
+                        var response = new Dictionary<string, string>();
+                        socket.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(request, Formatting.Indented) + Contracts.EndOfMessage));
+                        if (socket.Poll(-1, SelectMode.SelectRead))
+                        {
+                            response = JsonConvert.DeserializeObject<Dictionary<string, string>>(ReadMessage(socket));
+                        }
 
-                    return response;
+                        if (response.Count > 0)
+                            return response;
+                    }
                 }
             }
             catch (Exception e)

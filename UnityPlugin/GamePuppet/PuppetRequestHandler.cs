@@ -14,11 +14,11 @@ namespace GamePuppet
         {
             PuppetDriverResponse response = new PuppetDriverResponse {method = request.method };
             Vector2 swipeDirection = Vector2.zero;
-
+            
             switch (request.method.ToLowerInvariant())
             {
                 case "registereditor":
-                    response.result = FindGameObject(request.name, request.parent, gameObject => true.ToString(), false.ToString());
+                    response.result = "unity";
                     break;
                 case "exist":
                     response.result = FindGameObject(request.name, request.parent, gameObject => true.ToString(), false.ToString());

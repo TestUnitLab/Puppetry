@@ -70,7 +70,7 @@ namespace PuppetDriver
                                 while (SocketHelper.IsSocketConnected(client))
                                 {
                                     var pong = SocketHelper.SendMessage(client, ping);
-                                    if (!pong.ContainsKey(Parameters.Method) || pong[Parameters.Method] != Methods.Pong)
+                                    if (!pong.ContainsKey(Parameters.Method) || pong[Parameters.Method] != Methods.Ping || pong[Parameters.Result] != Methods.Pong)
                                         throw new Exception("Unexpected response from socket");
 
                                     Thread.Sleep(5000);
