@@ -3,10 +3,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace GamePuppet
+namespace GamePuppet.Plugins
 {
     [InitializeOnLoad]
     public class PuppetClientLoader
@@ -14,6 +15,7 @@ namespace GamePuppet
         static PuppetClientLoader()
         {
             Debug.Log("PuppetClientLoader is called");
+            
             EditorApplication.update += StartPuppetClient;
 
             EditorApplication.playModeStateChanged += InstantiatePuppetProcessor;
@@ -23,19 +25,7 @@ namespace GamePuppet
         {
             EditorApplication.update -= StartPuppetClient;
 
-            if (!PuppetClient.IsInitalized)
-            {
-                Debug.Log("Creating new thread");
-                PuppetClient.IsInitalized = true;
-                var childSocketThread =
-                            new Thread(() =>
-                            {
-                                new PuppetClient().StartClient();
-                            });
-
-                childSocketThread.IsBackground = true;
-                childSocketThread.Start();
-            }
+            PuppetClient.Instance.Start();
         }
 
         private static void InstantiatePuppetProcessor(PlayModeStateChange state)
@@ -44,23 +34,47 @@ namespace GamePuppet
 
             if (state == PlayModeStateChange.EnteredPlayMode)
             {
-                var puppetProcessor = new GameObject().AddComponent<PuppetProcessor>();
+                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<PuppetProcessor>();
                 UnityEngine.Object.DontDestroyOnLoad(puppetProcessor);
             }
         }
     }
-
+    
     public class PuppetClient : IDisposable
     {
-        [SerializeField]
-        public static bool IsInitalized;
+        private PuppetClient()
+        {
+            Debug.Log("PuppetClient instance is created");
+        }
+
         private const string EndOfMessage = "<EOF>";
+
+        public Thread Thread;
         private TcpClient client;
 
-        public void StartClient()
+        static PuppetClient instance;
+        public static PuppetClient Instance
         {
-            // Data buffer for incoming data.  
-            byte[] bytes = new byte[1024];
+            get
+            {
+                return instance ?? (instance = new PuppetClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
+            }
+        }
+        
+        public async void Start()
+        {
+            Debug.Log("Thread is started");
+            Thread = new Thread(new ThreadStart(ProcessWork));
+            Thread.IsBackground = true;
+            Thread.Start();
+
+            await Task.Run(() => !Thread.IsAlive);
+
+            Debug.Log("Thread was dead");
+        }
+
+        public void ProcessWork()
+        {
             PuppetDriverResponse response = new PuppetDriverResponse();
 
             // Connect to a remote device.  
@@ -77,37 +91,34 @@ namespace GamePuppet
                         if (client.Available > 0)
                         {
                             var message = ReadData(client).Replace(EndOfMessage, string.Empty);
-                            Debug.Log("Message received: " + message);
+                            //Debug.Log("Message received: " + message);
                             var request = JsonUtility.FromJson<PuppetDriverRequest>(message);
-                            Debug.Log("Request is: " + message + " after the serialization");
+                            //Debug.Log("Request is: " + message + " after the serialization");
                             response = PuppetRequestHandler.HandlePuppetDriverRequest(request);
-                            Debug.Log("We are going to send response.method: " + response.method);
+                            //Debug.Log("We are going to send response.method: " + response.method);
                             client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
-                            Debug.Log("Response was sent");
+                            //Debug.Log("Response was sent");
                             response.Clear();
                         }
                         else
                         {
                             //Debug.Log("Nothing to read.. sleep 100 ms");
-                            Thread.Sleep(100);
+                            Thread.Sleep(500);
                         }
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Debug.Log(e);
                     }
                 }
+
+                Debug.Log("Client was disconnected");
 
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Debug.Log(e.ToString());
             }
-        }
-
-        public void Dispose()
-        {
-            if (client != null) ((IDisposable)client).Dispose();
         }
 
         private static string ReadData(TcpClient client)
@@ -136,6 +147,11 @@ namespace GamePuppet
 
 
             return retVal;
+        }
+
+        public void Dispose()
+        {
+            if (client != null) ((IDisposable)client).Dispose();
         }
     }
 }
