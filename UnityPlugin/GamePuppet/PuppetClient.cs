@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,20 +14,20 @@ namespace GamePuppet.Plugins
         static PuppetClientLoader()
         {
             Debug.Log("PuppetClientLoader is called");
-            
+
             EditorApplication.update += StartPuppetClient;
 
             EditorApplication.playModeStateChanged += InstantiatePuppetProcessor;
         }
 
-        private static void StartPuppetClient()
+        static void StartPuppetClient()
         {
             EditorApplication.update -= StartPuppetClient;
 
-            PuppetClient.Instance.Start();
+            PuppetClient.Instance.StartClient();
         }
 
-        private static void InstantiatePuppetProcessor(PlayModeStateChange state)
+        static void InstantiatePuppetProcessor(PlayModeStateChange state)
         {
             Debug.Log("InstantiatePuppetProcessor is processed");
 
@@ -44,33 +43,33 @@ namespace GamePuppet.Plugins
     {
         private PuppetClient()
         {
-            Debug.Log("PuppetClient instance is created");
+            Debug.Log("PuppetClient is intantiated");
         }
 
         private const string EndOfMessage = "<EOF>";
 
-        public Thread Thread;
-        private TcpClient client;
+        private Thread _thread;
+        private TcpClient _client;
 
-        static PuppetClient instance;
+        private static PuppetClient _instance;
+
+        public static bool IsRun = false;
+        public static bool WorkDone = false;
+
         public static PuppetClient Instance
         {
             get
             {
-                return instance ?? (instance = new PuppetClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
+                return _instance ?? (_instance = new PuppetClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
             }
         }
         
-        public async void Start()
+        public void StartClient()
         {
             Debug.Log("Thread is started");
-            Thread = new Thread(new ThreadStart(ProcessWork));
-            Thread.IsBackground = true;
-            Thread.Start();
-
-            await Task.Run(() => !Thread.IsAlive);
-
-            Debug.Log("Thread was dead");
+            _thread = new Thread(ProcessWork);
+            _thread.IsBackground = true;
+            _thread.Start();
         }
 
         public void ProcessWork()
@@ -81,22 +80,22 @@ namespace GamePuppet.Plugins
             try
             {
                 Debug.Log("Puppet client is connecting");
-                client = new TcpClient();
-                client.Client.Connect(IPAddress.Parse("127.0.0.1"), 6111);
+                _client = new TcpClient();
+                _client.Client.Connect(IPAddress.Parse("127.0.0.1"), 6111);
 
-                while (client.Connected)
+                while (_client.Connected)
                 {
                     try
                     {
-                        if (client.Available > 0)
+                        if (_client.Available > 0)
                         {
-                            var message = ReadData(client).Replace(EndOfMessage, string.Empty);
+                            var message = ReadData(_client).Replace(EndOfMessage, string.Empty);
                             //Debug.Log("Message received: " + message);
                             var request = JsonUtility.FromJson<PuppetDriverRequest>(message);
                             //Debug.Log("Request is: " + message + " after the serialization");
                             response = PuppetRequestHandler.HandlePuppetDriverRequest(request);
                             //Debug.Log("We are going to send response.method: " + response.method);
-                            client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
+                            _client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
                             //Debug.Log("Response was sent");
                             response.Clear();
                         }
@@ -149,9 +148,12 @@ namespace GamePuppet.Plugins
             return retVal;
         }
 
+        
+
         public void Dispose()
         {
-            if (client != null) ((IDisposable)client).Dispose();
+            if (_client != null) ((IDisposable)_client).Dispose();
         }
     }
 }
+

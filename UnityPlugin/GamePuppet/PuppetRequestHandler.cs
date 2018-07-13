@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using UnityEditor;
 using UnityEngine;
@@ -12,12 +14,23 @@ namespace GamePuppet
     {
         internal static PuppetDriverResponse HandlePuppetDriverRequest(PuppetDriverRequest request)
         {
-            PuppetDriverResponse response = new PuppetDriverResponse {method = request.method };
-            Vector2 swipeDirection = Vector2.zero;
-            
+            var response = new PuppetDriverResponse {method = request.method };
+            var swipeDirection = Vector2.zero;
+            var session = GetSession();
+
             switch (request.method.ToLowerInvariant())
             {
                 case "registereditor":
+                    if (string.IsNullOrEmpty(session))
+                    {
+                        SaveSession(request.session);
+                        response.session = request.session;
+                    }
+                    else
+                    {
+                        response.session = session;
+                    }
+
                     response.result = "unity";
                     break;
                 case "exist":
@@ -201,7 +214,7 @@ namespace GamePuppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            string response = "OK";
+            string response = "success";
             PuppetProcessor.QueueOnMainThread(() =>
             {
                 try
@@ -239,6 +252,31 @@ namespace GamePuppet
         private static void TakeScreenshot(string pathName)
         {
             ScreenCapture.CaptureScreenshot(pathName);
+        }
+
+        private static void SaveSession(string session)
+        {
+            var bf = new BinaryFormatter();
+            var file = File.Create("D:/Tmp" + "/session.data");
+
+            var sessionData = new SessionInfo { Session = session };
+            bf.Serialize(file, sessionData);
+            file.Close();
+        }
+
+        private static string GetSession()
+        {
+            string session = null;
+            if (File.Exists("D:/Tmp" + "/session.data")) //Application.persistentDataPath
+            {
+                var bf = new BinaryFormatter();
+                var file = File.Open("D:/Tmp" + "/session.data", FileMode.Open);
+
+                session = ((SessionInfo)bf.Deserialize(file)).Session;
+                file.Close();
+            }
+
+            return session;
         }
     }
 }
