@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using PuppetDriver.Controllers;
 
-namespace PuppetDriver
+namespace Puppetry.PuppetDriver
 {
     public class Startup
     {

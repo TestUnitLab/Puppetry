@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-using static PuppetContracts.Contracts;
+using Puppetry.PuppetContracts;
+using Puppetry.PuppetDriver.TcpSocket;
 
-namespace PuppetDriver.Editor
+namespace Puppetry.PuppetDriver.Editor
 {
     internal class UnityEditor : IEditorHandler
     {

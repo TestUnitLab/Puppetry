@@ -5,9 +5,9 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 
-using PuppetDriver.Editor;
+using Puppetry.PuppetDriver.Editor;
 
-namespace PuppetDriver
+namespace Puppetry.PuppetDriver
 {
     internal static class ConnectionManager
     {

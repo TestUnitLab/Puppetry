@@ -4,11 +4,10 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Puppetry.PuppetContracts;
+using Puppetry.PuppetDriver.Editor;
 
-using PuppetDriver.Editor;
-using static PuppetContracts.Contracts;
-
-namespace PuppetDriver.TcpSocket
+namespace Puppetry.PuppetDriver.TcpSocket
 {
     internal static class PuppetListener
     {

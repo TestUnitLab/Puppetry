@@ -3,7 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <StartupObject>PuppetDriver.Program</StartupObject>
+    <StartupObject>Puppetry.PuppetDriver.Program</StartupObject>
+    <RootNamespace>Puppetry.PuppetDriver</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

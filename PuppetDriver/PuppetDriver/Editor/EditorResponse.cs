@@ -1,5 +1,5 @@
 ﻿
-namespace PuppetDriver.Editor
+namespace Puppetry.PuppetDriver.Editor
 {
     internal class EditorResponse
     {

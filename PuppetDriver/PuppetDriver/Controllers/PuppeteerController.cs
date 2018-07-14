@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Http;
 
 using Newtonsoft.Json;
 
-using PuppetDriver.Editor;
-using static PuppetContracts.Contracts;
+using Puppetry.PuppetDriver.Editor;
+using Puppetry.PuppetContracts;
+using Puppetry.PuppetDriver;
 
 namespace PuppetDriver.Controllers
 {

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
-using PuppetContracts;
+using Puppetry.PuppetContracts;
+using static Puppetry.PuppetContracts.Constants;
 
-namespace PuppetDriver.TcpSocket
+namespace Puppetry.PuppetDriver.TcpSocket
 {
     internal static class SocketHelper
     {
@@ -32,7 +33,7 @@ namespace PuppetDriver.TcpSocket
                     while (true)
                     {
                         var response = new Dictionary<string, string>();
-                        socket.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(request, Formatting.Indented) + Contracts.EndOfMessage));
+                        socket.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(request, Formatting.Indented) + EndOfMessage));
                         if (socket.Poll(-1, SelectMode.SelectRead))
                         {
                             response = JsonConvert.DeserializeObject<Dictionary<string, string>>(ReadMessage(socket));
@@ -61,17 +62,17 @@ namespace PuppetDriver.TcpSocket
                 {
                     int bytesRec = socket.Receive(bytes);
                     data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                    if (data.IndexOf(Contracts.EndOfMessage) > -1)
+                    if (data.IndexOf(EndOfMessage) > -1)
                     {
                         break;
                     }
                 }
             }
 
-            if(!(data.Contains(Contracts.Methods.Ping) && data.Contains(Contracts.Methods.Pong)))
+            if(!(data.Contains(Methods.Ping) && data.Contains(Methods.Pong)))
                 Console.WriteLine(data);
 
-            return data.Replace(Contracts.EndOfMessage, string.Empty);
+            return data.Replace(EndOfMessage, string.Empty);
         }
     }
 }

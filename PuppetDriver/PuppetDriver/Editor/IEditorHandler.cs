@@ -1,7 +1,7 @@
 ﻿
 using System.Net.Sockets;
 
-namespace PuppetDriver.Editor
+namespace Puppetry.PuppetDriver.Editor
 {
     interface IEditorHandler
     {
