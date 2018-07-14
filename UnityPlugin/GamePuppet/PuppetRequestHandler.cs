@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace GamePuppet
+namespace Puppetry.Puppet
 {
     public class PuppetRequestHandler
     {

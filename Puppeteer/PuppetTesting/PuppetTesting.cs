@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using Puppeteer;
-using Puppeteer.Puppet;
-using Puppeteer.Conditions;
+using Puppetry.Puppeteer;
+using Puppetry.Puppeteer.Puppet;
+using Puppetry.Puppeteer.Conditions;
 
 namespace PuppetTesting
 {

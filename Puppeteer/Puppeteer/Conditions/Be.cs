@@ -1,4 +1,4 @@
-﻿namespace Puppeteer.Conditions
+﻿namespace Puppetry.Puppeteer.Conditions
 {
     public static partial class Be
     {

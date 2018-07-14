@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Puppeteer.Exceptions
+namespace Puppetry.Puppeteer.Exceptions
 {
     public class SessionCreationException : PuppetDriverException
     {

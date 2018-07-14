@@ -6,7 +6,7 @@ using System.Threading;
 using UnityEditor;
 using UnityEngine;
 
-namespace GamePuppet.Plugins
+namespace Puppetry.Puppet
 {
     [InitializeOnLoad]
     public class PuppetClientLoader
@@ -147,8 +147,6 @@ namespace GamePuppet.Plugins
 
             return retVal;
         }
-
-        
 
         public void Dispose()
         {

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using RestSharp;
 
-using Puppeteer.Exceptions;
-using static PuppetContracts.Contracts;
+using Puppetry.PuppetContracts;
+using Puppetry.Puppeteer.Exceptions;
 
-namespace Puppeteer.PuppetDriver
+namespace Puppetry.Puppeteer.PuppetDriver
 {
     internal class DriverHandler : IDisposable
     {

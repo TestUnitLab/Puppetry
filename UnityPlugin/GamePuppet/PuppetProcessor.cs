@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-namespace GamePuppet
+namespace Puppetry.Puppet
 {
     public class PuppetProcessor : MonoBehaviour
     {

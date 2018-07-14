@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Puppeteer.PuppetDriver
+namespace Puppetry.Puppeteer.PuppetDriver
 {
     internal static class Driver
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GamePuppet
+namespace Puppetry.Puppet
 {
     [Serializable]
     public class PuppetDriverRequest

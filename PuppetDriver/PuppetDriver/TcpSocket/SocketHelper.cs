@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using PuppetContracts;
 
-namespace PuppetDriver
+namespace PuppetDriver.TcpSocket
 {
     internal static class SocketHelper
     {
@@ -68,7 +68,9 @@ namespace PuppetDriver
                 }
             }
 
-            Console.WriteLine(data);
+            if(!(data.Contains(Contracts.Methods.Ping) && data.Contains(Contracts.Methods.Pong)))
+                Console.WriteLine(data);
+
             return data.Replace(Contracts.EndOfMessage, string.Empty);
         }
     }
