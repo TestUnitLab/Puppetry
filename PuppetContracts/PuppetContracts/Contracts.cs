@@ -31,7 +31,6 @@ namespace PuppetContracts
             public const string Value = "value";
             public const string Name = "name";
             public const string Parent = "parent";
-            public const string Path = "path";
         }
 
         public static class ErrorCodes

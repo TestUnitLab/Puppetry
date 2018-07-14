@@ -1,9 +1,13 @@
 ﻿
+using System.Net.Sockets;
+
 namespace PuppetDriver.Editor
 {
     interface IEditorHandler
     {
-        string Identificator { get;}
+        string Session { get;}
+
+        Socket Socket { get; set; }
 
         EditorResponse Click(string name, string parent);
 

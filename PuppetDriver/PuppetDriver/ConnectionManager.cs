@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading;
 
 using PuppetDriver.Editor;
@@ -36,6 +37,14 @@ namespace PuppetDriver
             Interlocked.Increment(ref AvailableEditorsCount);
         }
 
+        internal static void ReconnectEditor(Socket socket, string session)
+        {
+            lock (AvailiableEditors)
+            {
+                AvailiableEditors.First(x => x.Session == session).Socket = socket;
+            }
+        }
+
         internal static void RemoveEditor(IEditorHandler editor)
         {
             lock (AvailiableEditors)
@@ -57,7 +66,7 @@ namespace PuppetDriver
 
             lock (AvailiableEditors)
             {
-                return AvailiableEditors.First(x => x.Identificator == editorIdentificator);
+                return AvailiableEditors.First(x => x.Session == editorIdentificator);
             }
         }
 
@@ -75,10 +84,10 @@ namespace PuppetDriver
             {
                 foreach (var editor in AvailiableEditors)
                 {
-                    if (!MappingEditorsToSessions.ContainsKey(editor.Identificator))
+                    if (!MappingEditorsToSessions.ContainsKey(editor.Session))
                     {
                         var sessionId = Guid.NewGuid().ToString();
-                        var result = MappingEditorsToSessions.TryAdd(editor.Identificator, sessionId);
+                        var result = MappingEditorsToSessions.TryAdd(editor.Session, sessionId);
 
                         if (result) return sessionId;
                     }

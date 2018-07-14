@@ -136,7 +136,7 @@ namespace Puppeteer.PuppetDriver
             var request = new Dictionary<string, string>();
             request.Add(Parameters.Method, Methods.TakeScreenshot);
             request.Add(Parameters.Session, _sessionId);
-            request.Add(Parameters.Path, path);
+            request.Add(Parameters.Value, path);
 
             var restResponse = Post(request);
             if (!string.IsNullOrEmpty(restResponse.ErrorMessage))

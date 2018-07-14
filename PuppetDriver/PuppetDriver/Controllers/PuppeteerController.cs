@@ -133,7 +133,7 @@ namespace PuppetDriver.Controllers
                 case Methods.TakeScreenshot:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
-                    var fullPath = request[Parameters.Path];
+                    var fullPath = request[Parameters.Value];
 
                     result = handler.MakeScreenshot(fullPath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());

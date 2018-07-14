@@ -40,6 +40,7 @@ namespace PuppetDriver
                 {
                     Socket client = listener.AcceptSocket();
                     Console.WriteLine("Connection accepted.");
+                    var session = Guid.NewGuid().ToString();
 
                     var childSocketThread =
                         new Thread(() =>
@@ -47,18 +48,28 @@ namespace PuppetDriver
                             IEditorHandler editor;
                             try
                             {
-                                var response = SocketHelper.SendMessage(client, new Dictionary<string, string> { { Parameters.Method, Methods.RegisterEditor } });
+                                var response = SocketHelper.SendMessage(client, new Dictionary<string, string> { { Parameters.Method, Methods.RegisterEditor }, { Parameters.Session, session } });
                                 if (response.ContainsKey(Parameters.Method) && response[Parameters.Method] == Methods.RegisterEditor)
                                 {
-                                    if (response[Parameters.Result] == EditorTypes.UnrealEngine4)
+                                    if (response[Parameters.Result] == EditorTypes.Unity)
                                     {
-                                        editor = new UnrealEngineEditor(client);
-                                        ConnectionManager.AddEditor(editor);
-                                    }
-                                    else if (response[Parameters.Result] == EditorTypes.Unity)
-                                    {
-                                        editor = new UnrealEngineEditor(client);
-                                        ConnectionManager.AddEditor(editor);
+                                        if (response.ContainsKey(Parameters.Session) && response[Parameters.Session] != session)
+                                        {
+                                            try
+                                            {
+                                                ConnectionManager.ReconnectEditor(client, response[Parameters.Session]);
+                                            }
+                                            catch (InvalidOperationException)
+                                            {
+                                                editor = new UnityEditor(client, session);
+                                                ConnectionManager.AddEditor(editor);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            editor = new UnityEditor(client, session);
+                                            ConnectionManager.AddEditor(editor);
+                                        }
                                     }
                                     else
                                     {
@@ -73,8 +84,11 @@ namespace PuppetDriver
                                     if (!pong.ContainsKey(Parameters.Method) || pong[Parameters.Method] != Methods.Ping || pong[Parameters.Result] != Methods.Pong)
                                         throw new Exception("Unexpected response from socket");
 
-                                    Thread.Sleep(5000);
+                                    Thread.Sleep(3000);
                                 }
+
+                                client.Close();
+                                Console.WriteLine("Socket connection closed.");
                             }
                             catch (SocketException e)
                             {

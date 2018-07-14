@@ -26,8 +26,8 @@ namespace PuppetTesting
             //Assert.IsTrue(isExist);
             var isActive = gameObject.IsActive();
             //Assert.IsTrue(isActive);
-            //gameObject.Should(Be.Present);
-            //gameObject.Should(Be.Active);
+            gameObject.ShouldNot(Be.Present);
+            gameObject.ShouldNot(Be.Active);
             //Editor.MakeScreenshot(TestContext.CurrentContext.Test.FullName, "FailedTests");
          }
 

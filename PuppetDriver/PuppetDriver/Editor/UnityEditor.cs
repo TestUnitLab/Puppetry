@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Sockets;
-
+using System.Threading;
 using static PuppetContracts.Contracts;
 
 namespace PuppetDriver.Editor
 {
-    internal class UnrealEngineEditor : IEditorHandler
+    internal class UnityEditor : IEditorHandler
     {
-        public string Identificator { get; }
-
-        private Socket _socket;
         private Dictionary<string, string> _request;
         private Dictionary<string, string> _response;
 
-        public UnrealEngineEditor(Socket socket)
+        public string Session { get; }
+        public Socket Socket { get; set; }
+
+        public UnityEditor(Socket socket, string session)
         {
-            Identificator = Guid.NewGuid().ToString();
-            _socket = socket;
+            Session = session;
+            Socket = socket;
             _request = new Dictionary<string, string>();
         }
 
@@ -28,7 +27,7 @@ namespace PuppetDriver.Editor
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
-            _response = SocketHelper.SendMessage(_socket, _request);
+            _response = SocketHelper.SendMessage(Socket, _request);
             _request.Clear();
             EditorResponse result;
             if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.SendKeys)
@@ -45,7 +44,7 @@ namespace PuppetDriver.Editor
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
-            _response = SocketHelper.SendMessage(_socket, _request);
+            _response = SocketHelper.SendMessage(Socket, _request);
             _request.Clear();
             EditorResponse result;
             if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Click)
@@ -62,7 +61,7 @@ namespace PuppetDriver.Editor
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
-            _response = SocketHelper.SendMessage(_socket, _request);
+            _response = SocketHelper.SendMessage(Socket, _request);
             _request.Clear();
             EditorResponse result;
             if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
@@ -79,7 +78,7 @@ namespace PuppetDriver.Editor
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
-            _response = SocketHelper.SendMessage(_socket, _request);
+            _response = SocketHelper.SendMessage(Socket, _request);
             _request.Clear();
             EditorResponse result;
             if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Active)
@@ -94,13 +93,23 @@ namespace PuppetDriver.Editor
         {
             _request.Add(Parameters.Method, Methods.StartPlayMode);
 
-            _response = SocketHelper.SendMessage(_socket, _request);
+            _response = SocketHelper.SendMessage(Socket, _request);
             _request.Clear();
             EditorResponse result;
             if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.StartPlayMode)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            for (var i = 0; i < 3; i++)
+            {
+                lock (Socket)
+                {
+                    if (SocketHelper.IsSocketConnected(Socket))
+                        break;
+                }
+                Thread.Sleep(500);
+            }
 
             return result;
         }
@@ -109,7 +118,7 @@ namespace PuppetDriver.Editor
         {
             _request.Add(Parameters.Method, Methods.StopPlayMode);
 
-            _response = SocketHelper.SendMessage(_socket, _request);
+            _response = SocketHelper.SendMessage(Socket, _request);
             _request.Clear();
             EditorResponse result;
             if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.StopPlayMode)
@@ -123,9 +132,9 @@ namespace PuppetDriver.Editor
         public EditorResponse MakeScreenshot(string fullPath)
         {
             _request.Add(Parameters.Method, Methods.TakeScreenshot);
-            _request.Add(Parameters.Path, fullPath);
+            _request.Add(Parameters.Value, fullPath);
 
-            _response = SocketHelper.SendMessage(_socket, _request);
+            _response = SocketHelper.SendMessage(Socket, _request);
             _request.Clear();
             EditorResponse result;
             if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
