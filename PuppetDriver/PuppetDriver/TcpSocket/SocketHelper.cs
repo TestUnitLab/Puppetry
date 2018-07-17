@@ -12,15 +12,24 @@ namespace Puppetry.PuppetDriver.TcpSocket
     {
         internal static bool IsSocketConnected(Socket socket)
         {
-            lock (socket)
+            if (socket == null) return false;
+            try
             {
-                bool part1 = socket.Poll(1000, SelectMode.SelectRead);
-                bool part2 = (socket.Available == 0);
+                lock (socket)
+                {
+                    bool part1 = socket.Poll(1000, SelectMode.SelectRead);
+                    bool part2 = (socket.Available == 0);
 
-                if (part1 && part2)
-                    return false;
-                else
-                    return true;
+                    if (part1 && part2)
+                        return false;
+                    else
+                        return true;
+                }
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine(e);
+                return false;
             }
         }
 

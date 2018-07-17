@@ -47,6 +47,8 @@ namespace Puppetry.PuppetDriver
 
         internal static void RemoveEditor(IEditorHandler editor)
         {
+            if (editor == null) return;
+
             lock (AvailiableEditors)
             {
                 AvailiableEditors.Remove(editor);
@@ -57,17 +59,29 @@ namespace Puppetry.PuppetDriver
 
         internal static IEditorHandler GetEditorHandler(string sessionId)
         {
-            if (AvailableEditorsCount <= 0)
-                throw new Exception("Error: Available Editors is 0");
-
-            string editorIdentificator;
-
-            editorIdentificator = MappingEditorsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
-
-            lock (AvailiableEditors)
+            for (var i = 0; i < 60; i++)
             {
-                return AvailiableEditors.First(x => x.Session == editorIdentificator);
+                try
+                {
+                    if (AvailableEditorsCount <= 0)
+                        throw new Exception("Error: Available Editors is 0");
+
+                    string editorIdentificator;
+
+                    editorIdentificator = MappingEditorsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
+
+                    lock (AvailiableEditors)
+                    {
+                        return AvailiableEditors.First(x => x.Session == editorIdentificator);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Thread.Sleep(500);
+                }
             }
+
+            throw new Exception("No Available Editors was received in 30 sec");
         }
 
         internal static void ReleaseEditorHandler(string sessionId)

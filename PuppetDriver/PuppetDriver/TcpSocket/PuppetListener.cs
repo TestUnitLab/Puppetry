@@ -22,6 +22,8 @@ namespace Puppetry.PuppetDriver.TcpSocket
 
                 while (true)
                 {
+                    IEditorHandler editor = null;
+
                     Socket client = listener.AcceptSocket();
                     Console.WriteLine("Connection accepted.");
                     var session = Guid.NewGuid().ToString();
@@ -29,7 +31,6 @@ namespace Puppetry.PuppetDriver.TcpSocket
                     var childSocketThread =
                         new Thread(() =>
                         {
-                            IEditorHandler editor;
                             try
                             {
                                 var response = SocketHelper.SendMessage(client, new Dictionary<string, string> { { Parameters.Method, Methods.RegisterEditor }, { Parameters.Session, session } });
@@ -43,9 +44,10 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                             {
                                                 ConnectionManager.ReconnectEditor(client, response[Parameters.Session]);
                                             }
-                                            catch (InvalidOperationException)
+                                            catch (InvalidOperationException e)
                                             {
-                                                editor = new UnityEditor(client, session);
+                                                Console.WriteLine(e);
+                                                editor = new UnityEditor(client, response[Parameters.Session]);
                                                 ConnectionManager.AddEditor(editor);
                                             }
                                         }
@@ -71,24 +73,28 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                     Thread.Sleep(3000);
                                 }
 
+                                //ConnectionManager.RemoveEditor(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (SocketException e)
                             {
                                 Console.WriteLine(e);
+                                //ConnectionManager.RemoveEditor(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (IOException e)
                             {
                                 Console.WriteLine(e);
+                                //ConnectionManager.RemoveEditor(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (NullReferenceException e)
                             {
                                 Console.WriteLine(e);
+                                //ConnectionManager.RemoveEditor(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }

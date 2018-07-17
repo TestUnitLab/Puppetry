@@ -13,6 +13,8 @@ namespace Puppetry.Puppet
     {
         static PuppetClientLoader()
         {
+            if (EditorApplication.isCompiling || EditorApplication.isUpdating) return;
+
             Debug.Log("PuppetClientLoader is called");
 
             EditorApplication.update += StartPuppetClient;
