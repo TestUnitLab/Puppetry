@@ -27,7 +27,7 @@ namespace Puppetry.Puppet
         {
             EditorApplication.update -= StartPuppetClient;
 
-            EditorApplication.LockReloadAssemblies();
+            //EditorApplication.LockReloadAssemblies();
             PuppetClient.Instance.StartClient();
         }
 
