@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+
 using UnityEditor;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ namespace Puppetry.Puppet
         {
             EditorApplication.update -= StartPuppetClient;
 
+            EditorApplication.LockReloadAssemblies();
             PuppetClient.Instance.StartClient();
         }
 
@@ -92,18 +94,13 @@ namespace Puppetry.Puppet
                         if (_client.Available > 0)
                         {
                             var message = ReadData(_client).Replace(EndOfMessage, string.Empty);
-                            //Debug.Log("Message received: " + message);
                             var request = JsonUtility.FromJson<PuppetDriverRequest>(message);
-                            //Debug.Log("Request is: " + message + " after the serialization");
                             response = PuppetRequestHandler.HandlePuppetDriverRequest(request);
-                            //Debug.Log("We are going to send response.method: " + response.method);
                             _client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
-                            //Debug.Log("Response was sent");
                             response.Clear();
                         }
                         else
                         {
-                            //Debug.Log("Nothing to read.. sleep 100 ms");
                             Thread.Sleep(500);
                         }
                     }
@@ -142,10 +139,7 @@ namespace Puppetry.Puppet
             }
             while (stream.DataAvailable);
 
-
-
             retVal = myCompleteMessage.ToString();
-
 
             return retVal;
         }

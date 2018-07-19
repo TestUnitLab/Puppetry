@@ -21,6 +21,7 @@ namespace PuppetDriver.Controllers
             IEditorHandler handler;
             EditorResponse result;
             string gameObjectName = null;
+            string gameObjectRootName = null;
             string gameObjectParentName = null;
 
             Dictionary<string, string> request = new Dictionary<string, string>();
@@ -66,9 +67,10 @@ namespace PuppetDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
                     gameObjectName = request[Parameters.Name];
+                    gameObjectRootName = request[Parameters.Root];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    result = handler.Click(gameObjectName, gameObjectParentName);
+                    result = handler.Click(gameObjectRootName, gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -79,9 +81,10 @@ namespace PuppetDriver.Controllers
                     handler = ConnectionManager.GetEditorHandler(sessionId);
                     var value = request[Parameters.Value];
                     gameObjectName = request[Parameters.Name];
+                    gameObjectRootName = request[Parameters.Root];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    result = handler.SendKeys(value, gameObjectName, gameObjectParentName);
+                    result = handler.SendKeys(value, gameObjectRootName, gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -91,9 +94,10 @@ namespace PuppetDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
                     gameObjectName = request[Parameters.Name];
+                    gameObjectRootName = request[Parameters.Root];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    result = handler.Exists(gameObjectName, gameObjectParentName);
+                    result = handler.Exists(gameObjectRootName, gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -103,9 +107,10 @@ namespace PuppetDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
                     gameObjectName = request[Parameters.Name];
+                    gameObjectRootName = request[Parameters.Root];
                     if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    result = handler.Active(gameObjectName, gameObjectParentName);
+                    result = handler.Active(gameObjectRootName, gameObjectName, gameObjectParentName);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;

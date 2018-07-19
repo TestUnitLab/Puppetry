@@ -9,13 +9,13 @@ namespace Puppetry.PuppetDriver.Editor
 
         Socket Socket { get; set; }
 
-        EditorResponse Click(string name, string parent);
+        EditorResponse Click(string root, string name, string parent);
 
-        EditorResponse SendKeys(string value, string name, string parent);
+        EditorResponse SendKeys(string value, string root, string name, string parent);
 
-        EditorResponse Exists(string name, string parent);
+        EditorResponse Exists(string root, string name, string parent);
 
-        EditorResponse Active(string name, string parent);
+        EditorResponse Active(string root, string name, string parent);
 
         EditorResponse StartPlayMode();
 

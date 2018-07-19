@@ -7,37 +7,40 @@ namespace Puppetry.Puppeteer.Puppet
     public class GameObject
     {
         internal string Name;
+        internal string Root;
         internal string Parent;
 
-        public GameObject(string name)
+        public GameObject(string root, string name)
         {
+            Root = root;
             Name = name;
         }
 
-        public GameObject(string name, string parent)
+        public GameObject(string root, string name, string parent)
         {
+            Root = root;
             Name = name;
             Parent = parent;
         }
 
         public void Click()
         {
-            Driver.Instance.Click(Name, Parent);
+            Driver.Instance.Click(Root, Name, Parent);
         }
 
         public void SendKeys(string value)
         {
-            Driver.Instance.SendKeys(value, Name, Parent);
+            Driver.Instance.SendKeys(value, Root, Name, Parent);
         }
 
         public bool Exists()
         {
-            return Driver.Instance.Exist(Name, Parent);
+            return Driver.Instance.Exist(Root, Name, Parent);
         }
 
         public bool IsActive()
         {
-            return Driver.Instance.Active(Name, Parent);
+            return Driver.Instance.Active(Root, Name, Parent);
         }
 
         public void Should(Condition condition)

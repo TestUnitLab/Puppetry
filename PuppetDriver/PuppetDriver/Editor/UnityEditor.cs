@@ -21,10 +21,11 @@ namespace Puppetry.PuppetDriver.Editor
             _request = new Dictionary<string, string>();
         }
 
-        public EditorResponse SendKeys(string value, string name, string parent)
+        public EditorResponse SendKeys(string value, string root, string name, string parent)
         {
             _request.Add(Parameters.Method, Methods.SendKeys);
             _request.Add(Parameters.Value, value);
+            _request.Add(Parameters.Root, root);
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
@@ -41,9 +42,10 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }       
 
-        public EditorResponse Click(string name, string parent)
+        public EditorResponse Click(string root, string name, string parent)
         {
             _request.Add(Parameters.Method, Methods.Click);
+            _request.Add(Parameters.Root, root);
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
@@ -60,9 +62,10 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
 
-        public EditorResponse Exists(string name, string parent)
+        public EditorResponse Exists(string root, string name, string parent)
         {
             _request.Add(Parameters.Method, Methods.Exist);
+            _request.Add(Parameters.Root, root);
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
@@ -79,9 +82,10 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
 
-        public EditorResponse Active(string name, string parent)
+        public EditorResponse Active(string root, string name, string parent)
         {
             _request.Add(Parameters.Method, Methods.Active);
+            _request.Add(Parameters.Root, root);
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 

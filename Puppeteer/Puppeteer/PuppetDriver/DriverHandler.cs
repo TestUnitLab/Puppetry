@@ -18,11 +18,12 @@ namespace Puppetry.Puppeteer.PuppetDriver
             StartSession();
         }
 
-        internal void Click(string name, string parent = null)
+        internal void Click(string root, string name, string parent = null)
         {
             var request = new Dictionary<string, string>();
             request.Add(Parameters.Method, Methods.Click);
             request.Add(Parameters.Session, _sessionId);
+            request.Add(Parameters.Root, root);
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 
@@ -38,12 +39,13 @@ namespace Puppetry.Puppeteer.PuppetDriver
                 throw new Exception($"GameObject with name: {name} and parent: {parent ?? "null"} was not clicked");
         }
 
-        internal void SendKeys(string value, string name, string parent = null)
+        internal void SendKeys(string value, string root, string name, string parent = null)
         {
             var request = new Dictionary<string, string>();
             request.Add(Parameters.Method, Methods.SendKeys);
             request.Add(Parameters.Session, _sessionId);
             request.Add(Parameters.Value, value);
+            request.Add(Parameters.Root, root);
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 
@@ -59,11 +61,12 @@ namespace Puppetry.Puppeteer.PuppetDriver
                 throw new Exception($"Keys {value} were not sent to GameObject with name: {name} and parent: {parent ?? "null"}");
         }
 
-        internal bool Exist(string name, string parent = null)
+        internal bool Exist(string root, string name, string parent = null)
         {
             var request = new Dictionary<string, string>();
             request.Add(Parameters.Method, Methods.Exist);
             request.Add(Parameters.Session, _sessionId);
+            request.Add(Parameters.Root, root);
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 
@@ -78,11 +81,12 @@ namespace Puppetry.Puppeteer.PuppetDriver
             return (bool.TryParse(response[Parameters.Result], out result) && result);
         }
 
-        internal bool Active(string name, string parent = null)
+        internal bool Active(string root, string name, string parent = null)
         {
             var request = new Dictionary<string, string>();
             request.Add(Parameters.Method, Methods.Active);
             request.Add(Parameters.Session, _sessionId);
+            request.Add(Parameters.Root, root);
             request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
 

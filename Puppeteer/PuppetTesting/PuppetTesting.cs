@@ -19,7 +19,7 @@ namespace PuppetTesting
         [Test]
         public void CheckAllMethods()
         {
-            var gameObject = new GameObject("Name", "Parent");
+            var gameObject = new GameObject("Main Camera", "Name", "Parent");
             //gameObject.Click();
             //gameObject.SendKeys("qwerty");
             var isExist = gameObject.Exists();
@@ -34,7 +34,7 @@ namespace PuppetTesting
         [Test]
         public void CheckAllMethods2()
         {
-            var gameObject = new GameObject("Name", "Parent");
+            var gameObject = new GameObject("Root", "Name", "Parent");
             gameObject.Click();
             gameObject.SendKeys("qwerty");
             var isExist = gameObject.Exists();

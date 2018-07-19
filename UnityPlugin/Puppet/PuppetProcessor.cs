@@ -24,9 +24,9 @@ namespace Puppetry.Puppet
             }
         }
 
-        private static GameObject FindGameObjectIncludingInactive(string name)
+        private static GameObject FindGameObjectIncludingInactive(string rootName, string name)
         {
-            return FindGameObjectIncludingInactive(GameObject.Find("Main Canvas"), name);
+            return FindGameObjectIncludingInactive(GameObject.Find(rootName), name);
         }
 
         private static GameObject FindGameObjectIncludingInactive(GameObject root, string name)
@@ -55,14 +55,14 @@ namespace Puppetry.Puppet
             return null;
         }
 
-        public static GameObject FindGameObject(string nameOrPath, string parentName)
+        public static GameObject FindGameObject(string rootName, string nameOrPath, string parentName)
         {
             if (string.IsNullOrEmpty(parentName))
             {
-                return FindGameObjectIncludingInactive(nameOrPath);
+                return FindGameObjectIncludingInactive(rootName, nameOrPath);
             }
 
-            var parentgameObject = FindGameObjectIncludingInactive(parentName);
+            var parentgameObject = FindGameObjectIncludingInactive(rootName, parentName);
             if (parentgameObject != null)
             {
                 if (nameOrPath.Contains("/"))

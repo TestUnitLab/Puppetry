@@ -75,7 +75,7 @@ namespace Puppetry.PuppetDriver
                         return AvailiableEditors.First(x => x.Session == editorIdentificator);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Thread.Sleep(500);
                 }

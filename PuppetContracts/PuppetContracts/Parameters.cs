@@ -11,5 +11,6 @@ namespace Puppetry.PuppetContracts
         public const string Value = "value";
         public const string Name = "name";
         public const string Parent = "parent";
+        public const string Root = "root";
     }
 }

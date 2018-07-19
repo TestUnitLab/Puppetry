@@ -34,10 +34,10 @@ namespace Puppetry.Puppet
                     response.result = "unity";
                     break;
                 case "exist":
-                    response.result = FindGameObject(request.name, request.parent, gameObject => true.ToString(), false.ToString());
+                    response.result = FindGameObject(request.root, request.name, request.parent, gameObject => true.ToString(), false.ToString());
                     break;
                 case "active":
-                    response.result = FindGameObject(request.name, request.parent, gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
+                    response.result = FindGameObject(request.root, request.name, request.parent, gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
                     break;
                 /*case "getcomponent":
                     responseString = FindGameObject(request.name, request.parent, gameObject =>
@@ -48,7 +48,7 @@ namespace Puppetry.Puppet
                     break;*/
 
                 case "click":
-                    response.result = FindGameObject(request.name, request.parent, go =>
+                    response.result = FindGameObject(request.root, request.name, request.parent, go =>
                     {
                         var pointer = new PointerEventData(EventSystem.current);
                         ExecuteEvents.Execute(go, pointer, ExecuteEvents.pointerClickHandler);
@@ -72,7 +72,7 @@ namespace Puppetry.Puppet
                 case "swipe":
                     swipeDirection *= 100;
 
-                    response.result = FindGameObject(request.name, request.parent, go =>
+                    response.result = FindGameObject(request.root, request.name, request.parent, go =>
                     {
                         var pointer = new PointerEventData(EventSystem.current);
 
@@ -95,7 +95,7 @@ namespace Puppetry.Puppet
 
 
                 case "sendkeys":
-                    response.result = FindGameObject(request.name, request.parent, go =>
+                    response.result = FindGameObject(request.root, request.name, request.parent, go =>
                     {
                         var input = go.GetComponent<InputField>();
                         if (input != null)
@@ -121,7 +121,6 @@ namespace Puppetry.Puppet
                         EditorApplication.isPlaying = false;
                     });
                     break;
-
                 case "ping":
                     response.result = "pong";
                     break;
@@ -164,7 +163,7 @@ namespace Puppetry.Puppet
             EditorApplication.isPlaying = true;
         }
 
-        private static string FindGameObject(string nameOrPath, string parent, Func<GameObject, string> onComplete, string notFoundMsg = null)
+        private static string FindGameObject(string rootName, string nameOrPath, string parent, Func<GameObject, string> onComplete, string notFoundMsg = null)
         {
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
@@ -174,7 +173,7 @@ namespace Puppetry.Puppet
             {
                 try
                 {
-                    var go = PuppetProcessor.FindGameObject(nameOrPath, parent);
+                    var go = PuppetProcessor.FindGameObject(rootName, nameOrPath, parent);
                     if (go != null)
                     {
                         response = onComplete(go);
@@ -257,7 +256,7 @@ namespace Puppetry.Puppet
         private static void SaveSession(string session)
         {
             var bf = new BinaryFormatter();
-            var file = File.Create("D:/Tmp" + "/session.data");
+            var file = File.Create(Directory.GetCurrentDirectory() + "/session.data");
 
             var sessionData = new SessionInfo { Session = session };
             bf.Serialize(file, sessionData);
@@ -267,7 +266,7 @@ namespace Puppetry.Puppet
         private static string GetSession()
         {
             string session = null;
-            if (File.Exists("D:/Tmp" + "/session.data")) //Application.persistentDataPath
+            if (File.Exists(Directory.GetCurrentDirectory() + "/session.data"))
             {
                 var bf = new BinaryFormatter();
                 var file = File.Open("D:/Tmp" + "/session.data", FileMode.Open);
@@ -277,6 +276,11 @@ namespace Puppetry.Puppet
             }
 
             return session;
+        }
+
+        private static void DeleteSession()
+        {
+            File.Delete(Directory.GetCurrentDirectory() + "/session.data");
         }
     }
 }
