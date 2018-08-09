@@ -166,7 +166,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             ValidateResponseStructure(response);
 
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"Session was not Killed");
+                throw new Exception("Session was not Killed");
         }
 
         private void StartSession()

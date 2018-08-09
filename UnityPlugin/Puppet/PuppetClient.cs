@@ -18,15 +18,17 @@ namespace Puppetry.Puppet
 
             Debug.Log("PuppetClientLoader is called");
 
-            EditorApplication.update += StartPuppetClient;
-
             EditorApplication.playModeStateChanged += InstantiatePuppetProcessor;
+            
+            EditorApplication.update += StartPuppetClient;
+            
+            //EditorApplication.playModeStateChanged += RestrictReloadAssemblies;
         }
 
         static void StartPuppetClient()
         {
             EditorApplication.update -= StartPuppetClient;
-
+            
             //EditorApplication.LockReloadAssemblies();
             PuppetClient.Instance.StartClient();
         }
@@ -39,6 +41,25 @@ namespace Puppetry.Puppet
             {
                 var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<PuppetProcessor>();
                 UnityEngine.Object.DontDestroyOnLoad(puppetProcessor);
+            }
+        }
+
+        static void RestrictReloadAssemblies(PlayModeStateChange stateChange)
+        {
+            switch (stateChange) 
+            {
+                case PlayModeStateChange.EnteredPlayMode: 
+                {
+                    EditorApplication.LockReloadAssemblies();
+                    Debug.Log ("Assembly Reload locked as entering play mode");
+                    break;
+                }
+                case PlayModeStateChange.ExitingPlayMode: 
+                {
+                    Debug.Log ("Assembly Reload unlocked as exiting play mode");
+                    EditorApplication.UnlockReloadAssemblies();
+                    break;
+                }
             }
         }
     }
@@ -122,20 +143,17 @@ namespace Puppetry.Puppet
         private static string ReadData(TcpClient client)
         {
             string retVal;
-            byte[] data = new byte[1024];
 
             NetworkStream stream = client.GetStream();
 
             byte[] myReadBuffer = new byte[1024];
             var myCompleteMessage = new StringBuilder();
-            int numberOfBytesRead = 0;
 
             do
             {
-                numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                var numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
 
                 myCompleteMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
-
             }
             while (stream.DataAvailable);
 

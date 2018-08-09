@@ -34,10 +34,12 @@ namespace Puppetry.Puppet
                     response.result = "unity";
                     break;
                 case "exist":
-                    response.result = FindGameObject(request.root, request.name, request.parent, gameObject => true.ToString(), false.ToString());
+                    response.result = FindGameObject(request.root, request.name, request.parent,
+                        gameObject => true.ToString(), false.ToString());
                     break;
                 case "active":
-                    response.result = FindGameObject(request.root, request.name, request.parent, gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
+                    response.result = FindGameObject(request.root, request.name, request.parent,
+                        gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
                     break;
                 /*case "getcomponent":
                     responseString = FindGameObject(request.name, request.parent, gameObject =>
@@ -76,7 +78,7 @@ namespace Puppetry.Puppet
                     {
                         var pointer = new PointerEventData(EventSystem.current);
 
-                        var rt = (RectTransform)go.transform;
+                        var rt = (RectTransform) go.transform;
 
                         Vector3[] corners = new Vector3[4];
                         rt.GetWorldCorners(corners);
@@ -85,9 +87,11 @@ namespace Puppetry.Puppet
                         var topRight = Camera.main.WorldToScreenPoint(corners[2]);
                         var bottomRight = Camera.main.WorldToScreenPoint(corners[3]);
 
-                        var center = new Vector2(topLeft.x + (bottomRight.x - topLeft.x) / 2, bottomRight.y + (topLeft.y - bottomRight.y) / 2);
+                        var center = new Vector2(topLeft.x + (bottomRight.x - topLeft.x) / 2,
+                            bottomRight.y + (topLeft.y - bottomRight.y) / 2);
 
-                        go.GetComponent<MonoBehaviour>().StartCoroutine(DragCoroutine(go, pointer, center, swipeDirection));
+                        go.GetComponent<MonoBehaviour>()
+                            .StartCoroutine(DragCoroutine(go, pointer, center, swipeDirection));
 
                         return "success";
                     });
@@ -118,8 +122,10 @@ namespace Puppetry.Puppet
                 case "stopplaymode":
                     response.result = InvokeOnMainThreadAndWait(() =>
                     {
+                        EditorApplication.UnlockReloadAssemblies();
                         EditorApplication.isPlaying = false;
                     });
+
                     break;
                 case "ping":
                     response.result = "pong";
@@ -159,7 +165,8 @@ namespace Puppetry.Puppet
         private static void StartPlayMode()
         {
             EditorApplication.update -= StartPlayMode;
-
+            
+            EditorApplication.LockReloadAssemblies();
             EditorApplication.isPlaying = true;
         }
 
@@ -248,9 +255,23 @@ namespace Puppetry.Puppet
             Debug.Log(DateTime.UtcNow.ToString("HH:mm:ss.fff") + " [Puppet] " + e);
         }
 
-        private static void TakeScreenshot(string pathName)
-        {
-            ScreenCapture.CaptureScreenshot(pathName);
+        private static void TakeScreenshot(string pathName) {
+            var cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+            var renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
+            cam.targetTexture = renderTexture;
+            cam.Render();
+            cam.targetTexture = null;
+
+            RenderTexture.active = renderTexture;
+            Texture2D screenshot = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+            screenshot.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+            screenshot.Apply();
+            RenderTexture.active = null;
+
+            //Encode screenshot to PNG
+            byte[] bytes = screenshot.EncodeToPNG();
+            UnityEngine.Object.Destroy(screenshot);
+            File.WriteAllBytes(pathName, bytes);
         }
 
         private static void SaveSession(string session)
@@ -269,7 +290,7 @@ namespace Puppetry.Puppet
             if (File.Exists(Directory.GetCurrentDirectory() + "/session.data"))
             {
                 var bf = new BinaryFormatter();
-                var file = File.Open("D:/Tmp" + "/session.data", FileMode.Open);
+                var file = File.Open(Directory.GetCurrentDirectory()+ "/session.data", FileMode.Open);
 
                 session = ((SessionInfo)bf.Deserialize(file)).Session;
                 file.Close();

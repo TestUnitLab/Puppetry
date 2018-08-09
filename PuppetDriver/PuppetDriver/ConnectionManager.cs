@@ -66,9 +66,7 @@ namespace Puppetry.PuppetDriver
                     if (AvailableEditorsCount <= 0)
                         throw new Exception("Error: Available Editors is 0");
 
-                    string editorIdentificator;
-
-                    editorIdentificator = MappingEditorsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
+                    var editorIdentificator = MappingEditorsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
 
                     lock (AvailiableEditors)
                     {
@@ -107,7 +105,7 @@ namespace Puppetry.PuppetDriver
                     }
                 }
 
-                if (MappingEditorsToSessions.Count ==  AvailableEditorsCount)
+                if (MappingEditorsToSessions.Count == AvailableEditorsCount)
                     return "Error: All editors are busy at the moment";
             }
 

@@ -23,6 +23,7 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse SendKeys(string value, string root, string name, string parent)
         {
+            _request.Clear();
             _request.Add(Parameters.Method, Methods.SendKeys);
             _request.Add(Parameters.Value, value);
             _request.Add(Parameters.Root, root);
@@ -30,7 +31,6 @@ namespace Puppetry.PuppetDriver.Editor
             _request.Add(Parameters.Parent, parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            _request.Clear();
             EditorResponse result;
             if (_response == null)
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
@@ -44,13 +44,13 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse Click(string root, string name, string parent)
         {
+            _request.Clear();
             _request.Add(Parameters.Method, Methods.Click);
             _request.Add(Parameters.Root, root);
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            _request.Clear();
             EditorResponse result;
             if (_response == null)
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
@@ -64,13 +64,13 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse Exists(string root, string name, string parent)
         {
+            _request.Clear();
             _request.Add(Parameters.Method, Methods.Exist);
             _request.Add(Parameters.Root, root);
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            _request.Clear();
             EditorResponse result;
             if (_response == null)
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
@@ -84,13 +84,13 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse Active(string root, string name, string parent)
         {
+            _request.Clear();
             _request.Add(Parameters.Method, Methods.Active);
             _request.Add(Parameters.Root, root);
             _request.Add(Parameters.Name, name);
             _request.Add(Parameters.Parent, parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            _request.Clear();
             EditorResponse result;
             if (_response == null)
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
@@ -104,25 +104,14 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse StartPlayMode()
         {
+            _request.Clear();
             _request.Add(Parameters.Method, Methods.StartPlayMode);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            Thread.Sleep(3000);
-            bool reconnect = false;
-            for(var i = 0; i < 30; i++)
-            {
-                Thread.Sleep(300);
-                if (SocketHelper.IsSocketConnected(Socket))
-                {
-                    reconnect = true;
-                    break;
-                }
-            }
-            _request.Clear();
+            
+
             EditorResponse result;
-            if (!reconnect)
-                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "PuppetDriver was not reconnect after PlayMode start" };
-            else if (_response == null)
+            if (_response == null)
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.StartPlayMode)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
@@ -134,10 +123,10 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse StopPlayMode()
         {
+            _request.Clear();
             _request.Add(Parameters.Method, Methods.StopPlayMode);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            _request.Clear();
             EditorResponse result;
             if (_response == null)
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
@@ -151,11 +140,11 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse MakeScreenshot(string fullPath)
         {
+            _request.Clear();
             _request.Add(Parameters.Method, Methods.TakeScreenshot);
             _request.Add(Parameters.Value, fullPath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            _request.Clear();
             EditorResponse result;
             if (_response == null)
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
