@@ -1,19 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Puppetry.Puppeteer</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="RestSharp" Version="106.3.1" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="PuppetContracts">
       <HintPath>..\..\PuppetContracts\PuppetContracts\bin\$(Configuration)\netcoreapp2.0\PuppetContracts.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

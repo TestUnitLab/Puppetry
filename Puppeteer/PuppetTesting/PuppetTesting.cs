@@ -22,12 +22,12 @@ namespace PuppetTesting
             var gameObject = new GameObject("Main Camera", "Name", "Parent");
             //gameObject.Click();
             //gameObject.SendKeys("qwerty");
-            var isExist = gameObject.Exists();
+            var isExist = gameObject.Exists;
             //Assert.IsTrue(isExist);
-            var isActive = gameObject.IsActive();
+            var isActive = gameObject.IsActiveInHierarchy;
             //Assert.IsTrue(isActive);
             gameObject.ShouldNot(Be.Present);
-            gameObject.ShouldNot(Be.Active);
+            gameObject.ShouldNot(Be.ActiveInHierarchy);
             //Editor.MakeScreenshot(TestContext.CurrentContext.Test.FullName, "FailedTests");
          }
 
@@ -37,12 +37,12 @@ namespace PuppetTesting
             var gameObject = new GameObject("Root", "Name", "Parent");
             gameObject.Click();
             gameObject.SendKeys("qwerty");
-            var isExist = gameObject.Exists();
+            var isExist = gameObject.Exists;
             Assert.IsTrue(isExist);
-            var isActive = gameObject.IsActive();
+            var isActive = gameObject.IsActiveInHierarchy;
             Assert.IsTrue(isActive);
             gameObject.Should(Be.Present);
-            gameObject.Should(Be.Active);
+            gameObject.Should(Be.ActiveInHierarchy);
             Editor.MakeScreenshot(TestContext.CurrentContext.Test.FullName, "FailedTests");
         }
 
@@ -50,26 +50,26 @@ namespace PuppetTesting
         public void CheckGPLogin()
         {
             var LoginGamePointButton = new GameObject("Main Canvas", "gamepointButton");
-            LoginGamePointButton.Should(Be.Active);
+            LoginGamePointButton.Should(Be.ActiveInHierarchy);
             LoginGamePointButton.Click();
             
             var UserNameInput = new GameObject("Main Canvas", "loginTextFiled");
-            UserNameInput.Should(Be.Active);
+            UserNameInput.Should(Be.ActiveInHierarchy);
             UserNameInput.Click();
             UserNameInput.SendKeys("Yevhen");
             
             var PasswordInput = new GameObject("Main Canvas", "passTextFiled");
-            PasswordInput.Should(Be.Active);
+            PasswordInput.Should(Be.ActiveInHierarchy);
             PasswordInput.Click();
             PasswordInput.SendKeys("defaultPassword");
             
             var LoginButton = new GameObject("Main Canvas", "button_login");
-            LoginButton.Should(Be.Active);
+            LoginButton.Should(Be.ActiveInHierarchy);
             LoginButton.Click();
             
             var ExperienceBar = new GameObject("Main Canvas", "fillarea_playerxp", "TopBar(Clone)");
             ExperienceBar.Should(Be.Present);
-            ExperienceBar.Should(Be.Active);
+            ExperienceBar.Should(Be.ActiveInHierarchy);
             
         }
         
@@ -77,26 +77,26 @@ namespace PuppetTesting
         public void CheckGPLogin2()
         {
             var LoginGamePointButton = new GameObject("Main Canvas", "gamepointButton");
-            LoginGamePointButton.Should(Be.Active);
+            LoginGamePointButton.Should(Be.ActiveInHierarchy);
             LoginGamePointButton.Click();
             
             var UserNameInput = new GameObject("Main Canvas", "loginTextFiled");
-            UserNameInput.Should(Be.Active);
+            UserNameInput.Should(Be.ActiveInHierarchy);
             UserNameInput.Click();
             UserNameInput.SendKeys("Yevhen");
             
             var PasswordInput = new GameObject("Main Canvas", "passTextFiled");
-            PasswordInput.Should(Be.Active);
+            PasswordInput.Should(Be.ActiveInHierarchy);
             PasswordInput.Click();
             PasswordInput.SendKeys("defaultPassword");
             
             var LoginButton = new GameObject("Main Canvas", "button_login");
-            LoginButton.Should(Be.Active);
+            LoginButton.Should(Be.ActiveInHierarchy);
             LoginButton.Click();
             
             var ExperienceBar = new GameObject("Main Canvas", "fillarea_playerxp", "TopBar(Clone)");
             ExperienceBar.Should(Be.Present);
-            ExperienceBar.Should(Be.Active);
+            ExperienceBar.Should(Be.ActiveInHierarchy);
             
         }
 

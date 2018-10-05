@@ -13,6 +13,10 @@ namespace Puppetry.PuppetContracts
         public const string StartPlayMode = "startplaymode";
         public const string StopPlayMode = "stopplaymode";
         public const string TakeScreenshot = "takescreenshot";
+        public const string Rendering = "isrendering";
+        public const string GetComponent = "getcomponent";
+        public const string DeletePlayerPref = "deletepref";
+        public const string Count = "count";
         public const string Ping = "ping";
         public const string Pong = "pong";
     }

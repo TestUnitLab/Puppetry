@@ -10,9 +10,9 @@ using UnityEngine;
 namespace Puppetry.Puppet
 {
     [InitializeOnLoad]
-    public class PuppetClientLoader
+    public class PuppetListenerLoader
     {
-        static PuppetClientLoader()
+        static PuppetListenerLoader()
         {
             if (EditorApplication.isCompiling || EditorApplication.isUpdating) return;
 
@@ -20,17 +20,17 @@ namespace Puppetry.Puppet
 
             EditorApplication.playModeStateChanged += InstantiatePuppetProcessor;
             
-            EditorApplication.update += StartPuppetClient;
+            EditorApplication.update += StartDriverClient;
             
             //EditorApplication.playModeStateChanged += RestrictReloadAssemblies;
         }
 
-        static void StartPuppetClient()
+        static void StartDriverClient()
         {
-            EditorApplication.update -= StartPuppetClient;
+            EditorApplication.update -= StartDriverClient;
             
             //EditorApplication.LockReloadAssemblies();
-            PuppetClient.Instance.StartClient();
+            DriverClient.Instance.StartClient();
         }
 
         static void InstantiatePuppetProcessor(PlayModeStateChange state)
@@ -39,7 +39,7 @@ namespace Puppetry.Puppet
 
             if (state == PlayModeStateChange.EnteredPlayMode)
             {
-                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<PuppetProcessor>();
+                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<DriverProcessor>();
                 UnityEngine.Object.DontDestroyOnLoad(puppetProcessor);
             }
         }
@@ -64,11 +64,11 @@ namespace Puppetry.Puppet
         }
     }
     
-    public class PuppetClient : IDisposable
+    public class DriverClient : IDisposable
     {
-        private PuppetClient()
+        private DriverClient()
         {
-            Debug.Log("PuppetClient is intantiated");
+            Debug.Log("DriverClient is intantiated");
         }
 
         private const string EndOfMessage = "<EOF>";
@@ -76,16 +76,16 @@ namespace Puppetry.Puppet
         private Thread _thread;
         private TcpClient _client;
 
-        private static PuppetClient _instance;
+        private static DriverClient _instance;
 
         public static bool IsRun = false;
         public static bool WorkDone = false;
 
-        public static PuppetClient Instance
+        public static DriverClient Instance
         {
             get
             {
-                return _instance ?? (_instance = new PuppetClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
+                return _instance ?? (_instance = new DriverClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
             }
         }
         
@@ -99,7 +99,7 @@ namespace Puppetry.Puppet
 
         public void ProcessWork()
         {
-            PuppetDriverResponse response = new PuppetDriverResponse();
+            DriverResponse response = new DriverResponse();
 
             // Connect to a remote device.  
             try
@@ -115,8 +115,8 @@ namespace Puppetry.Puppet
                         if (_client.Available > 0)
                         {
                             var message = ReadData(_client).Replace(EndOfMessage, string.Empty);
-                            var request = JsonUtility.FromJson<PuppetDriverRequest>(message);
-                            response = PuppetRequestHandler.HandlePuppetDriverRequest(request);
+                            var request = JsonUtility.FromJson<DriverRequest>(message);
+                            response = PuppetHandler.HandleDriverRequest(request);
                             _client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
                             response.Clear();
                         }

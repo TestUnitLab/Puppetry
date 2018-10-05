@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
@@ -10,11 +11,11 @@ using UnityEngine.UI;
 
 namespace Puppetry.Puppet
 {
-    public class PuppetRequestHandler
+    public class PuppetHandler
     {
-        internal static PuppetDriverResponse HandlePuppetDriverRequest(PuppetDriverRequest request)
+        internal static DriverResponse HandleDriverRequest(DriverRequest request)
         {
-            var response = new PuppetDriverResponse {method = request.method };
+            var response = new DriverResponse {method = request.method };
             var swipeDirection = Vector2.zero;
             var session = GetSession();
 
@@ -34,27 +35,50 @@ namespace Puppetry.Puppet
                     response.result = "unity";
                     break;
                 case "exist":
-                    response.result = FindGameObject(request.root, request.name, request.parent,
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
                         gameObject => true.ToString(), false.ToString());
                     break;
                 case "active":
-                    response.result = FindGameObject(request.root, request.name, request.parent,
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
                         gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
                     break;
-                /*case "getcomponent":
-                    responseString = FindGameObject(request.name, request.parent, gameObject =>
+                case "getcomponent":
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {
-                        var component = gameObject.GetComponent(data["component"]);
+                        var component = gameObject.GetComponent(request.value);
                         return component != null ? EditorJsonUtility.ToJson(component) : "null";
                     });
-                    break;*/
+                    break;
 
                 case "click":
-                    response.result = FindGameObject(request.root, request.name, request.parent, go =>
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
                     {
                         var pointer = new PointerEventData(EventSystem.current);
                         ExecuteEvents.Execute(go, pointer, ExecuteEvents.pointerClickHandler);
                         return "success";
+                    });
+                    break;
+                case "isrendering":
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent,
+                        request.upath,
+                        go =>
+                        {
+                            var renderer = go.GetComponent<Renderer>();
+                            if (renderer != null)
+                                return renderer.isVisible.ToString();
+
+                            return false.ToString();
+
+                        });
+                    break;
+                case "count":
+                    response.result = ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, goList => goList.Count.ToString());
+                    break;
+                case "deletepref":
+                    response.result = InvokeOnMainThreadAndWait(() =>
+                    {
+                        PlayerPrefs.DeleteKey(request.value);
+                        PlayerPrefs.Save();
                     });
                     break;
 
@@ -74,7 +98,7 @@ namespace Puppetry.Puppet
                 case "swipe":
                     swipeDirection *= 100;
 
-                    response.result = FindGameObject(request.root, request.name, request.parent, go =>
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
                     {
                         var pointer = new PointerEventData(EventSystem.current);
 
@@ -99,7 +123,7 @@ namespace Puppetry.Puppet
 
 
                 case "sendkeys":
-                    response.result = FindGameObject(request.root, request.name, request.parent, go =>
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
                     {
                         var input = go.GetComponent<InputField>();
                         if (input != null)
@@ -132,7 +156,7 @@ namespace Puppetry.Puppet
                     break;
                 case "takescreenshot":
                     var path = request.value;
-                    PuppetProcessor.QueueOnMainThread(() => { TakeScreenshot(path); });
+                    DriverProcessor.QueueOnMainThread(() => { TakeScreenshot(path); });
                     response.result = "success";
                     break;
 
@@ -170,17 +194,22 @@ namespace Puppetry.Puppet
             EditorApplication.isPlaying = true;
         }
 
-        private static string FindGameObject(string rootName, string nameOrPath, string parent, Func<GameObject, string> onComplete, string notFoundMsg = null)
+        private static string ExecuteGameObjectEmulation(string rootName, string nameOrPath, string parent, string upath, Func<GameObject, string> onComplete, string notFoundMsg = null)
         {
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
             string response = "";
-            PuppetProcessor.QueueOnMainThread(() =>
+            DriverProcessor.QueueOnMainThread(() =>
             {
                 try
                 {
-                    var go = PuppetProcessor.FindGameObject(rootName, nameOrPath, parent);
+                    GameObject go;
+                    if (!string.IsNullOrEmpty(upath))
+                        go = FindGameObjectHelper.FindGameObjectByUPath(upath);
+                    else
+                        go = FindGameObjectHelper.FindGameObject(rootName, nameOrPath, parent);
+                    
                     if (go != null)
                     {
                         response = onComplete(go);
@@ -214,6 +243,41 @@ namespace Puppetry.Puppet
 
             return response;
         }
+        
+        private static string ExecuteGameObjectsEmulation(string nameOrPath, string parent, string root, string upath, Func<List<GameObject>, string> onComplete)
+        {
+            var autoEvent = new AutoResetEvent(false);
+
+            var response = "";
+            UnityDriver.QueueOnMainThread(() => {
+                try
+                {
+                    List<GameObject> listOfGOs;
+                    if (!string.IsNullOrEmpty(upath))
+                    {
+                        listOfGOs = FindGameObjectHelper.FindGameObjectsByUPath(upath);
+                    }
+                    else
+                    {
+                        listOfGOs = FindGameObjectHelper.GetGameObjects(nameOrPath, root, parent);
+                    }
+                    
+                    response = onComplete(listOfGOs);
+
+                } catch (Exception e) {
+                    Log(e);
+                    response = e.Message;
+                } finally {
+                    // set the event to "unlock" the thread
+                    autoEvent.Set();
+                }
+            });
+
+            // wait for the end of the 'action' executed in the main thread
+            autoEvent.WaitOne();
+
+            return response;
+        }
 
         private static string InvokeOnMainThreadAndWait(Action action)
         {
@@ -221,7 +285,7 @@ namespace Puppetry.Puppet
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
             string response = "success";
-            PuppetProcessor.QueueOnMainThread(() =>
+            DriverProcessor.QueueOnMainThread(() =>
             {
                 try
                 {
@@ -255,7 +319,8 @@ namespace Puppetry.Puppet
             Debug.Log(DateTime.UtcNow.ToString("HH:mm:ss.fff") + " [Puppet] " + e);
         }
 
-        private static void TakeScreenshot(string pathName) {
+        private static void TakeScreenshot(string pathName) 
+        {
             var cam = GameObject.Find("Main Camera").GetComponent<Camera>();
             var renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
             cam.targetTexture = renderTexture;

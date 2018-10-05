@@ -1,27 +1,26 @@
 ﻿namespace Puppetry.Puppeteer.Conditions
 {
-    internal class Present : Condition
+    internal class Rendering : Condition
     {
         public override bool Invoke<T>(T gameObject)
         {
             _curentGameObject = gameObject;
-
-            return gameObject.Exists;
+            return gameObject.IsRendering;
         }
 
         protected override string DescribeExpected()
         {
-            return $"Present {true}";
+            return $"Is Rendering {true}";
         }
 
         protected override string DescribeActual()
         {
-            return $"Present {false}";
+            return $"Is Rendering {false}";
         }
     }
 
     public static partial class Be
     {
-        public static Condition Present => new Present();
+        public static Condition Rendered => new Rendering();
     }
 }

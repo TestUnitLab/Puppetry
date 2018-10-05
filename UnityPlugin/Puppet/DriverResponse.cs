@@ -3,7 +3,7 @@
 namespace Puppetry.Puppet
 {
     [Serializable]
-    public class PuppetDriverResponse
+    public class DriverResponse
     {
         public string session;
         public string method;

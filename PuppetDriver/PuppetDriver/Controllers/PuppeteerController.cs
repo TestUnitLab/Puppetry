@@ -23,8 +23,10 @@ namespace PuppetDriver.Controllers
             string gameObjectName = null;
             string gameObjectRootName = null;
             string gameObjectParentName = null;
+            string upath = null;
+            string value = null;
 
-            Dictionary<string, string> request = new Dictionary<string, string>();
+            var request = new Dictionary<string, string>();
             var body = new StreamReader(context.Request.Body).ReadToEnd();
             try
             {
@@ -35,8 +37,7 @@ namespace PuppetDriver.Controllers
                 Console.WriteLine(e);
             }
 
-            var response = new Dictionary<string, string>();
-            response.Add(Parameters.ErrorMessage, string.Empty);
+            var response = new Dictionary<string, string> {{Parameters.ErrorMessage, string.Empty}};
 
             if (!request.ContainsKey(Parameters.Method))
             {
@@ -45,6 +46,11 @@ namespace PuppetDriver.Controllers
                 response.Add(Parameters.Result, ActionResults.Fail);
                 return context.Response.WriteAsync(JsonConvert.SerializeObject(response, Formatting.Indented));
             }
+            if (request.ContainsKey(Parameters.Name)) gameObjectName = request[Parameters.Name];
+            if (request.ContainsKey(Parameters.Root)) gameObjectRootName = request[Parameters.Root];
+            if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
+            if (request.ContainsKey(Parameters.UPath)) upath = request[Parameters.UPath];
+            if (request.ContainsKey(Parameters.Value)) value = request[Parameters.Value];
 
             switch (request[Parameters.Method].ToLowerInvariant())
             {
@@ -66,11 +72,7 @@ namespace PuppetDriver.Controllers
                 case Methods.Click:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
-                    gameObjectName = request[Parameters.Name];
-                    gameObjectRootName = request[Parameters.Root];
-                    if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
-
-                    result = handler.Click(gameObjectRootName, gameObjectName, gameObjectParentName);
+                    result = handler.Click(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -79,12 +81,8 @@ namespace PuppetDriver.Controllers
                 case Methods.SendKeys:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
-                    var value = request[Parameters.Value];
-                    gameObjectName = request[Parameters.Name];
-                    gameObjectRootName = request[Parameters.Root];
-                    if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    result = handler.SendKeys(value, gameObjectRootName, gameObjectName, gameObjectParentName);
+                    result = handler.SendKeys(value, gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -93,11 +91,8 @@ namespace PuppetDriver.Controllers
                 case Methods.Exist:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
-                    gameObjectName = request[Parameters.Name];
-                    gameObjectRootName = request[Parameters.Root];
-                    if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    result = handler.Exists(gameObjectRootName, gameObjectName, gameObjectParentName);
+                    result = handler.Exists(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -106,11 +101,38 @@ namespace PuppetDriver.Controllers
                 case Methods.Active:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
-                    gameObjectName = request[Parameters.Name];
-                    gameObjectRootName = request[Parameters.Root];
-                    if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
 
-                    result = handler.Active(gameObjectRootName, gameObjectName, gameObjectParentName);
+                    result = handler.Active(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                
+                case Methods.Rendering:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+
+                    result = handler.Rendering(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                
+                case Methods.Count:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+
+                    result = handler.Count(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                
+                case Methods.GetComponent:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+
+                    result = handler.GetComponent(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -149,12 +171,20 @@ namespace PuppetDriver.Controllers
 
                 case Methods.KillSession:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
                     ConnectionManager.ReleaseEditorHandler(sessionId);
                     response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
                     response.Add(Parameters.Result, ActionResults.Success);
                     break;
-
+                
+                case Methods.DeletePlayerPref:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.DeletePlayerPref(value);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                
                 default:
                     response.Add(Parameters.StatusCode, ErrorCodes.MethodNotSupported.ToString());
                     response[Parameters.ErrorMessage] = $"Method: '{request["method"]}' is not supported";

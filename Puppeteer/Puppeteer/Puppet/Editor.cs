@@ -21,6 +21,11 @@ namespace Puppetry.Puppeteer.Puppet
 
             Driver.Instance.TakeScreenshot(path);
         }
+        
+        public static void DeletePlayerPref(string key)
+        {
+            Driver.Instance.DeletePlayerPref(key);
+        }
 
         public static void KillSession()
         {

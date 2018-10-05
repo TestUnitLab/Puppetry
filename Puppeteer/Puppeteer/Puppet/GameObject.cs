@@ -9,6 +9,9 @@ namespace Puppetry.Puppeteer.Puppet
         internal string Name;
         internal string Root;
         internal string Parent;
+        internal string UPath;
+
+        public GameObject() { }
 
         public GameObject(string root, string name)
         {
@@ -23,24 +26,51 @@ namespace Puppetry.Puppeteer.Puppet
             Parent = parent;
         }
 
+        public GameObject FindByUPath(string upath)
+        {
+            UPath = upath;
+
+            return this;
+        }
+        
+        public GameObject FindByName(string root, string name)
+        {
+            Root = root;
+            Name = name;
+
+            return this;
+        }
+        
+        public GameObject FindByNameAndParent(string root, string name, string parent)
+        {
+            Root = root;
+            Name = name;
+            Parent = parent;
+
+            return this;
+        }
+        
+        public bool Exists => Driver.Instance.Exist(Root, Name, Parent, UPath);
+        
+        public bool IsActiveInHierarchy => Driver.Instance.Active(Root, Name, Parent, UPath);
+        
+        public bool IsRendering => Driver.Instance.IsRendering(Root, Name, Parent, UPath);
+        
+        public int Count => Driver.Instance.Count(Root, Name, Parent, UPath);
+
         public void Click()
         {
-            Driver.Instance.Click(Root, Name, Parent);
+            Driver.Instance.Click(Root, Name, Parent, UPath);
         }
 
         public void SendKeys(string value)
         {
-            Driver.Instance.SendKeys(value, Root, Name, Parent);
+            Driver.Instance.SendKeys(value, Root, Name, Parent, UPath);
         }
-
-        public bool Exists()
+        
+        public string GetComponent(string component)
         {
-            return Driver.Instance.Exist(Root, Name, Parent);
-        }
-
-        public bool IsActive()
-        {
-            return Driver.Instance.Active(Root, Name, Parent);
+            return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component);
         }
 
         public void Should(Condition condition)

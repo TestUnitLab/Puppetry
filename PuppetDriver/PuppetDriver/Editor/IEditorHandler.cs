@@ -9,18 +9,26 @@ namespace Puppetry.PuppetDriver.Editor
 
         Socket Socket { get; set; }
 
-        EditorResponse Click(string root, string name, string parent);
+        EditorResponse Click(string root, string name, string parent, string upath);
 
-        EditorResponse SendKeys(string value, string root, string name, string parent);
+        EditorResponse SendKeys(string value, string root, string name, string parent, string upath);
 
-        EditorResponse Exists(string root, string name, string parent);
+        EditorResponse Exists(string root, string name, string parent, string upath);
 
-        EditorResponse Active(string root, string name, string parent);
+        EditorResponse Active(string root, string name, string parent, string upath);
+        
+        EditorResponse Rendering(string root, string name, string parent, string upath);
+        
+        EditorResponse Count(string root, string name, string parent, string upath);
+        
+        EditorResponse GetComponent(string root, string name, string parent, string upath, string component);
 
         EditorResponse StartPlayMode();
 
         EditorResponse StopPlayMode();
 
         EditorResponse MakeScreenshot(string fullPath);
+        
+        EditorResponse DeletePlayerPref(string key);
     }
 }

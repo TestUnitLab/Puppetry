@@ -21,14 +21,9 @@ namespace Puppetry.PuppetDriver.Editor
             _request = new Dictionary<string, string>();
         }
 
-        public EditorResponse SendKeys(string value, string root, string name, string parent)
+        public EditorResponse SendKeys(string value, string root, string name, string parent, string upath)
         {
-            _request.Clear();
-            _request.Add(Parameters.Method, Methods.SendKeys);
-            _request.Add(Parameters.Value, value);
-            _request.Add(Parameters.Root, root);
-            _request.Add(Parameters.Name, name);
-            _request.Add(Parameters.Parent, parent);
+            PrepareRequest(Methods.SendKeys, upath: upath, root: root, name: name, parent: parent, value: value);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -42,13 +37,9 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }       
 
-        public EditorResponse Click(string root, string name, string parent)
+        public EditorResponse Click(string root, string name, string parent, string upath)
         {
-            _request.Clear();
-            _request.Add(Parameters.Method, Methods.Click);
-            _request.Add(Parameters.Root, root);
-            _request.Add(Parameters.Name, name);
-            _request.Add(Parameters.Parent, parent);
+            PrepareRequest(Methods.Click, upath: upath, root: root, name: name, parent: parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -62,13 +53,57 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
 
-        public EditorResponse Exists(string root, string name, string parent)
+        public EditorResponse Exists(string root, string name, string parent, string upath)
         {
-            _request.Clear();
-            _request.Add(Parameters.Method, Methods.Exist);
-            _request.Add(Parameters.Root, root);
-            _request.Add(Parameters.Name, name);
-            _request.Add(Parameters.Parent, parent);
+            PrepareRequest(Methods.Exist, upath: upath, root: root, name: name, parent: parent);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+        
+        public EditorResponse Rendering(string root, string name, string parent, string upath)
+        {
+            PrepareRequest(Methods.Rendering, upath: upath, root: root, name: name, parent: parent);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+        
+        public EditorResponse GetComponent(string root, string name, string parent, string upath, string component)
+        {
+            PrepareRequest(Methods.GetComponent, upath: upath, root: root, name: name, parent: parent, value: component);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+        
+        public EditorResponse Count(string root, string name, string parent, string upath)
+        {
+            PrepareRequest(Methods.Count, upath: upath, root: root, name: name, parent: parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -82,13 +117,9 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
 
-        public EditorResponse Active(string root, string name, string parent)
+        public EditorResponse Active(string root, string name, string parent, string upath)
         {
-            _request.Clear();
-            _request.Add(Parameters.Method, Methods.Active);
-            _request.Add(Parameters.Root, root);
-            _request.Add(Parameters.Name, name);
-            _request.Add(Parameters.Parent, parent);
+            PrepareRequest(Methods.Exist, upath: upath, root: root, name: name, parent: parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -104,8 +135,7 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse StartPlayMode()
         {
-            _request.Clear();
-            _request.Add(Parameters.Method, Methods.StartPlayMode);
+            PrepareRequest(Methods.StartPlayMode);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             
@@ -123,8 +153,7 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse StopPlayMode()
         {
-            _request.Clear();
-            _request.Add(Parameters.Method, Methods.StopPlayMode);
+            PrepareRequest(Methods.StopPlayMode);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -140,9 +169,7 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse MakeScreenshot(string fullPath)
         {
-            _request.Clear();
-            _request.Add(Parameters.Method, Methods.TakeScreenshot);
-            _request.Add(Parameters.Value, fullPath);
+            PrepareRequest(Methods.TakeScreenshot, value: fullPath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -154,6 +181,33 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
             return result;
+        }
+        
+        public EditorResponse DeletePlayerPref(string key)
+        {
+            PrepareRequest(Methods.DeletePlayerPref, value: key);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        private void PrepareRequest(string method, string upath = null, string root = null, string name = null, string parent = null, string value = null)
+        {
+            _request.Clear();
+            if (!string.IsNullOrEmpty(method)) _request.Add(Parameters.Method, method);
+            if (!string.IsNullOrEmpty(value)) _request.Add(Parameters.Value, value);
+            if (!string.IsNullOrEmpty(root)) _request.Add(Parameters.Root, root);
+            if (!string.IsNullOrEmpty(name)) _request.Add(Parameters.Name, name);
+            if (!string.IsNullOrEmpty(parent)) _request.Add(Parameters.Parent, parent);
+            if (!string.IsNullOrEmpty(upath)) _request.Add(Parameters.UPath, upath);
         }
     }
 }

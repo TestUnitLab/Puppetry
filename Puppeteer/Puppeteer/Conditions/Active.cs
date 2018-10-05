@@ -5,7 +5,7 @@
         public override bool Invoke<T>(T gameObject)
         {
             _curentGameObject = gameObject;
-            return gameObject.IsActive();
+            return gameObject.IsActiveInHierarchy;
         }
 
         protected override string DescribeExpected()
@@ -21,6 +21,6 @@
 
     public static partial class Be
     {
-        public static Condition Active => new Active();
+        public static Condition ActiveInHierarchy => new Active();
     }
 }
