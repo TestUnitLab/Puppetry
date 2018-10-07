@@ -249,7 +249,7 @@ namespace Puppetry.Puppet
             var autoEvent = new AutoResetEvent(false);
 
             var response = "";
-            UnityDriver.QueueOnMainThread(() => {
+            DriverProcessor.QueueOnMainThread(() => {
                 try
                 {
                     List<GameObject> listOfGOs;
