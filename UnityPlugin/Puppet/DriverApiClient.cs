@@ -10,88 +10,61 @@ using UnityEngine;
 namespace Puppetry.Puppet
 {
     [InitializeOnLoad]
-    public class PuppetListenerLoader
+    public class DriverApiClientLoader
     {
-        static PuppetListenerLoader()
+        static DriverApiClientLoader()
         {
             if (EditorApplication.isCompiling || EditorApplication.isUpdating) return;
 
-            Debug.Log("PuppetClientLoader is called");
+            Debug.Log("DriverApiClient is starting...");
 
             EditorApplication.playModeStateChanged += InstantiatePuppetProcessor;
             
-            EditorApplication.update += StartDriverClient;
+            EditorApplication.update += StartDriverApiClient;
             
             //EditorApplication.playModeStateChanged += RestrictReloadAssemblies;
         }
 
-        static void StartDriverClient()
+        static void StartDriverApiClient()
         {
-            EditorApplication.update -= StartDriverClient;
+            EditorApplication.update -= StartDriverApiClient;
             
             //EditorApplication.LockReloadAssemblies();
-            DriverClient.Instance.StartClient();
+            DriverApiClient.Instance.StartClient();
         }
 
         static void InstantiatePuppetProcessor(PlayModeStateChange state)
         {
-            Debug.Log("InstantiatePuppetProcessor is processed");
-
             if (state == PlayModeStateChange.EnteredPlayMode)
             {
-                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<DriverProcessor>();
+                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<MainThreadHelper>();
                 UnityEngine.Object.DontDestroyOnLoad(puppetProcessor);
-            }
-        }
-
-        static void RestrictReloadAssemblies(PlayModeStateChange stateChange)
-        {
-            switch (stateChange) 
-            {
-                case PlayModeStateChange.EnteredPlayMode: 
-                {
-                    EditorApplication.LockReloadAssemblies();
-                    Debug.Log ("Assembly Reload locked as entering play mode");
-                    break;
-                }
-                case PlayModeStateChange.ExitingPlayMode: 
-                {
-                    Debug.Log ("Assembly Reload unlocked as exiting play mode");
-                    EditorApplication.UnlockReloadAssemblies();
-                    break;
-                }
             }
         }
     }
     
-    public class DriverClient : IDisposable
+    public class DriverApiClient : IDisposable
     {
-        private DriverClient()
-        {
-            Debug.Log("DriverClient is intantiated");
-        }
-
         private const string EndOfMessage = "<EOF>";
 
         private Thread _thread;
         private TcpClient _client;
 
-        private static DriverClient _instance;
+        private static DriverApiClient _instance;
 
         public static bool IsRun = false;
         public static bool WorkDone = false;
 
-        public static DriverClient Instance
+        public static DriverApiClient Instance
         {
             get
             {
-                return _instance ?? (_instance = new DriverClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
+                return _instance ?? (_instance = new DriverApiClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
             }
         }
         
         public void StartClient()
         {
-            Debug.Log("Thread is started");
             _thread = new Thread(ProcessWork);
             _thread.IsBackground = true;
             _thread.Start();
@@ -104,7 +77,6 @@ namespace Puppetry.Puppet
             // Connect to a remote device.  
             try
             {
-                Debug.Log("Puppet client is connecting");
                 _client = new TcpClient();
                 _client.Client.Connect(IPAddress.Parse("127.0.0.1"), 6111);
 
@@ -116,7 +88,7 @@ namespace Puppetry.Puppet
                         {
                             var message = ReadData(_client).Replace(EndOfMessage, string.Empty);
                             var request = JsonUtility.FromJson<DriverRequest>(message);
-                            response = PuppetHandler.HandleDriverRequest(request);
+                            response = DriverHandler.HandleDriverRequest(request);
                             _client.Client.Send(Encoding.ASCII.GetBytes(JsonUtility.ToJson(response) + EndOfMessage));
                             response.Clear();
                         }
@@ -131,7 +103,7 @@ namespace Puppetry.Puppet
                     }
                 }
 
-                Debug.Log("Client was disconnected");
+                Debug.Log("ApiClient was disconnected");
 
             }
             catch (Exception e)

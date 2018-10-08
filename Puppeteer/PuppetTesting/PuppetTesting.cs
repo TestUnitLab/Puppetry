@@ -100,6 +100,23 @@ namespace PuppetTesting
             
         }
 
+        [Test]
+        public void StandartAsset_OpenMenu_Positive()
+        {
+            var menuButton = new GameObject().FindByUPath("/MainMenuUI(Clone)//OpenMenuButton");
+            var menu = new GameObject().FindByUPath("/MainMenuUI(Clone)//MenuParent");
+            //var menuButton = new GameObject().FindByName("MainMenuUI(Clone)", "OpenMenuButton");
+            //var menu = new GameObject().FindByName("MainMenuUI(Clone)", "MenuParent");
+
+            menuButton.Should(Be.Present);
+            menuButton.Should(Be.ActiveInHierarchy);
+
+            menuButton.Click();
+
+            menu.Should(Be.Present);
+            menu.Should(Be.ActiveInHierarchy);
+        }
+
         [TearDown]
         public void CleanUp()
         {

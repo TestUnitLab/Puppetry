@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace Puppetry.Puppet
 {
-    public class PuppetHandler
+    public class DriverHandler
     {
         internal static DriverResponse HandleDriverRequest(DriverRequest request)
         {
@@ -156,7 +156,7 @@ namespace Puppetry.Puppet
                     break;
                 case "takescreenshot":
                     var path = request.value;
-                    DriverProcessor.QueueOnMainThread(() => { TakeScreenshot(path); });
+                    MainThreadHelper.QueueOnMainThread(() => { TakeScreenshot(path); });
                     response.result = "success";
                     break;
 
@@ -200,7 +200,7 @@ namespace Puppetry.Puppet
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
             string response = "";
-            DriverProcessor.QueueOnMainThread(() =>
+            MainThreadHelper.QueueOnMainThread(() =>
             {
                 try
                 {
@@ -249,7 +249,7 @@ namespace Puppetry.Puppet
             var autoEvent = new AutoResetEvent(false);
 
             var response = "";
-            DriverProcessor.QueueOnMainThread(() => {
+            MainThreadHelper.QueueOnMainThread(() => {
                 try
                 {
                     List<GameObject> listOfGOs;
@@ -285,7 +285,7 @@ namespace Puppetry.Puppet
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
             string response = "success";
-            DriverProcessor.QueueOnMainThread(() =>
+            MainThreadHelper.QueueOnMainThread(() =>
             {
                 try
                 {

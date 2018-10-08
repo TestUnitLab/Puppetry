@@ -22,7 +22,7 @@ namespace Puppetry.Puppet
             currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
             var currentGameObject = GameObject.Find(name);
 
-            while (currentUpath.Length == 0 || currentGameObject == null) //we processed all upath or currentGameObject is null
+            while (currentUpath.Length != 0 && currentGameObject != null) //we processed all upath or currentGameObject is null
             {
                 currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
 
@@ -47,7 +47,7 @@ namespace Puppetry.Puppet
             currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
             var currentGameObject = GameObject.Find(name);
 
-            while (true)
+            while (currentUpath.Length != 0 && currentGameObject != null) //we processed all upath or currentGameObject is null
             {
                 currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
 
@@ -57,10 +57,6 @@ namespace Puppetry.Puppet
                     currentGameObject = FindGameObjectByExpression(currentGameObject, typeOfSearch, name, condition);
                 else
                     currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name)[(int) index];
-
-                if (currentUpath.Length == 0 || currentGameObject == null
-                ) //we processed all upath or currentGameObject is null
-                    break;
             }
 
             return result;
@@ -76,7 +72,7 @@ namespace Puppetry.Puppet
             return FindDescendants(gameObjectName, parent);
         }
 
-        public static GameObject FindGameObject(string nameOrPath, string parentName, string root)
+        public static GameObject FindGameObject(string root, string nameOrPath, string parentName)
         {
             if (string.IsNullOrEmpty(parentName))
             {

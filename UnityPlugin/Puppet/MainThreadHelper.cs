@@ -4,14 +4,14 @@ using System;
 
 namespace Puppetry.Puppet
 {
-    public class DriverProcessor : MonoBehaviour
+    public class MainThreadHelper : MonoBehaviour
     {
         private readonly List<Action> requestedActions = new List<Action>();
         private readonly List<Action> currentActions = new List<Action>();
 
-        private static DriverProcessor Instance { get; set; }
+        private static MainThreadHelper Instance { get; set; }
 
-        private DriverProcessor()
+        private MainThreadHelper()
         {
             Instance = this;
         }
