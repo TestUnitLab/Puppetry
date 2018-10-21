@@ -10,7 +10,7 @@ namespace Puppetry.Puppeteer.Utils
         {
             if (!TryToWaitFor(condition, waitTimeout))
             {
-                throw new Exception(errorMessage);
+                throw new Exceptions.TimeoutException(errorMessage);
             }
         }
 
@@ -18,7 +18,7 @@ namespace Puppetry.Puppeteer.Utils
         {
             if (!TryToWaitFor(condition, waitTimeout))
             {
-                throw new Exception(errorMessage.Invoke());
+                throw new Exceptions.TimeoutException(errorMessage.Invoke());
             }
         }
 
