@@ -21,7 +21,12 @@ namespace Puppetry.Puppeteer.Puppet
 
             Driver.Instance.TakeScreenshot(path);
         }
-        
+
+        public static void MakeScreenshot(string fullPath)
+        {
+            Driver.Instance.TakeScreenshot(fullPath);
+        }
+
         public static void DeletePlayerPref(string key)
         {
             Driver.Instance.DeletePlayerPref(key);

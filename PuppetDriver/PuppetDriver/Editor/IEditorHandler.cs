@@ -16,7 +16,9 @@ namespace Puppetry.PuppetDriver.Editor
         EditorResponse Exists(string root, string name, string parent, string upath);
 
         EditorResponse Active(string root, string name, string parent, string upath);
-        
+
+        EditorResponse Swipe(string root, string name, string parent, string upath, string direction);
+
         EditorResponse Rendering(string root, string name, string parent, string upath);
         
         EditorResponse Count(string root, string name, string parent, string upath);

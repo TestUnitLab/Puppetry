@@ -107,7 +107,17 @@ namespace PuppetDriver.Controllers
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
-                
+
+                case Methods.Swipe:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+
+                    result = handler.Swipe(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+
                 case Methods.Rendering:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);

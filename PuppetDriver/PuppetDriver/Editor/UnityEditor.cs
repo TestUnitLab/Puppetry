@@ -133,6 +133,22 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
 
+        public EditorResponse Swipe(string root, string name, string parent, string upath, string direction)
+        {
+            PrepareRequest(Methods.Swipe, upath: upath, root: root, name: name, parent: parent, value: direction);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Active)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
         public EditorResponse StartPlayMode()
         {
             PrepareRequest(Methods.StartPlayMode);

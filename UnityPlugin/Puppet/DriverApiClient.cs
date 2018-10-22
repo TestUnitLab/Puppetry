@@ -21,15 +21,12 @@ namespace Puppetry.Puppet
             EditorApplication.playModeStateChanged += InstantiatePuppetProcessor;
             
             EditorApplication.update += StartDriverApiClient;
-            
-            //EditorApplication.playModeStateChanged += RestrictReloadAssemblies;
         }
 
         static void StartDriverApiClient()
         {
             EditorApplication.update -= StartDriverApiClient;
             
-            //EditorApplication.LockReloadAssemblies();
             DriverApiClient.Instance.StartClient();
         }
 
@@ -59,7 +56,7 @@ namespace Puppetry.Puppet
         {
             get
             {
-                return _instance ?? (_instance = new DriverApiClient());//new GameObject("PuppetClient").AddComponent<PuppetClient>());
+                return _instance ?? (_instance = new DriverApiClient());
             }
         }
         

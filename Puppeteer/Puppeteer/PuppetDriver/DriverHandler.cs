@@ -40,6 +40,17 @@ namespace Puppetry.Puppeteer.PuppetDriver
                 throw new Exception($"Keys {value} were not sent to GameObject with name: {name} and parent: {parent ?? "null"}");
         }
 
+        internal void Swipe(string root, string name, string parent, string upath, string direction)
+        {
+            var request = BuildRequest(Methods.Click, _sessionId, upath: upath, root: root, name: name, parent: parent, value: direction);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new Exception($"GameObject with name: {name} and parent: {parent ?? "null"} was not clicked");
+        }
+
         internal bool Exist(string root, string name, string parent, string upath)
         {
             var request = BuildRequest(Methods.Exist, _sessionId, upath: upath, root: root, name: name, parent: parent);

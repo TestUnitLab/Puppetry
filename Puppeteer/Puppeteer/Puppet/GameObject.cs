@@ -67,7 +67,12 @@ namespace Puppetry.Puppeteer.Puppet
         {
             Driver.Instance.SendKeys(value, Root, Name, Parent, UPath);
         }
-        
+
+        public void Swipe(Constants.Directions direction)
+        {
+            Driver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower());
+        }
+
         public string GetComponent(string component)
         {
             return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component);

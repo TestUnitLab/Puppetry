@@ -13,10 +13,11 @@ namespace Puppetry.Puppet
 {
     public class DriverHandler
     {
+        const string SuccessResult = "success";
+
         internal static DriverResponse HandleDriverRequest(DriverRequest request)
         {
             var response = new DriverResponse {method = request.method };
-            var swipeDirection = Vector2.zero;
             var session = GetSession();
 
             switch (request.method.ToLowerInvariant())
@@ -55,7 +56,7 @@ namespace Puppetry.Puppet
                     {
                         var pointer = new PointerEventData(EventSystem.current);
                         ExecuteEvents.Execute(go, pointer, ExecuteEvents.pointerClickHandler);
-                        return "success";
+                        return SuccessResult;
                     });
                     break;
                 case "isrendering":
@@ -82,20 +83,24 @@ namespace Puppetry.Puppet
                     });
                     break;
 
-                case "swipeleft":
-                    swipeDirection = Vector2.left;
-                    goto case "swipe";
-                case "swiperight":
-                    swipeDirection = Vector2.right;
-                    goto case "swipe";
-                case "swipeup":
-                    swipeDirection = Vector2.up;
-                    goto case "swipe";
-                case "swipedown":
-                    swipeDirection = Vector2.down;
-                    goto case "swipe";
-
                 case "swipe":
+                    var swipeDirection = Vector2.zero;
+                    switch (request.value)
+                    {
+                        case "up":
+                            swipeDirection = Vector2.up;
+                            break;
+                        case "down":
+                            swipeDirection = Vector2.down;
+                            break;
+                        case "left":
+                            swipeDirection = Vector2.left;
+                            break;
+                        case "right":
+                            swipeDirection = Vector2.right;
+                            break;
+                    }
+
                     swipeDirection *= 100;
 
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
@@ -117,7 +122,7 @@ namespace Puppetry.Puppet
                         go.GetComponent<MonoBehaviour>()
                             .StartCoroutine(DragCoroutine(go, pointer, center, swipeDirection));
 
-                        return "success";
+                        return SuccessResult;
                     });
                     break;
 
@@ -135,13 +140,13 @@ namespace Puppetry.Puppet
                             return "input not found";
                         }
 
-                        return "success";
+                        return SuccessResult;
                     });
                     break;
 
                 case "startplaymode":
                     EditorApplication.update += StartPlayMode;
-                    response.result = "success";
+                    response.result = SuccessResult;
                     break;
                 case "stopplaymode":
                     response.result = InvokeOnMainThreadAndWait(() =>
@@ -157,7 +162,7 @@ namespace Puppetry.Puppet
                 case "takescreenshot":
                     var path = request.value;
                     MainThreadHelper.QueueOnMainThread(() => { TakeScreenshot(path); });
-                    response.result = "success";
+                    response.result = SuccessResult;
                     break;
 
                 default:
@@ -284,7 +289,7 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            string response = "success";
+            string response = SuccessResult;
             MainThreadHelper.QueueOnMainThread(() =>
             {
                 try
@@ -321,7 +326,7 @@ namespace Puppetry.Puppet
 
         private static void TakeScreenshot(string pathName) 
         {
-            var cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+            var cam = Camera.main.GetComponent<Camera>();
             var renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
             cam.targetTexture = renderTexture;
             cam.Render();

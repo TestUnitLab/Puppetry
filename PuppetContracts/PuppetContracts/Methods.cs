@@ -10,6 +10,7 @@ namespace Puppetry.PuppetContracts
         public const string SendKeys = "sendkeys";
         public const string Exist = "exist";
         public const string Active = "active";
+        public const string Swipe = "swipe";
         public const string StartPlayMode = "startplaymode";
         public const string StopPlayMode = "stopplaymode";
         public const string TakeScreenshot = "takescreenshot";

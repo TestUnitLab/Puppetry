@@ -52,6 +52,7 @@ namespace PuppetTesting
         [TearDown]
         public void CleanUp()
         {
+            Editor.MakeScreenshot("D:\\ScreenShots\\Test.png");
             Editor.StopPlayMode();
             Editor.KillSession();
         }
