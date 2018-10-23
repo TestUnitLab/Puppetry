@@ -74,7 +74,7 @@ namespace Puppetry.Puppeteer.Conditions
         
         public static Condition Text(string componentName, string value)
         {
-            return new Component(componentName, "m_text", $"\"{value}\"");
+            return new Component(componentName, "m_Text", $"\"{value}\"");
         }
 
         public static Condition ComponentWithCondition(string componentName, Expression<Func<string, bool>> condition)

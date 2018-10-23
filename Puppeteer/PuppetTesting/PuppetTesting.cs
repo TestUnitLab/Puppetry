@@ -40,11 +40,12 @@ namespace PuppetTesting
 
             previousButton.Should(Be.Present);
             previousButton.Should(Be.ActiveInHierarchy);
+            previousButton.Should(Be.Interactable("Button"));
             previousButton.Click();
 
             titleLabel.Should(Be.ActiveInHierarchy);
             titleLabel.Should(Have.Component("Text"));
-
+            titleLabel.Should(Have.Text("Text","Flare"));
             var text = titleLabel.GetComponent("Text");
             Assert.IsTrue(text.Contains("Flare"));
         }
