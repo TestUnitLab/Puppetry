@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <version>1.0</version>
+        <authors>GameUnitLab</authors>
+        <owners>GameUnitLab</owners>
+        <id>Puppetry.Puppeteer</id>
+        <title>Puppetry.Puppeteer</title>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Client of Puppetry Framework</description>
+        <copyright>Copyright GameUnitLab 2018</copyright>
+        <dependencies>
+            <dependency id="RestSharp" version="106.3.1" />
+            <dependency id="Newtonsoft.Json" version="11.0.2" />
+			<dependency id="Microsoft.NetCore.App" version="2.0.0" />
+			<dependency id="Puppetry.Contracts" version="1.0.0" />
+        </dependencies>       
+    </metadata>
+    <files>
+        <file src="bin/Debug/netcoreapp2.0/Puppeteer.dll" target="lib/netcoreapp2.0" />    
+    </files>
+</package>
