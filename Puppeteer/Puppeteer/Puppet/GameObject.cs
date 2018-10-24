@@ -56,6 +56,8 @@ namespace Puppetry.Puppeteer.Puppet
         
         public bool IsRendering => Driver.Instance.IsRendering(Root, Name, Parent, UPath);
         
+        public bool IsOnScreen => Driver.Instance.IsOnScreen(Root, Name, Parent, UPath);
+        
         public int Count => Driver.Instance.Count(Root, Name, Parent, UPath);
 
         public void Click()

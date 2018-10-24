@@ -21,6 +21,8 @@ namespace Puppetry.PuppetDriver.Editor
 
         EditorResponse Rendering(string root, string name, string parent, string upath);
         
+        EditorResponse OnScreen(string root, string name, string parent, string upath);
+        
         EditorResponse Count(string root, string name, string parent, string upath);
         
         EditorResponse GetComponent(string root, string name, string parent, string upath, string component);

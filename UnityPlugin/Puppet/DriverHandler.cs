@@ -43,6 +43,18 @@ namespace Puppetry.Puppet
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
                         gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
                     break;
+                case "onscreen":
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    {
+                        var position = ScreenHelper.GetPositionOnScreen(gameObject);
+                        
+                        return (position.x > 0 && 
+                                position.y > 0 && 
+                                position.x < Screen.width &&
+                                position.y < Screen.height && 
+                                position.z >= 0).ToString(); //Check if camera can see the object
+                    }, "False");
+                    break;
                 case "getcomponent":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {
