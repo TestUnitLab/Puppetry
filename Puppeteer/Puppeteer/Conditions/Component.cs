@@ -31,7 +31,7 @@ namespace Puppetry.Puppeteer.Conditions
 
         public override bool Invoke<T>(T gameObject)
         {
-            _curentGameObject = gameObject;
+            CurentGameObject = gameObject;
 
             _actualComponent = gameObject.GetComponent(_componentName);
             //Want to check if property with specific name and value of the component exist

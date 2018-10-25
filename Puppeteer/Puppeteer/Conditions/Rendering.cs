@@ -4,7 +4,7 @@
     {
         public override bool Invoke<T>(T gameObject)
         {
-            _curentGameObject = gameObject;
+            CurentGameObject = gameObject;
             return gameObject.IsRendering;
         }
 

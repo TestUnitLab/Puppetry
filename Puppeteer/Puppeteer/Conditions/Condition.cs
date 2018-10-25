@@ -1,10 +1,8 @@
-﻿using Puppetry.Puppeteer.Puppet;
-
-namespace Puppetry.Puppeteer.Conditions
+﻿namespace Puppetry.Puppeteer.Conditions
 {
     public abstract class Condition
     {
-        protected GameObject _curentGameObject;
+        protected GameObject CurentGameObject;
 
         public abstract bool Invoke<T>(T gameObject) where T : GameObject;
 
@@ -14,7 +12,7 @@ namespace Puppetry.Puppeteer.Conditions
 
         public override string ToString()
         {
-            return $"\n{GetType().Name} for GameObject with name: {_curentGameObject.Name} and parent: {_curentGameObject.Parent ?? "null"} =>" +
+            return $"\n{GetType().Name} for GameObject with {CurentGameObject.LocatorMessage} =>" +
                    $" \nExpected: {DescribeExpected()} \nActual: {DescribeActual()}";
         }
     }

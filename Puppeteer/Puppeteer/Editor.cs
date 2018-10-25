@@ -1,7 +1,7 @@
-﻿using Puppetry.Puppeteer.PuppetDriver;
-using System.IO;
+﻿using System.IO;
+using Puppetry.Puppeteer.PuppetDriver;
 
-namespace Puppetry.Puppeteer.Puppet
+namespace Puppetry.Puppeteer
 {
     public static class Editor
     {

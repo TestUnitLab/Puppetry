@@ -2,14 +2,15 @@
 using Puppetry.Puppeteer.PuppetDriver;
 using Puppetry.Puppeteer.Utils;
 
-namespace Puppetry.Puppeteer.Puppet
+namespace Puppetry.Puppeteer
 {
     public class GameObject
     {
-        internal string Name;
-        internal string Root;
-        internal string Parent;
-        internal string UPath;
+        private string Name;
+        private string Root;
+        private string Parent;
+        private string UPath;
+        internal string LocatorMessage { get; private set;}
 
         public GameObject() { }
 
@@ -17,6 +18,7 @@ namespace Puppetry.Puppeteer.Puppet
         {
             Root = root;
             Name = name;
+            LocatorMessage = $"root: {Root} and name: {Name}";
         }
 
         public GameObject(string root, string name, string parent)
@@ -24,11 +26,13 @@ namespace Puppetry.Puppeteer.Puppet
             Root = root;
             Name = name;
             Parent = parent;
+            LocatorMessage = $"root: {Root}, name: {Name} and parent: {Parent}";
         }
 
         public GameObject FindByUPath(string upath)
         {
             UPath = upath;
+            LocatorMessage = $"upath: {UPath}";
 
             return this;
         }
@@ -37,6 +41,7 @@ namespace Puppetry.Puppeteer.Puppet
         {
             Root = root;
             Name = name;
+            LocatorMessage = $"root: {Root} and name: {Name}";
 
             return this;
         }
@@ -46,6 +51,7 @@ namespace Puppetry.Puppeteer.Puppet
             Root = root;
             Name = name;
             Parent = parent;
+            LocatorMessage = $"root: {Root}, name: {Name} and parent: {Parent}";
 
             return this;
         }
@@ -57,6 +63,8 @@ namespace Puppetry.Puppeteer.Puppet
         public bool IsRendering => Driver.Instance.IsRendering(Root, Name, Parent, UPath);
         
         public bool IsOnScreen => Driver.Instance.IsOnScreen(Root, Name, Parent, UPath);
+        
+        public bool IsGraphicClickable => Driver.Instance.IsGraphicClickable(Root, Name, Parent, UPath);
         
         public int Count => Driver.Instance.Count(Root, Name, Parent, UPath);
 
