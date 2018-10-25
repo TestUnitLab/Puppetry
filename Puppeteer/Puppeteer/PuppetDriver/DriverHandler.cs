@@ -18,37 +18,37 @@ namespace Puppetry.Puppeteer.PuppetDriver
             StartSession();
         }
 
-        internal void Click(string root, string name, string parent, string upath)
+        internal void Click(string root, string name, string parent, string upath, string locatorMessage)
         {
             var request = BuildRequest(Methods.Click, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"GameObject with name: {name} and parent: {parent ?? "null"} was not clicked");
+                throw new Exception($"GameObject with {locatorMessage} was not clicked");
         }
 
-        internal void SendKeys(string value, string root, string name, string parent, string upath)
+        internal void SendKeys(string value, string root, string name, string parent, string upath, string locatorMessage)
         {
             var request = BuildRequest(Methods.SendKeys, _sessionId, upath: upath, root: root, name: name, parent: parent, value: value);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"Keys {value} were not sent to GameObject with name: {name} and parent: {parent ?? "null"}");
+                throw new Exception($"Keys {value} were not sent to GameObject with {locatorMessage}");
         }
 
-        internal void Swipe(string root, string name, string parent, string upath, string direction)
+        internal void Swipe(string root, string name, string parent, string upath, string direction, string locatorMessage)
         {
             var request = BuildRequest(Methods.Click, _sessionId, upath: upath, root: root, name: name, parent: parent, value: direction);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"GameObject with name: {name} and parent: {parent ?? "null"} was not clicked");
+                throw new Exception($"GameObject with {locatorMessage} was not clicked");
         }
 
         internal bool Exist(string root, string name, string parent, string upath)
@@ -59,51 +59,51 @@ namespace Puppetry.Puppeteer.PuppetDriver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        internal bool Active(string root, string name, string parent, string upath)
+        internal bool Active(string root, string name, string parent, string upath, string locatorMessage)
         {
             var request = BuildRequest(Methods.Active, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
-        
-        public bool IsRendering(string root, string name, string parent, string upath)
+
+        internal bool IsRendering(string root, string name, string parent, string upath, string locatorMessage)
         {
             var request = BuildRequest(Methods.Rendering, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
-        
-        public bool IsOnScreen(string root, string name, string parent, string upath)
+
+        internal bool IsOnScreen(string root, string name, string parent, string upath, string locatorMessage)
         {
             var request = BuildRequest(Methods.OnScreen, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        public bool IsGraphicClickable(string root, string name, string parent, string upath)
+        internal bool IsGraphicClickable(string root, string name, string parent, string upath, string locatorMessage)
         {
             var request = BuildRequest(Methods.GraphicClickable, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
-        
-        public int Count(string root, string name, string parent, string upath)
+
+        internal int Count(string root, string name, string parent, string upath)
         {
             var request = BuildRequest(Methods.Count, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
@@ -111,13 +111,13 @@ namespace Puppetry.Puppeteer.PuppetDriver
             return int.TryParse(response[Parameters.Result], out var result) ? result : -1;
         }
 
-        public string GetComponent(string root, string name, string parent, string upath, string component)
+        internal string GetComponent(string root, string name, string parent, string upath, string component, string locatorMessage)
         {
             var request = BuildRequest(Methods.GetComponent, _sessionId, upath: upath, root: root, name: name, parent: parent, value: component);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with name: {name} and parent: {parent ?? "null"} was not found");
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             
             return response[Parameters.Result];
         }

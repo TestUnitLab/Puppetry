@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Puppetry.Puppeteer;
-using Puppetry.Puppeteer.Puppet;
 using Puppetry.Puppeteer.Conditions;
 
 namespace PuppetTesting
@@ -40,12 +39,14 @@ namespace PuppetTesting
 
             previousButton.Should(Be.Present);
             previousButton.Should(Be.ActiveInHierarchy);
-            previousButton.Should(Be.Interactable("Button"));
+            previousButton.Should(Have.ComponentWithPropertyAndValue("Button", "m_Interactable", "true"));
+            var onScreen = previousButton.IsOnScreen;
+            var clickable = previousButton.IsGraphicClickable;
             previousButton.Click();
 
             titleLabel.Should(Be.ActiveInHierarchy);
             titleLabel.Should(Have.Component("Text"));
-            titleLabel.Should(Have.Text("Text","Flare"));
+            titleLabel.Should(Have.ComponentWithPropertyAndValue("Text", "m_Text", "\"Flare\""));
             var text = titleLabel.GetComponent("Text");
             Assert.IsTrue(text.Contains("Flare"));
         }

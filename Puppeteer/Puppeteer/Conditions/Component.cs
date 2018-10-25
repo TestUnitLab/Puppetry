@@ -71,11 +71,6 @@ namespace Puppetry.Puppeteer.Conditions
         {
             return new Component(componentName);
         }
-        
-        public static Condition Text(string componentName, string value)
-        {
-            return new Component(componentName, "m_Text", $"\"{value}\"");
-        }
 
         public static Condition ComponentWithCondition(string componentName, Expression<Func<string, bool>> condition)
         {
@@ -85,14 +80,6 @@ namespace Puppetry.Puppeteer.Conditions
         public static Condition ComponentWithPropertyAndValue(string componentName, string propertyName, string propertyValue)
         {
             return new Component(componentName, propertyName, propertyValue);
-        }
-    }
-    
-    public static partial class Be
-    {
-        public static Condition Interactable(string componentName)
-        {
-            return new Component(componentName, "m_Interactable", "true");
         }
     }
 }

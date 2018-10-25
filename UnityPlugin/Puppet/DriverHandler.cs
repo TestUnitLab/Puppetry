@@ -72,8 +72,7 @@ namespace Puppetry.Puppet
                     });
                     break;
                 case "isrendering":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent,
-                        request.upath,
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
                         go =>
                         {
                             var renderer = go.GetComponent<Renderer>();
@@ -91,6 +90,13 @@ namespace Puppetry.Puppet
                     response.result = InvokeOnMainThreadAndWait(() =>
                     {
                         PlayerPrefs.DeleteKey(request.value);
+                        PlayerPrefs.Save();
+                    });
+                    break;
+                case "deleteallprefs":
+                    response.result = InvokeOnMainThreadAndWait(() =>
+                    {
+                        PlayerPrefs.DeleteAll();
                         PlayerPrefs.Save();
                     });
                     break;

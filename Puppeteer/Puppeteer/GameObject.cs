@@ -58,34 +58,34 @@ namespace Puppetry.Puppeteer
         
         public bool Exists => Driver.Instance.Exist(Root, Name, Parent, UPath);
         
-        public bool IsActiveInHierarchy => Driver.Instance.Active(Root, Name, Parent, UPath);
+        public bool IsActiveInHierarchy => Driver.Instance.Active(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsRendering => Driver.Instance.IsRendering(Root, Name, Parent, UPath);
+        public bool IsRendering => Driver.Instance.IsRendering(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsOnScreen => Driver.Instance.IsOnScreen(Root, Name, Parent, UPath);
+        public bool IsOnScreen => Driver.Instance.IsOnScreen(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsGraphicClickable => Driver.Instance.IsGraphicClickable(Root, Name, Parent, UPath);
+        public bool IsGraphicClickable => Driver.Instance.IsGraphicClickable(Root, Name, Parent, UPath, LocatorMessage);
         
         public int Count => Driver.Instance.Count(Root, Name, Parent, UPath);
 
         public void Click()
         {
-            Driver.Instance.Click(Root, Name, Parent, UPath);
+            Driver.Instance.Click(Root, Name, Parent, UPath, LocatorMessage);
         }
 
         public void SendKeys(string value)
         {
-            Driver.Instance.SendKeys(value, Root, Name, Parent, UPath);
+            Driver.Instance.SendKeys(value, Root, Name, Parent, UPath, LocatorMessage);
         }
 
         public void Swipe(Constants.Directions direction)
         {
-            Driver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower());
+            Driver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower(), LocatorMessage);
         }
 
         public string GetComponent(string component)
         {
-            return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component);
+            return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
         }
 
         public void Should(Condition condition)
