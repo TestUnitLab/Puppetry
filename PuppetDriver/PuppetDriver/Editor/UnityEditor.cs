@@ -101,6 +101,22 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
         
+        public EditorResponse GraphicClickable(string root, string name, string parent, string upath)
+        {
+            PrepareRequest(Methods.GraphicClickable, upath: upath, root: root, name: name, parent: parent);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+        
         public EditorResponse GetComponent(string root, string name, string parent, string upath, string component)
         {
             PrepareRequest(Methods.GetComponent, upath: upath, root: root, name: name, parent: parent, value: component);

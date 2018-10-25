@@ -44,15 +44,15 @@ namespace Puppetry.Puppet
                         gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
                     break;
                 case "onscreen":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
                     {
-                        var position = ScreenHelper.GetPositionOnScreen(gameObject);
-                        
-                        return (position.x > 0 && 
-                                position.y > 0 && 
-                                position.x < Screen.width &&
-                                position.y < Screen.height && 
-                                position.z >= 0).ToString(); //Check if camera can see the object
+                        return ScreenHelper.IsOnScreen(go).ToString();
+                    }, "False");
+                    break;
+                case "clickable":
+                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
+                    {
+                        return ScreenHelper.IsGraphicClickable(go).ToString();
                     }, "False");
                     break;
                 case "getcomponent":

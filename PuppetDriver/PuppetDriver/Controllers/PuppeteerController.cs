@@ -138,6 +138,16 @@ namespace PuppetDriver.Controllers
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
+                case Methods.GraphicClickable:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+
+                    result = handler.GraphicClickable(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                
                 case Methods.Count:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
