@@ -37,23 +37,23 @@ namespace Puppetry.Puppet
                     break;
                 case "exist":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
-                        gameObject => true.ToString(), false.ToString());
+                        gameObject => true.ToString());
                     break;
                 case "active":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
-                        gameObject => gameObject.activeInHierarchy.ToString(), false.ToString());
+                        gameObject => gameObject.activeInHierarchy.ToString());
                     break;
                 case "onscreen":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
                     {
                         return ScreenHelper.IsOnScreen(go).ToString();
-                    }, "False");
+                    });
                     break;
                 case "clickable":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, go =>
                     {
                         return ScreenHelper.IsGraphicClickable(go).ToString();
-                    }, "False");
+                    });
                     break;
                 case "getcomponent":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
@@ -217,7 +217,7 @@ namespace Puppetry.Puppet
             EditorApplication.isPlaying = true;
         }
 
-        private static string ExecuteGameObjectEmulation(string rootName, string nameOrPath, string parent, string upath, Func<GameObject, string> onComplete, string notFoundMsg = null)
+        private static string ExecuteGameObjectEmulation(string rootName, string nameOrPath, string parent, string upath, Func<GameObject, string> onComplete)
         {
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
@@ -234,20 +234,9 @@ namespace Puppetry.Puppet
                         go = FindGameObjectHelper.FindGameObject(rootName, nameOrPath, parent);
                     
                     if (go != null)
-                    {
                         response = onComplete(go);
-                    }
                     else
-                    {
-                        if (notFoundMsg != null)
-                        {
-                            response = notFoundMsg;
-                        }
-                        else
-                        {
-                            response = "not found (" + (parent != null ? parent + "/" : "") + nameOrPath + ")";
-                        }
-                    }
+                        response = "GameObject was not found";
                 }
                 catch (Exception e)
                 {

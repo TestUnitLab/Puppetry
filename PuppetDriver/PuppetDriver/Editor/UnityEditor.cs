@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Threading;
 using Puppetry.PuppetContracts;
 using Puppetry.PuppetDriver.TcpSocket;
 
@@ -8,6 +7,8 @@ namespace Puppetry.PuppetDriver.Editor
 {
     internal class UnityEditor : IEditorHandler
     {
+        private const string NotFoundMessage = "GameObject was not found";
+
         private Dictionary<string, string> _request;
         private Dictionary<string, string> _response;
 
@@ -31,6 +32,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.SendKeys)
                 result = new EditorResponse {StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -47,6 +50,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Click)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -79,6 +84,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -95,6 +102,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -111,6 +120,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -127,6 +138,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -151,7 +164,7 @@ namespace Puppetry.PuppetDriver.Editor
 
         public EditorResponse Active(string root, string name, string parent, string upath)
         {
-            PrepareRequest(Methods.Exist, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.Active, upath: upath, root: root, name: name, parent: parent);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -159,6 +172,10 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Active)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (!bool.TryParse(_response[Parameters.Result], out var r))
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = $"Unexpected response: {_response[Parameters.Result]} was received" };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -175,6 +192,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Active)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -186,7 +205,6 @@ namespace Puppetry.PuppetDriver.Editor
             PrepareRequest(Methods.StartPlayMode);
 
             _response = SocketHelper.SendMessage(Socket, _request);
-            
 
             EditorResponse result;
             if (_response == null)

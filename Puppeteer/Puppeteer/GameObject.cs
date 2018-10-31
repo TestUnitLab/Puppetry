@@ -88,20 +88,30 @@ namespace Puppetry.Puppeteer
             return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
         }
 
-        public void Should(Condition condition)
+        public void Should(Condition condition, int timeoutMs)
         {
             Wait.For(() => condition.Invoke(this),
                 () =>
-                    $"Timed out after {Configuration.TimeoutMs / 1000} seconds while waiting for Condition: {condition}",
+                    $"Timed out after {timeoutMs / 1000} seconds while waiting for Condition: {condition}",
+                Configuration.TimeoutMs);
+        }
+
+        public void Should(Condition condition)
+        {
+            Should(condition, Configuration.TimeoutMs);
+        }
+
+        public void ShouldNot(Condition condition, int timeoutMs)
+        {
+            Wait.For(() => !condition.Invoke(this),
+                () =>
+                    $"Timed out after {timeoutMs / 1000} seconds while waiting for Condition Not fulfilled: {condition}",
                 Configuration.TimeoutMs);
         }
 
         public void ShouldNot(Condition condition)
         {
-            Wait.For(() => !condition.Invoke(this),
-                () =>
-                    $"Timed out after {Configuration.TimeoutMs / 1000} seconds while waiting for Condition Not fulfilled: {condition}",
-                Configuration.TimeoutMs);
+            ShouldNot(condition, Configuration.TimeoutMs);
         }
     }
 }
