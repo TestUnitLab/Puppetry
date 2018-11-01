@@ -26,8 +26,8 @@ namespace Puppetry.Puppeteer.Utils
         {
             var isSuccess = false;
             var alreadyWaited = 0;
-            var timeToWait = 0;
-            Stopwatch stopwatch = new Stopwatch();
+            var timeToWait = Configuration.PollingStratagy == PollingStratagies.Progressive ? 0 : 500;
+            var stopwatch = new Stopwatch();
 
             while (true)
             {
@@ -46,9 +46,12 @@ namespace Puppetry.Puppeteer.Utils
 
                 if (alreadyWaited >= waitTimeout)
                     break;
-
-                if (timeToWait == 0) timeToWait += 100;
-                else timeToWait *= 2;
+                
+                if (Configuration.PollingStratagy == PollingStratagies.Progressive)
+                {
+                    if (timeToWait == 0) timeToWait += 100;
+                    else timeToWait *= 2;
+                }
 
                 Thread.Sleep(timeToWait);
 

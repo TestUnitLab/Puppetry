@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
+using System.Threading;
 using Newtonsoft.Json;
 using RestSharp;
 
 using Puppetry.PuppetContracts;
 using Puppetry.Puppeteer.Exceptions;
-using Puppetry.Puppeteer.Utils;
 
 namespace Puppetry.Puppeteer.PuppetDriver
 {
@@ -169,40 +169,85 @@ namespace Puppetry.Puppeteer.PuppetDriver
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception("Session was not Killed");
         }
+        
+        internal void KillAllSessions()
+        {
+            var request = BuildRequest(Methods.KillAllSessions);
+            var response = Post(request);;
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new Exception("Session was not Killed");
+        }
 
         private void StartSession()
         {
-            var request = BuildRequest(Methods.CreateSession);
-            var response = new Dictionary<string, string>();
+            var isSuccess = false;
+            var alreadyWaited = 0;
+            var timeToWait = Configuration.PollingStratagy == PollingStratagies.Progressive ? 0 : 500;
+            var stopwatch = new Stopwatch();
 
-            Wait.For(() =>
+            Dictionary<string, string> response;
+
+            while (true)
             {
-                try
+                stopwatch.Reset();
+                stopwatch.Start();
+                var result = false;
+                
+                var request = BuildRequest(Methods.CreateSession);
+                response = Post(request);
+                if (response[Parameters.StatusCode] == ErrorCodes.Success.ToString())
                 {
-                    response = Post(request);
-                }
-                catch
-                {
-                    return false;
+                    _sessionId = response[Parameters.Result];
+                    result = true;
                 }
 
-                if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
-                    return false;
+                if (result)
+                {
+                    isSuccess = true;
+                    break;
+                }
 
-                _sessionId = response[Parameters.Result];
-                return true;
-            }, 
-                $"Session Creation was failed. {response[Parameters.ErrorMessage]}", 
-                Configuration.TimeoutMs);
+                stopwatch.Stop();
+
+                alreadyWaited += stopwatch.Elapsed.Milliseconds;
+
+                if (alreadyWaited >= Configuration.SessionTimeoutMs)
+                    break;
+
+                if (Configuration.PollingStratagy == PollingStratagies.Progressive)
+                {
+                    if (timeToWait == 0) timeToWait += 100;
+                    else timeToWait *= 2;
+                }
+
+                Thread.Sleep(timeToWait);
+
+                alreadyWaited += timeToWait;
+            }
+
+            if (!isSuccess)
+                throw new SessionCreationException(
+                    $"Session Creation was failed. {response[Parameters.ErrorMessage]}");
+                
         }
 
         public void DeletePlayerPref(string key)
         {
-            var request = BuildRequest(Methods.DeletePlayerPref, value: key);            
+            var request = BuildRequest(Methods.DeletePlayerPref, _sessionId, value: key);            
             var response = Post(request);
 
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new Exception("PlayerPref was not deleted");
+        }
+        
+        public void DeleteAllPlayerPrefs()
+        {
+            var request = BuildRequest(Methods.DeleteAllPrefs, _sessionId);            
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new Exception("PlayerPrefs were not deleted");
         }
 
         public void Dispose()
@@ -228,7 +273,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
 
         private Dictionary<string, string> Post(Dictionary<string, string> request)
         {
-            var restClient = new RestClient($"http://localhost:7111/");
+            var restClient = new RestClient($"{Configuration.BaseUrl}:{Configuration.Port}/");
             var restRequest = new RestRequest(Method.POST);
             var json = JsonConvert.SerializeObject(request, Formatting.Indented);
             restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
