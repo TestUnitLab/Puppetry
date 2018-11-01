@@ -19,6 +19,7 @@ namespace Puppetry.PuppetContracts
         public const string Rendering = "isrendering";
         public const string GetComponent = "getcomponent";
         public const string DeletePlayerPref = "deletepref";
+        public const string GetCoordinates = "getcoordinates";
         public const string Count = "count";
         public const string Ping = "ping";
         public const string Pong = "pong";
