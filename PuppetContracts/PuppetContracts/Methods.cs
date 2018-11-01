@@ -6,6 +6,7 @@ namespace Puppetry.PuppetContracts
         public const string RegisterEditor = "registereditor";
         public const string CreateSession = "createsession";
         public const string KillSession = "killsession";
+        public const string KillAllSessions = "killallsessions";
         public const string Click = "click";
         public const string SendKeys = "sendkeys";
         public const string Exist = "exist";
@@ -19,6 +20,7 @@ namespace Puppetry.PuppetContracts
         public const string Rendering = "isrendering";
         public const string GetComponent = "getcomponent";
         public const string DeletePlayerPref = "deletepref";
+        public const string DeleteAllPrefs = "deleteallprefs";
         public const string GetCoordinates = "getcoordinates";
         public const string Count = "count";
         public const string Ping = "ping";
