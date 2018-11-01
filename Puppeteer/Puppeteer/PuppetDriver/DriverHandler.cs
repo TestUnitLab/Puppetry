@@ -6,6 +6,7 @@ using RestSharp;
 
 using Puppetry.PuppetContracts;
 using Puppetry.Puppeteer.Exceptions;
+using Puppetry.Puppeteer.Utils;
 
 namespace Puppetry.Puppeteer.PuppetDriver
 {
@@ -137,7 +138,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             var response = Post(request);
             
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"PlayMode was not stopped");
+                throw new Exception("PlayMode was not stopped");
         }
 
         internal void TakeScreenshot(string path)
@@ -146,7 +147,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             var response = Post(request);
             
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"PlayMode was not stopped");
+                throw new Exception("PlayMode was not stopped");
         }
 
         internal void KillSession()
@@ -161,11 +162,27 @@ namespace Puppetry.Puppeteer.PuppetDriver
         private void StartSession()
         {
             var request = BuildRequest(Methods.CreateSession);
-            var response = Post(request);
-            
-            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
-                throw new SessionCreationException($"Session Creation was failed. {response[Parameters.ErrorMessage]}");
-            _sessionId = response[Parameters.Result];
+            var response = new Dictionary<string, string>();
+
+            Wait.For(() =>
+            {
+                try
+                {
+                    response = Post(request);
+                }
+                catch
+                {
+                    return false;
+                }
+
+                if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                    return false;
+
+                _sessionId = response[Parameters.Result];
+                return true;
+            }, 
+                $"Session Creation was failed. {response[Parameters.ErrorMessage]}", 
+                Configuration.TimeoutMs);
         }
 
         public void DeletePlayerPref(string key)
