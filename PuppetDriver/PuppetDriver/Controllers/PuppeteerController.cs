@@ -167,6 +167,16 @@ namespace PuppetDriver.Controllers
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
+                
+                case Methods.GetCoordinates:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+
+                    result = handler.GetCoordinates(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
 
                 case Methods.StartPlayMode:
                     sessionId = request[Parameters.Session];
@@ -205,11 +215,24 @@ namespace PuppetDriver.Controllers
                     response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
                     response.Add(Parameters.Result, ActionResults.Success);
                     break;
+                case Methods.KillAllSessions:
+                    ConnectionManager.ReleaseAllEditorHandlers();
+                    response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
+                    response.Add(Parameters.Result, ActionResults.Success);
+                    break;
                 
                 case Methods.DeletePlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
                     result = handler.DeletePlayerPref(value);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.DeleteAllPrefs:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.DeleteAllPrefs();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;

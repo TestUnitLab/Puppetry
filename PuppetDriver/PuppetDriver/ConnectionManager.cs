@@ -86,6 +86,14 @@ namespace Puppetry.PuppetDriver
         {
             MappingEditorsToSessions.Remove(MappingEditorsToSessions.First(x => x.Value == sessionId).Key, out var session);
         }
+        
+        internal static void ReleaseAllEditorHandlers()
+        {
+            foreach (var mappedEditorToSession in MappingEditorsToSessions)
+            {
+                MappingEditorsToSessions.Remove(mappedEditorToSession.Key, out var session);
+            }
+        }
 
         internal static string StartSession()
         {

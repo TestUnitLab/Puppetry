@@ -28,6 +28,8 @@ namespace Puppetry.PuppetDriver.Editor
         EditorResponse Count(string root, string name, string parent, string upath);
         
         EditorResponse GetComponent(string root, string name, string parent, string upath, string component);
+        
+        EditorResponse GetCoordinates(string root, string name, string parent, string upath);
 
         EditorResponse StartPlayMode();
 
@@ -36,5 +38,7 @@ namespace Puppetry.PuppetDriver.Editor
         EditorResponse MakeScreenshot(string fullPath);
         
         EditorResponse DeletePlayerPref(string key);
+        
+        EditorResponse DeleteAllPrefs();
     }
 }
