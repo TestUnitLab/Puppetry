@@ -1,4 +1,5 @@
-﻿using Puppetry.Puppeteer.Conditions;
+﻿using Newtonsoft.Json;
+using Puppetry.Puppeteer.Conditions;
 using Puppetry.Puppeteer.PuppetDriver;
 using Puppetry.Puppeteer.Utils;
 
@@ -86,6 +87,13 @@ namespace Puppetry.Puppeteer
         public string GetComponent(string component)
         {
             return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
+        }
+        
+        public ScreenCoordinates GetCoordinates()
+        {
+            var result = Driver.Instance.GetCoordinates(Root, Name, Parent, UPath, LocatorMessage);
+
+            return JsonConvert.DeserializeObject<ScreenCoordinates>(result);
         }
 
         public void Should(Condition condition, int timeoutMs)

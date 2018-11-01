@@ -122,6 +122,17 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             return response[Parameters.Result];
         }
+        
+        internal string GetCoordinates(string root, string name, string parent, string upath, string locatorMessage)
+        {
+            var request = BuildRequest(Methods.GetCoordinates, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var response = Post(request);
+            
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            
+            return response[Parameters.Result];
+        }
 
         internal void StartPlayMode()
         {
