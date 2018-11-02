@@ -33,7 +33,16 @@ namespace Puppetry.Puppeteer.Utils
             {
                 stopwatch.Reset();
                 stopwatch.Start();
-                var result = condition.Invoke();
+                var result = false;
+                try
+                {
+                    result = condition.Invoke();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                
                 if (result)
                 {
                     isSuccess = true;
