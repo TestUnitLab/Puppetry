@@ -46,7 +46,7 @@ namespace Puppetry.Puppet
                 case "onscreen":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsOnScreen(gameObject).ToString());
                     break;
-                case "clickable":
+                case "graphicclickable":
                     response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsGraphicClickable(gameObject).ToString());
                     break;
                 case "getcomponent":

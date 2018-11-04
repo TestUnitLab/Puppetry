@@ -183,7 +183,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
         {
             var isSuccess = false;
             var alreadyWaited = 0;
-            var timeToWait = Configuration.PollingStratagy == PollingStratagies.Progressive ? 0 : 500;
+            var timeToWait = Configuration.PollingStratagy == PollingStrategies.Progressive ? 0 : 500;
             var stopwatch = new Stopwatch();
 
             Dictionary<string, string> response;
@@ -215,7 +215,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
                 if (alreadyWaited >= Configuration.SessionTimeoutMs)
                     break;
 
-                if (Configuration.PollingStratagy == PollingStratagies.Progressive)
+                if (Configuration.PollingStratagy == PollingStrategies.Progressive)
                 {
                     if (timeToWait == 0) timeToWait += 100;
                     else timeToWait *= 2;

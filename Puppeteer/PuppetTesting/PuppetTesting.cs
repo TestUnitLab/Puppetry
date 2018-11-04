@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Puppetry.Puppeteer;
 using Puppetry.Puppeteer.Conditions;
+using Puppetry.Puppeteer.PuppetDriver;
 
 namespace PuppetTesting
 {
@@ -54,9 +55,9 @@ namespace PuppetTesting
         [TearDown]
         public void CleanUp()
         {
-            Editor.MakeScreenshot("D:\\ScreenShots\\Test.png");
+            Game.MakeScreenshot("D:\\ScreenShots\\Test.png");
             Editor.StopPlayMode();
-            Editor.KillSession();
+            Driver.KillSession();
         }
     }
 }

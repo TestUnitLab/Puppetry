@@ -11,7 +11,7 @@ namespace Puppetry.Puppeteer
             TimeoutMs = 60000;
             SessionTimeoutMs = 120000;
             //DriverType = DriverTypes.Unity;
-            PollingStratagy = PollingStratagies.Constant;
+            PollingStratagy = PollingStrategies.Constant;
         }
 
         internal static string BaseUrl { get; private set; }
@@ -19,7 +19,7 @@ namespace Puppetry.Puppeteer
         internal static int TimeoutMs { get; private set; }
         internal static int SessionTimeoutMs { get; private set; }
         //internal static DriverTypes DriverType { get; private set; }
-        internal static PollingStratagies PollingStratagy { get; private set; }
+        internal static PollingStrategies PollingStratagy { get; private set; }
 
         public static void Set(Settings setting, object value)
         {
@@ -41,7 +41,7 @@ namespace Puppetry.Puppeteer
                     DriverType = (DriverTypes)Enum.Parse(typeof(DriverTypes), value.ToString());
                     break;*/
                 case Settings.PollingStratagy:
-                    PollingStratagy = (PollingStratagies)Enum.Parse(typeof(PollingStratagies), value.ToString());
+                    PollingStratagy = (PollingStrategies)Enum.Parse(typeof(PollingStrategies), value.ToString());
                     break;
             }
         }
@@ -63,7 +63,7 @@ namespace Puppetry.Puppeteer
         Unity
     }*/
     
-    public enum PollingStratagies
+    public enum PollingStrategies
     {
         Constant,
         Progressive
