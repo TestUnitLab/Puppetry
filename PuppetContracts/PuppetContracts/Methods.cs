@@ -14,6 +14,7 @@ namespace Puppetry.PuppetContracts
         public const string OnScreen = "onscreen";
         public const string GraphicClickable = "graphicclickable";
         public const string Swipe = "swipe";
+        public const string DragTo = "dragto";
         public const string StartPlayMode = "startplaymode";
         public const string StopPlayMode = "stopplaymode";
         public const string TakeScreenshot = "takescreenshot";
