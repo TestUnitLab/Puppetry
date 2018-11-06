@@ -10,6 +10,7 @@ namespace Puppetry.Puppet
         private const string ChildAxe = "child";
         private const string DescendantAxe = "descendant";
         private const string AncestorAxe = "ancestor";
+        private const string Active = "active";
 
         public static GameObject FindGameObjectByUPath(string upath)
         {
@@ -29,7 +30,7 @@ namespace Puppetry.Puppet
                 if (index == null)
                     currentGameObject = FindGameObjectByExpression(currentGameObject, typeOfSearch, name, condition);
                 else
-                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name)[(int) index];
+                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition)[(int) index];
             }
 
             return currentGameObject;
@@ -56,7 +57,7 @@ namespace Puppetry.Puppet
                 else if (index == null)
                     currentGameObject = FindGameObjectByExpression(currentGameObject, typeOfSearch, name, condition);
                 else
-                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name)[(int) index];
+                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition)[(int) index];
             }
 
             return result;
@@ -107,19 +108,24 @@ namespace Puppetry.Puppet
 
             typeOfSearch = new Regex(@"^(?<type>)//|/[a-z]*[:]{2}|/").Match(expression).Groups[0].ToString();
             expression = expression.Replace(typeOfSearch, string.Empty); //remove type of search from the expression
-
-            var property = new Regex(@"^.*\[(?<property>.*[^\]])").Match(expression).Groups["property"].ToString();
             index = null;
             condition = null;
-            if (!string.IsNullOrEmpty(property))
+            while (true)
             {
-                int parseResult;
-                if (int.TryParse(property, out parseResult))
-                    index = parseResult;
-                else
-                    condition = property;
+                var property = new Regex(@"^.*\[(?<property>.*[^\]])").Match(expression).Groups["property"].ToString();
 
-                expression = expression.Replace("[" + property + "]", string.Empty);
+                if (!string.IsNullOrEmpty(property))
+                {
+                    int parseResult;
+                    if (int.TryParse(property, out parseResult))
+                        index = parseResult;
+                    else
+                        condition = property;
+
+                    expression = expression.Replace("[" + property + "]", string.Empty);
+                }
+                else
+                    break;
             }
 
             name = expression;
@@ -127,8 +133,7 @@ namespace Puppetry.Puppet
             return resultedUPath;
         }
 
-        private static List<GameObject> FindGameObjectsByExpression(GameObject root, string typeOfSearch, string name,
-            string condition = null)
+        private static List<GameObject> FindGameObjectsByExpression(GameObject root, string typeOfSearch, string name, string condition)
         {
             var result = new List<GameObject>();
 
@@ -211,8 +216,7 @@ namespace Puppetry.Puppet
             return result;
         }
 
-        private static GameObject FindGameObjectByExpression(GameObject root, string typeOfSearch, string name,
-            string condition)
+        private static GameObject FindGameObjectByExpression(GameObject root, string typeOfSearch, string name, string condition)
         {
             GameObject result = null;
             switch (typeOfSearch)
@@ -419,7 +423,11 @@ namespace Puppetry.Puppet
         {
             var currentCondition = condition;
             var typeOfSearch = new Regex(@"^(?<type>)[a-z]*[:]{2}").Match(currentCondition).Groups[0].ToString();
-            var name = currentCondition.Replace(typeOfSearch, string.Empty); //remove type of search from the expression
+            string name = null;
+            if (string.IsNullOrEmpty(typeOfSearch))
+                typeOfSearch = currentCondition;
+            else
+                name = currentCondition.Replace(typeOfSearch, string.Empty); //remove type of search from the expression
 
             var result = false;
             switch (typeOfSearch)
@@ -435,6 +443,12 @@ namespace Puppetry.Puppet
                     break;
                 case DescendantAxe + "::":
                     result = FindDescendant(name, gameObject) != null;
+                    break;
+                case Active:
+                    result = gameObject.activeInHierarchy;
+                    break;
+                case "!" + Active:
+                    result = !gameObject.activeInHierarchy;
                     break;
             }
 

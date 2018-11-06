@@ -9,10 +9,15 @@ namespace PuppetTesting
     [Parallelizable(ParallelScope.None)]
     public class PuppetTesting
     {
+        [OneTimeSetUp]
+        public void TestRunInit()
+        {
+            Configuration.Set(Settings.TimeoutMs, 45000);
+        }
+
         [SetUp]
         public void Init()
         {
-            Configuration.Set(Settings.TimeoutMs, 45000);
             Editor.StartPlayMode();
         }
 
@@ -57,6 +62,11 @@ namespace PuppetTesting
         {
             Game.MakeScreenshot("D:\\ScreenShots\\Test.png");
             Editor.StopPlayMode();
+        }
+
+        [OneTimeTearDown]
+        public void TestRunCleanUp()
+        {
             Driver.KillSession();
         }
     }

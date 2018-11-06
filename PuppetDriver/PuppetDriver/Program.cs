@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -11,14 +12,29 @@ namespace Puppetry.PuppetDriver
     {
         static void Main(string[] args)
         {
-            Parallel.Invoke(() => BuildWebHost(args).Run(), StartTcpListner);
+            var settings = Configuration.ProcessComandLineArguments(args);
+
+            Parallel.Invoke(() => BuildWebHost(settings).Run(), StartTcpListner);
         }
 
-        private static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        private static IWebHost BuildWebHost(Dictionary<string, string> settings)
+        {
+            const string PortParameter = "p";
+
+            string baseUrl = "http://localhost";
+            string port = "7111";
+
+            if (settings.Count > 0)
+            {
+                if (settings.ContainsKey(PortParameter))
+                    port = settings[PortParameter];
+            }
+
+            return WebHost.CreateDefaultBuilder()
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:7111/")
+                .UseUrls($"{baseUrl}:{port}/")
                 .Build();
+        }
 
         private static void StartTcpListner()
         {
