@@ -13,7 +13,7 @@
             <dependency id="RestSharp" version="106.3.1" />
             <dependency id="Newtonsoft.Json" version="11.0.2" />
 			<dependency id="Microsoft.NetCore.App" version="2.0.0" />
-			<dependency id="Puppetry.Contracts" version="1.0.3" />
+			<dependency id="Puppetry.Contracts" version="1.0.4" />
         </dependencies>       
     </metadata>
     <files>

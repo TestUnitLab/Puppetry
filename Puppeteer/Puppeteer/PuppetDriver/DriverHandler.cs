@@ -43,7 +43,18 @@ namespace Puppetry.Puppeteer.PuppetDriver
 
         internal void Swipe(string root, string name, string parent, string upath, string direction, string locatorMessage)
         {
-            var request = BuildRequest(Methods.Click, _sessionId, upath: upath, root: root, name: name, parent: parent, value: direction);
+            var request = BuildRequest(Methods.Swipe, _sessionId, upath: upath, root: root, name: name, parent: parent, value: direction);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new Exception($"GameObject with {locatorMessage} was not clicked");
+        }
+        
+        internal void DragTo(string root, string name, string parent, string upath, string toCoordinates, string locatorMessage)
+        {
+            var request = BuildRequest(Methods.DragTo, _sessionId, upath: upath, root: root, name: name, parent: parent, value: toCoordinates);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())

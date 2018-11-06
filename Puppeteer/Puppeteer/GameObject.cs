@@ -83,13 +83,24 @@ namespace Puppetry.Puppeteer
         {
             Driver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower(), LocatorMessage);
         }
+        
+        public void DragTo(string name, string parent, string upath, ScreenCoordinates toCoordinates)
+        {
+            Driver.Instance.DragTo(Root, Name, Parent, UPath, JsonConvert.SerializeObject(toCoordinates), LocatorMessage);
+        }
+        
+        public void DragTo(string name, string parent, string upath, GameObject toGameObject)
+        {
+            var toCoordinates = toGameObject.GetScreenCoordinates();
+            DragTo(name, parent, upath, toCoordinates);
+        }
 
         public string GetComponent(string component)
         {
             return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
         }
         
-        public ScreenCoordinates GetCoordinates()
+        public ScreenCoordinates GetScreenCoordinates()
         {
             var result = Driver.Instance.GetCoordinates(Root, Name, Parent, UPath, LocatorMessage);
 

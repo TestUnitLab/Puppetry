@@ -40,7 +40,7 @@ namespace Puppetry.Puppeteer
                 /*case Settings.Driver:
                     DriverType = (DriverTypes)Enum.Parse(typeof(DriverTypes), value.ToString());
                     break;*/
-                case Settings.PollingStratagy:
+                case Settings.PollingStrategy:
                     PollingStratagy = (PollingStrategies)Enum.Parse(typeof(PollingStrategies), value.ToString());
                     break;
             }
@@ -54,7 +54,7 @@ namespace Puppetry.Puppeteer
         TimeoutMs,
         SessionTimeoutMs,
         //Driver,
-        PollingStratagy
+        PollingStrategy
     }
 
     /*public enum DriverTypes
