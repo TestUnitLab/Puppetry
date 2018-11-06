@@ -217,6 +217,24 @@ namespace Puppetry.PuppetDriver.Editor
 
             return result;
         }
+        
+        public EditorResponse DragTo(string root, string name, string parent, string upath, string toCoordinates)
+        {
+            PrepareRequest(Methods.Swipe, upath: upath, root: root, name: name, parent: parent, value: toCoordinates);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Active)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new EditorResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
 
         public EditorResponse StartPlayMode()
         {

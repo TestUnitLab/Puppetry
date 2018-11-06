@@ -18,6 +18,8 @@ namespace Puppetry.PuppetDriver.Editor
         EditorResponse Active(string root, string name, string parent, string upath);
 
         EditorResponse Swipe(string root, string name, string parent, string upath, string direction);
+        
+        EditorResponse DragTo(string root, string name, string parent, string upath, string toCoordinates);
 
         EditorResponse Rendering(string root, string name, string parent, string upath);
         
