@@ -14,6 +14,8 @@ namespace Puppetry.Puppet
     public static class DriverHandler
     {
         const string SuccessResult = "success";
+        const string PlayModeIsNotStarted = "Play mode is not started";
+        const string GameObjectWasNotFound = "GameObject was not found";
 
         internal static DriverResponse HandleDriverRequest(DriverRequest request)
         {
@@ -222,7 +224,7 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            string response = "";
+            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadHelper.QueueOnMainThread(() =>
             {
                 try
@@ -232,11 +234,11 @@ namespace Puppetry.Puppet
                         go = FindGameObjectHelper.FindGameObjectByUPath(upath);
                     else
                         go = FindGameObjectHelper.FindGameObject(rootName, nameOrPath, parent);
-                    
+
                     if (go != null)
                         response = onComplete(go);
                     else
-                        response = "GameObject was not found";
+                        response = GameObjectWasNotFound;
                 }
                 catch (Exception e)
                 {
@@ -251,17 +253,18 @@ namespace Puppetry.Puppet
             });
 
             // wait for the end of the 'action' executed in the main thread
-            autoEvent.WaitOne();
+            autoEvent.WaitOne(5000);
 
             return response;
         }
-        
+
         private static string ExecuteGameObjectsEmulation(string nameOrPath, string parent, string root, string upath, Func<List<GameObject>, string> onComplete)
         {
             var autoEvent = new AutoResetEvent(false);
 
-            var response = "";
-            MainThreadHelper.QueueOnMainThread(() => {
+            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
+            MainThreadHelper.QueueOnMainThread(() =>
+            {
                 try
                 {
                     List<GameObject> listOfGOs;
@@ -273,35 +276,9 @@ namespace Puppetry.Puppet
                     {
                         listOfGOs = FindGameObjectHelper.GetGameObjects(nameOrPath, root, parent);
                     }
-                    
+
                     response = onComplete(listOfGOs);
 
-                } catch (Exception e) {
-                    Log(e);
-                    response = e.Message;
-                } finally {
-                    // set the event to "unlock" the thread
-                    autoEvent.Set();
-                }
-            });
-
-            // wait for the end of the 'action' executed in the main thread
-            autoEvent.WaitOne();
-
-            return response;
-        }
-
-        private static string InvokeOnMainThreadAndWait(Action action)
-        {
-            // event used to wait the answer from the main thread.
-            AutoResetEvent autoEvent = new AutoResetEvent(false);
-
-            string response = SuccessResult;
-            MainThreadHelper.QueueOnMainThread(() =>
-            {
-                try
-                {
-                    action();
                 }
                 catch (Exception e)
                 {
@@ -316,7 +293,68 @@ namespace Puppetry.Puppet
             });
 
             // wait for the end of the 'action' executed in the main thread
-            autoEvent.WaitOne();
+            autoEvent.WaitOne(5000);
+
+            return response;
+        }
+
+        private static string InvokeOnMainThreadAndWait(Action action)
+        {
+            // event used to wait the answer from the main thread.
+            AutoResetEvent autoEvent = new AutoResetEvent(false);
+
+            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
+            MainThreadHelper.QueueOnMainThread(() =>
+            {
+                try
+                {
+                    action();
+                    response = SuccessResult;
+                }
+                catch (Exception e)
+                {
+                    Log(e);
+                    response = e.Message;
+                }
+                finally
+                {
+                    // set the event to "unlock" the thread
+                    autoEvent.Set();
+                }
+            });
+
+            // wait for the end of the 'action' executed in the main thread
+            autoEvent.WaitOne(5000);
+
+            return response;
+        }
+
+        private static string InvokeOnMainThreadAndWait(Func<string> action)
+        {
+            // event used to wait the answer from the main thread.
+            AutoResetEvent autoEvent = new AutoResetEvent(false);
+
+            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
+            MainThreadHelper.QueueOnMainThread(() =>
+            {
+                try
+                {
+                    response = action.Invoke();
+                }
+                catch (Exception e)
+                {
+                    Log(e);
+                    response = e.Message;
+                }
+                finally
+                {
+                    // set the event to "unlock" the thread
+                    autoEvent.Set();
+                }
+            });
+
+            // wait for the end of the 'action' executed in the main thread
+            autoEvent.WaitOne(5000);
 
             return response;
         }

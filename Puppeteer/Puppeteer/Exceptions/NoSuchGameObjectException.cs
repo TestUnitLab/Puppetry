@@ -2,7 +2,7 @@
 
 namespace Puppetry.Puppeteer.Exceptions
 {
-    public class NoSuchGameObjectException : PuppetDriverException
+    public class NoSuchGameObjectException : PuppetryException
     {
         public NoSuchGameObjectException()
         {

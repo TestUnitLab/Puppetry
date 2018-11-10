@@ -26,8 +26,10 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"GameObject with {locatorMessage} was not clicked");
+                throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
 
         internal void SendKeys(string value, string root, string name, string parent, string upath, string locatorMessage)
@@ -37,8 +39,10 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"Keys {value} were not sent to GameObject with {locatorMessage}");
+                throw new PuppetryException($"Keys {value} were not sent to GameObject with {locatorMessage}");
         }
 
         internal void Swipe(string root, string name, string parent, string upath, string direction, string locatorMessage)
@@ -48,8 +52,10 @@ namespace Puppetry.Puppeteer.PuppetDriver
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"GameObject with {locatorMessage} was not clicked");
+                throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
         
         internal void DragTo(string root, string name, string parent, string upath, string toCoordinates, string locatorMessage)
@@ -59,14 +65,19 @@ namespace Puppetry.Puppeteer.PuppetDriver
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"GameObject with {locatorMessage} was not clicked");
+                throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
 
         internal bool Exist(string root, string name, string parent, string upath)
         {
             var request = BuildRequest(Methods.Exist, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -78,6 +89,8 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -89,6 +102,8 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -100,6 +115,8 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -111,6 +128,8 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -119,6 +138,9 @@ namespace Puppetry.Puppeteer.PuppetDriver
         {
             var request = BuildRequest(Methods.Count, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
 
             return int.TryParse(response[Parameters.Result], out var result) ? result : -1;
         }
@@ -130,7 +152,9 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
+
             return response[Parameters.Result];
         }
         
@@ -141,7 +165,9 @@ namespace Puppetry.Puppeteer.PuppetDriver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
+
             return response[Parameters.Result];
         }
 
@@ -151,43 +177,47 @@ namespace Puppetry.Puppeteer.PuppetDriver
             var response = Post(request);
             
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception($"PlayMode was not started");
+                throw new PuppetryException($"PlayMode was not started");
         }
 
         internal void StopPlayMode()
         {
             var request = BuildRequest(Methods.StopPlayMode, _sessionId);
             var response = Post(request);
-            
+
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception("PlayMode was not stopped");
+                throw new PuppetryException("PlayMode was not stopped");
         }
 
         internal void TakeScreenshot(string path)
         {
             var request = BuildRequest(Methods.TakeScreenshot, _sessionId, value: path);
             var response = Post(request);
-            
+
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception("PlayMode was not stopped");
+                throw new PuppetryException("PlayMode was not stopped");
         }
 
-        internal void KillSession()
+        internal void ReleaseSession()
         {
             var request = BuildRequest(Methods.KillSession, _sessionId);
             var response = Post(request);;
 
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception("Session was not Killed");
+                throw new PuppetryException("Session was not released");
         }
         
-        internal void KillAllSessions()
+        internal static void ReleaseAllSessions()
         {
             var request = BuildRequest(Methods.KillAllSessions);
             var response = Post(request);;
 
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception("Session was not Killed");
+                throw new PuppetryException("All Sessions were not released");
         }
 
         private void StartSession()
@@ -263,10 +293,10 @@ namespace Puppetry.Puppeteer.PuppetDriver
 
         public void Dispose()
         {
-            KillSession();
+            ReleaseSession();
         }
 
-        private Dictionary<string, string> BuildRequest(string method, string session = null, string upath = null,
+        private static Dictionary<string, string> BuildRequest(string method, string session = null, string upath = null,
             string root = null, string name = null, string parent = null, string value = null)
         {
             var request = new Dictionary<string, string>();
@@ -282,7 +312,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             return request;
         }
 
-        private Dictionary<string, string> Post(Dictionary<string, string> request)
+        private static Dictionary<string, string> Post(Dictionary<string, string> request)
         {
             var restClient = new RestClient($"{Configuration.BaseUrl}:{Configuration.Port}/");
             var restRequest = new RestRequest(Method.POST);
@@ -299,7 +329,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             return response;
         }
 
-        private void ValidateResponseStructure(Dictionary<string, string> response)
+        private static void ValidateResponseStructure(Dictionary<string, string> response)
         {
             if (!response.ContainsKey(Parameters.StatusCode) || !response.ContainsKey(Parameters.Result))
                 throw new UnexpectedResponseException($"PuppetDriver sent unexpected response: {response}");

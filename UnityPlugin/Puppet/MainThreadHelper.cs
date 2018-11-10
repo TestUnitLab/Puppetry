@@ -8,19 +8,26 @@ namespace Puppetry.Puppet
     {
         private readonly List<Action> requestedActions = new List<Action>();
         private readonly List<Action> currentActions = new List<Action>();
+        private static MainThreadHelper _instance;
 
-        private static MainThreadHelper Instance { get; set; }
-
-        private MainThreadHelper()
+        private static MainThreadHelper Instance
         {
-            Instance = this;
+            get { return _instance; }
+        }
+
+        void Awake()
+        {
+            _instance = this;
         }
 
         public static void QueueOnMainThread(Action action)
         {
-            lock (Instance.requestedActions)
+            if (Instance != null)
             {
-                Instance.requestedActions.Add(action);
+                lock (Instance.requestedActions)
+                {
+                    Instance.requestedActions.Add(action);
+                }
             }
         }
 

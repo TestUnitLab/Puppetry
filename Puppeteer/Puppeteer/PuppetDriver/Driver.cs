@@ -6,15 +6,15 @@ namespace Puppetry.Puppeteer.PuppetDriver
     {
         private static ThreadLocal<DriverHandler> _handler = new ThreadLocal<DriverHandler>();
 
-        public static void KillSession()
+        public static void ReleaseSession()
         {
-            Instance.KillSession();
+            Instance.ReleaseSession();
             Clear();
         }
         
-        public static void KillAllSessions()
+        public static void ReleaseAllSessions()
         {
-            Instance.KillAllSessions();
+            DriverHandler.ReleaseAllSessions();
             Clear();
         }
         
@@ -22,7 +22,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
         {
             get
             {
-                if (!_handler.IsValueCreated && _handler.Value == null)
+                if (_handler.Value == null)
                 {
                     _handler.Value = new DriverHandler();
                 }

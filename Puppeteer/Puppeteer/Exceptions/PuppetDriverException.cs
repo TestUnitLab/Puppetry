@@ -2,19 +2,17 @@
 
 namespace Puppetry.Puppeteer.Exceptions
 {
-    public class PuppetDriverException : Exception
+    public class PuppetryException : Exception
     {
-        public PuppetDriverException()
+        public PuppetryException()
         {
         }
 
-        public PuppetDriverException(string message)
-            : base(message)
+        public PuppetryException(string message) : base(message)
         {
         }
 
-        public PuppetDriverException(string message, Exception inner)
-            : base(message, inner)
+        public PuppetryException(string message, Exception inner) : base(message, inner)
         {
         }
     }

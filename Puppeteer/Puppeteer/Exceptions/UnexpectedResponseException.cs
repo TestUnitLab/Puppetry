@@ -2,19 +2,17 @@
 
 namespace Puppetry.Puppeteer.Exceptions
 {
-    public class UnexpectedResponseException : PuppetDriverException
+    public class UnexpectedResponseException : PuppetryException
     {
         public UnexpectedResponseException()
         {
         }
 
-        public UnexpectedResponseException(string message)
-            : base(message)
+        public UnexpectedResponseException(string message) : base(message)
         {
         }
 
-        public UnexpectedResponseException(string message, Exception inner)
-            : base(message, inner)
+        public UnexpectedResponseException(string message, Exception inner) : base(message, inner)
         {
         }
     }
