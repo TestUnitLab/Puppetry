@@ -24,6 +24,7 @@ namespace PuppetDriver.Controllers
             string gameObjectRootName = null;
             string gameObjectParentName = null;
             string upath = null;
+            string key = null;
             string value = null;
 
             var request = new Dictionary<string, string>();
@@ -50,6 +51,7 @@ namespace PuppetDriver.Controllers
             if (request.ContainsKey(Parameters.Root)) gameObjectRootName = request[Parameters.Root];
             if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
             if (request.ContainsKey(Parameters.UPath)) upath = request[Parameters.UPath];
+            if (request.ContainsKey(Parameters.Key)) key = request[Parameters.Key];
             if (request.ContainsKey(Parameters.Value)) value = request[Parameters.Value];
 
             switch (request[Parameters.Method].ToLowerInvariant())
@@ -234,20 +236,76 @@ namespace PuppetDriver.Controllers
                 case Methods.DeletePlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
-                    result = handler.DeletePlayerPref(value);
+                    result = handler.DeletePlayerPref(key);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
-                case Methods.DeleteAllPrefs:
+                case Methods.DeleteAllPlayerPrefs:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetEditorHandler(sessionId);
-                    result = handler.DeleteAllPrefs();
+                    result = handler.DeleteAllPlayerPrefs();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
-                
+                case Methods.GetFloatPlayerPref:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.GetFloatPlayerPref(key);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.GetIntPlayerPref:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.GetIntPlayerPref(key);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.GetStringPlayerPref:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.GetStringPlayerPref(key);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.SetFloatPlayerPref:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.SetFloatPlayerPref(key, value);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.SetIntPlayerPref:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.SetIntPlayerPref(key, value);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.SetStringPlayerPref:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.SetStringPlayerPref(key, value);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.PlayerPrefHasKey:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    result = handler.PlayerPrefHasKey(key);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+
                 default:
                     response.Add(Parameters.StatusCode, ErrorCodes.MethodNotSupported.ToString());
                     response[Parameters.ErrorMessage] = $"Method: '{request["method"]}' is not supported";

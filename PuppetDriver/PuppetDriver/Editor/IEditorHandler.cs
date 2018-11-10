@@ -41,6 +41,20 @@ namespace Puppetry.PuppetDriver.Editor
         
         EditorResponse DeletePlayerPref(string key);
         
-        EditorResponse DeleteAllPrefs();
+        EditorResponse DeleteAllPlayerPrefs();
+
+        EditorResponse GetFloatPlayerPref(string key);
+
+        EditorResponse GetIntPlayerPref(string key);
+
+        EditorResponse GetStringPlayerPref(string key);
+
+        EditorResponse SetFloatPlayerPref(string key, string value);
+
+        EditorResponse SetIntPlayerPref(string key, string value);
+
+        EditorResponse SetStringPlayerPref(string key, string value);
+
+        EditorResponse PlayerPrefHasKey(string key);
     }
 }

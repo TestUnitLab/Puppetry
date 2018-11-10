@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,10 +11,6 @@ namespace Puppetry.Puppet
 {
     public static class DriverHandler
     {
-        const string SuccessResult = "success";
-        const string PlayModeIsNotStarted = "Play mode is not started";
-        const string GameObjectWasNotFound = "GameObject was not found";
-
         internal static DriverResponse HandleDriverRequest(DriverRequest request)
         {
             var response = new DriverResponse {method = request.method };
@@ -38,21 +32,21 @@ namespace Puppetry.Puppet
                     response.result = "unity";
                     break;
                 case "exist":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
                         gameObject => true.ToString());
                     break;
                 case "active":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
                         gameObject => gameObject.activeInHierarchy.ToString());
                     break;
                 case "onscreen":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsOnScreen(gameObject).ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsOnScreen(gameObject).ToString());
                     break;
                 case "graphicclickable":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsGraphicClickable(gameObject).ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsGraphicClickable(gameObject).ToString());
                     break;
                 case "getcomponent":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {
                         var component = gameObject.GetComponent(request.value);
                         return component != null ? EditorJsonUtility.ToJson(component) : "null";
@@ -60,15 +54,15 @@ namespace Puppetry.Puppet
                     break;
 
                 case "click":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {
                         var pointer = new PointerEventData(EventSystem.current);
                         ExecuteEvents.Execute(gameObject, pointer, ExecuteEvents.pointerClickHandler);
-                        return SuccessResult;
+                        return Constants.ErrorMessages.SuccessResult;
                     });
                     break;
                 case "isrendering":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
                         go =>
                         {
                             var renderer = go.GetComponent<Renderer>();
@@ -80,24 +74,105 @@ namespace Puppetry.Puppet
                         });
                     break;
                 case "count":
-                    response.result = ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, goList => goList.Count.ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, goList => goList.Count.ToString());
                     break;
-                case "deletepref":
-                    response.result = InvokeOnMainThreadAndWait(() =>
+                case "deleteplayerpref":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
-                        PlayerPrefs.DeleteKey(request.value);
+                        PlayerPrefs.DeleteKey(request.key);
                         PlayerPrefs.Save();
                     });
                     break;
                 case "deleteallprefs":
-                    response.result = InvokeOnMainThreadAndWait(() =>
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
                         PlayerPrefs.DeleteAll();
                         PlayerPrefs.Save();
                     });
                     break;
+                case "getfloatplayerpref":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                    {
+                        return PlayerPrefs.GetFloat(request.key).ToString();
+                    });
+                    break;
+                case "getintplayerpref":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                    {
+                        return PlayerPrefs.GetInt(request.key).ToString();
+                    });
+                    break;
+                case "getstringplayerpref":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                    {
+                        return PlayerPrefs.GetString(request.key);
+                    });
+                    break;
+                case "setfloatplayerpref":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                    {
+                        var result = Constants.ErrorMessages.SuccessResult;
+                        try
+                        {
+                            PlayerPrefs.SetFloat(request.key, float.Parse(request.value));
+                            PlayerPrefs.Save();
+                        }
+                        catch (Exception e)
+                        {
+                            result = e.ToString();
+                        }
+                        return result;
+                    });
+                    break;
+                case "setintplayerpref":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                    {
+                        var result = Constants.ErrorMessages.SuccessResult;
+                        try
+                        {
+                            PlayerPrefs.SetInt(request.key, int.Parse(request.value));
+                            PlayerPrefs.Save();
+                        }
+                        catch (Exception e)
+                        {
+                            result = e.ToString();
+                        }
+                        return result;
+                    });
+                    break;
+                case "setstringplayerpref":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                    {
+                        var result = Constants.ErrorMessages.SuccessResult;
+                        try
+                        {
+                            PlayerPrefs.SetFloat(request.key, float.Parse(request.value));
+                            PlayerPrefs.Save();
+                        }
+                        catch (Exception e)
+                        {
+                            result = e.ToString();
+                        }
+                        return result;
+                    });
+                    break;
+                case "playerprefhaskey":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                    {
+                        string result;
+                        try
+                        {
+                            result = PlayerPrefs.HasKey(request.key).ToString();
+                        }
+                        catch (Exception e)
+                        {
+                            result = e.ToString();
+                        }
+                        return result;
+                    });
+                    break;
                 case "getcoordinates":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {
                         var position = ScreenHelper.GetPositionOnScreen(gameObject);
                         var coordinates = new ScreenCoordinates {X = position.x, Y = position.y};
@@ -125,16 +200,16 @@ namespace Puppetry.Puppet
 
                     swipeDirection *= 100;
 
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => {
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => {
                         var pointer = new PointerEventData(EventSystem.current);
                         gameObject.GetComponent<MonoBehaviour>().StartCoroutine(DragCoroutine(gameObject, pointer, (Vector2)ScreenHelper.GetPositionOnScreen(gameObject) + swipeDirection * 2));
 
-                        return SuccessResult;
+                        return Constants.ErrorMessages.SuccessResult;
                     });
                     break;
                 
                 case "dragto":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => {
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => {
                         var screenCoordinates = new ScreenCoordinates();
                         EditorJsonUtility.FromJsonOverwrite(request.value, screenCoordinates);
                         var pointer = new PointerEventData(EventSystem.current);
@@ -147,7 +222,7 @@ namespace Puppetry.Puppet
 
 
                 case "sendkeys":
-                    response.result = ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {
                         var input = gameObject.GetComponent<InputField>();
                         if (input != null)
@@ -159,16 +234,16 @@ namespace Puppetry.Puppet
                             return "input not found";
                         }
 
-                        return SuccessResult;
+                        return Constants.ErrorMessages.SuccessResult;
                     });
                     break;
 
                 case "startplaymode":
                     EditorApplication.update += StartPlayMode;
-                    response.result = SuccessResult;
+                    response.result = Constants.ErrorMessages.SuccessResult;
                     break;
                 case "stopplaymode":
-                    response.result = InvokeOnMainThreadAndWait(() =>
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
                         //EditorApplication.UnlockReloadAssemblies();
                         EditorApplication.isPlaying = false;
@@ -180,8 +255,8 @@ namespace Puppetry.Puppet
                     break;
                 case "takescreenshot":
                     var path = request.value;
-                    MainThreadHelper.QueueOnMainThread(() => { TakeScreenshot(path); });
-                    response.result = SuccessResult;
+                    MainThreadQueue.QueueOnMainThread(() => { TakeScreenshot(path); });
+                    response.result = Constants.ErrorMessages.SuccessResult;
                     break;
 
                 default:
@@ -217,156 +292,6 @@ namespace Puppetry.Puppet
             
             //EditorApplication.LockReloadAssemblies();
             EditorApplication.isPlaying = true;
-        }
-
-        private static string ExecuteGameObjectEmulation(string rootName, string nameOrPath, string parent, string upath, Func<GameObject, string> onComplete)
-        {
-            // event used to wait the answer from the main thread.
-            AutoResetEvent autoEvent = new AutoResetEvent(false);
-
-            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
-            MainThreadHelper.QueueOnMainThread(() =>
-            {
-                try
-                {
-                    GameObject go;
-                    if (!string.IsNullOrEmpty(upath))
-                        go = FindGameObjectHelper.FindGameObjectByUPath(upath);
-                    else
-                        go = FindGameObjectHelper.FindGameObject(rootName, nameOrPath, parent);
-
-                    if (go != null)
-                        response = onComplete(go);
-                    else
-                        response = GameObjectWasNotFound;
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                    response = e.Message;
-                }
-                finally
-                {
-                    // set the event to "unlock" the thread
-                    autoEvent.Set();
-                }
-            });
-
-            // wait for the end of the 'action' executed in the main thread
-            autoEvent.WaitOne(5000);
-
-            return response;
-        }
-
-        private static string ExecuteGameObjectsEmulation(string nameOrPath, string parent, string root, string upath, Func<List<GameObject>, string> onComplete)
-        {
-            var autoEvent = new AutoResetEvent(false);
-
-            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
-            MainThreadHelper.QueueOnMainThread(() =>
-            {
-                try
-                {
-                    List<GameObject> listOfGOs;
-                    if (!string.IsNullOrEmpty(upath))
-                    {
-                        listOfGOs = FindGameObjectHelper.FindGameObjectsByUPath(upath);
-                    }
-                    else
-                    {
-                        listOfGOs = FindGameObjectHelper.GetGameObjects(nameOrPath, root, parent);
-                    }
-
-                    response = onComplete(listOfGOs);
-
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                    response = e.Message;
-                }
-                finally
-                {
-                    // set the event to "unlock" the thread
-                    autoEvent.Set();
-                }
-            });
-
-            // wait for the end of the 'action' executed in the main thread
-            autoEvent.WaitOne(5000);
-
-            return response;
-        }
-
-        private static string InvokeOnMainThreadAndWait(Action action)
-        {
-            // event used to wait the answer from the main thread.
-            AutoResetEvent autoEvent = new AutoResetEvent(false);
-
-            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
-            MainThreadHelper.QueueOnMainThread(() =>
-            {
-                try
-                {
-                    action();
-                    response = SuccessResult;
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                    response = e.Message;
-                }
-                finally
-                {
-                    // set the event to "unlock" the thread
-                    autoEvent.Set();
-                }
-            });
-
-            // wait for the end of the 'action' executed in the main thread
-            autoEvent.WaitOne(5000);
-
-            return response;
-        }
-
-        private static string InvokeOnMainThreadAndWait(Func<string> action)
-        {
-            // event used to wait the answer from the main thread.
-            AutoResetEvent autoEvent = new AutoResetEvent(false);
-
-            var response = PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
-            MainThreadHelper.QueueOnMainThread(() =>
-            {
-                try
-                {
-                    response = action.Invoke();
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                    response = e.Message;
-                }
-                finally
-                {
-                    // set the event to "unlock" the thread
-                    autoEvent.Set();
-                }
-            });
-
-            // wait for the end of the 'action' executed in the main thread
-            autoEvent.WaitOne(5000);
-
-            return response;
-        }
-
-        public static void Log(string msg)
-        {
-            Debug.Log(DateTime.UtcNow.ToString("HH:mm:ss.fff") + " [Puppet] " + msg);
-        }
-
-        private static void Log(Exception e)
-        {
-            Debug.Log(DateTime.UtcNow.ToString("HH:mm:ss.fff") + " [Puppet] " + e);
         }
 
         private static void TakeScreenshot(string pathName) 

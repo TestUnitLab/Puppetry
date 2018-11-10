@@ -10,7 +10,7 @@ namespace Puppetry.Puppet
             {
                 Debug.Log("DriverApiClient is starting...");
                 DriverApiClient.Instance.StartClient();
-                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<MainThreadHelper>();
+                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<MainThreadQueue>();
             }
         }
     }

@@ -10,7 +10,7 @@ using Puppetry.Puppeteer.Exceptions;
 
 namespace Puppetry.Puppeteer.PuppetDriver
 {
-    internal class DriverHandler : IDisposable
+    internal class DriverHandler
     {
         private string _sessionId;
 
@@ -220,6 +220,83 @@ namespace Puppetry.Puppeteer.PuppetDriver
                 throw new PuppetryException("All Sessions were not released");
         }
 
+        public void DeletePlayerPref(string key)
+        {
+            var request = BuildRequest(Methods.DeletePlayerPref, _sessionId, key: key);            
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException("PlayerPref was not deleted");
+        }
+        
+        public void DeleteAllPlayerPrefs()
+        {
+            var request = BuildRequest(Methods.DeleteAllPlayerPrefs, _sessionId);            
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException("PlayerPrefs were not deleted");
+        }
+
+        public string GetFloatPlayerPref(string key)
+        {
+            var request = BuildRequest(Methods.GetFloatPlayerPref, _sessionId, key: key);
+            var response = Post(request);
+
+            return response[Parameters.Result];
+        }
+
+        public string GetIntPlayerPref(string key)
+        {
+            var request = BuildRequest(Methods.GetIntPlayerPref, _sessionId, key: key);
+            var response = Post(request);
+
+            return response[Parameters.Result];
+        }
+
+        public string GetStringPlayerPref(string key)
+        {
+            var request = BuildRequest(Methods.GetStringPlayerPref, _sessionId, key: key);
+            var response = Post(request);
+
+            return response[Parameters.Result];
+        }
+
+        public void SetFloatPlayerPref(string key, string value)
+        {
+            var request = BuildRequest(Methods.SetFloatPlayerPref, _sessionId, key: key, value: value);
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException(response[Parameters.Result]);
+        }
+
+        public void SetIntPlayerPref(string key, string value)
+        {
+            var request = BuildRequest(Methods.SetIntPlayerPref, _sessionId, key: key, value: value);
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException(response[Parameters.Result]);
+        }
+
+        public void SetStringPlayerPref(string key, string value)
+        {
+            var request = BuildRequest(Methods.SetStringPlayerPref, _sessionId, key: key, value: value);
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException(response[Parameters.Result]);
+        }
+
+        public string PlayerPrefHasKey(string key)
+        {
+            var request = BuildRequest(Methods.PlayerPrefHasKey, _sessionId, key: key);
+            var response = Post(request);
+
+            return response[Parameters.Result];
+        }
+
         private void StartSession()
         {
             var isSuccess = false;
@@ -234,7 +311,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
                 stopwatch.Reset();
                 stopwatch.Start();
                 var result = false;
-                
+
                 var request = BuildRequest(Methods.CreateSession);
                 response = Post(request);
                 if (response[Parameters.StatusCode] == ErrorCodes.Success.ToString())
@@ -270,34 +347,11 @@ namespace Puppetry.Puppeteer.PuppetDriver
             if (!isSuccess)
                 throw new SessionCreationException(
                     $"Session Creation was failed. {response[Parameters.ErrorMessage]}");
-                
-        }
 
-        public void DeletePlayerPref(string key)
-        {
-            var request = BuildRequest(Methods.DeletePlayerPref, _sessionId, value: key);            
-            var response = Post(request);
-
-            if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception("PlayerPref was not deleted");
-        }
-        
-        public void DeleteAllPlayerPrefs()
-        {
-            var request = BuildRequest(Methods.DeleteAllPrefs, _sessionId);            
-            var response = Post(request);
-
-            if (response[Parameters.Result] != ActionResults.Success)
-                throw new Exception("PlayerPrefs were not deleted");
-        }
-
-        public void Dispose()
-        {
-            ReleaseSession();
         }
 
         private static Dictionary<string, string> BuildRequest(string method, string session = null, string upath = null,
-            string root = null, string name = null, string parent = null, string value = null)
+            string root = null, string name = null, string parent = null, string key = null, string value = null)
         {
             var request = new Dictionary<string, string>();
             
@@ -307,6 +361,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             if (!string.IsNullOrEmpty(root)) request.Add(Parameters.Root, root);
             if (!string.IsNullOrEmpty(name)) request.Add(Parameters.Name, name);
             if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
+            if (!string.IsNullOrEmpty(key)) request.Add(Parameters.Key, key);
             if (!string.IsNullOrEmpty(value)) request.Add(Parameters.Value, value);
 
             return request;

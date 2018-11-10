@@ -316,7 +316,7 @@ namespace Puppetry.PuppetDriver.Editor
         
         public EditorResponse DeletePlayerPref(string key)
         {
-            PrepareRequest(Methods.DeletePlayerPref, value: key);
+            PrepareRequest(Methods.DeletePlayerPref, key: key);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -332,9 +332,9 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
         
-        public EditorResponse DeleteAllPrefs()
+        public EditorResponse DeleteAllPlayerPrefs()
         {
-            PrepareRequest(Methods.DeleteAllPrefs);
+            PrepareRequest(Methods.DeleteAllPlayerPrefs);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             EditorResponse result;
@@ -350,10 +350,137 @@ namespace Puppetry.PuppetDriver.Editor
             return result;
         }
 
-        private void PrepareRequest(string method, string upath = null, string root = null, string name = null, string parent = null, string value = null)
+        public EditorResponse GetFloatPlayerPref(string key)
+        {
+            PrepareRequest(Methods.GetFloatPlayerPref, key: key);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        public EditorResponse GetIntPlayerPref(string key)
+        {
+            PrepareRequest(Methods.GetIntPlayerPref, key: key);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        public EditorResponse GetStringPlayerPref(string key)
+        {
+            PrepareRequest(Methods.GetStringPlayerPref, key: key);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        public EditorResponse SetFloatPlayerPref(string key, string value)
+        {
+            PrepareRequest(Methods.SetFloatPlayerPref, key: key, value: value);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        public EditorResponse SetIntPlayerPref(string key, string value)
+        {
+            PrepareRequest(Methods.SetIntPlayerPref, key: key, value: value);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        public EditorResponse SetStringPlayerPref(string key, string value)
+        {
+            PrepareRequest(Methods.SetStringPlayerPref, key: key, value: value);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        public EditorResponse PlayerPrefHasKey(string key)
+        {
+            PrepareRequest(Methods.PlayerPrefHasKey, key: key);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+
+        private void PrepareRequest(string method, string upath = null, string root = null, string name = null, string parent = null, string key = null, string value = null)
         {
             _request.Clear();
             if (!string.IsNullOrEmpty(method)) _request.Add(Parameters.Method, method);
+            if (!string.IsNullOrEmpty(value)) _request.Add(Parameters.Key, key);
             if (!string.IsNullOrEmpty(value)) _request.Add(Parameters.Value, value);
             if (!string.IsNullOrEmpty(root)) _request.Add(Parameters.Root, root);
             if (!string.IsNullOrEmpty(name)) _request.Add(Parameters.Name, name);

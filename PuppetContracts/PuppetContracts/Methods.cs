@@ -20,8 +20,15 @@ namespace Puppetry.PuppetContracts
         public const string TakeScreenshot = "takescreenshot";
         public const string Rendering = "isrendering";
         public const string GetComponent = "getcomponent";
-        public const string DeletePlayerPref = "deletepref";
-        public const string DeleteAllPrefs = "deleteallprefs";
+        public const string DeletePlayerPref = "deleteplayerpref";
+        public const string DeleteAllPlayerPrefs = "deleteallprefs";
+        public const string GetFloatPlayerPref = "getfloatplayerpref";
+        public const string GetIntPlayerPref = "getintplayerpref";
+        public const string GetStringPlayerPref = "getstringplayerpref";
+        public const string SetFloatPlayerPref = "setfloatplayerpref";
+        public const string SetIntPlayerPref = "setintplayerpref";
+        public const string SetStringPlayerPref = "setstringplayerpref";
+        public const string PlayerPrefHasKey = "playerprefhaskey";
         public const string GetCoordinates = "getcoordinates";
         public const string Count = "count";
         public const string Ping = "ping";

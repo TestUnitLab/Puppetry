@@ -28,7 +28,7 @@ namespace Puppetry.Puppet
         {
             if (state == PlayModeStateChange.EnteredPlayMode)
             {
-                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<MainThreadHelper>();
+                var puppetProcessor = new GameObject("PuppetProcessor").AddComponent<MainThreadQueue>();
                 Object.DontDestroyOnLoad(puppetProcessor);
             }
         }

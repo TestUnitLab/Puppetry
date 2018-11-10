@@ -8,6 +8,7 @@ namespace Puppetry.PuppetContracts
         public const string ErrorMessage = "errormessage";
         public const string Result = "result";
         public const string Session = "session";
+        public const string Key = "key";
         public const string Value = "value";
         public const string Name = "name";
         public const string Parent = "parent";
