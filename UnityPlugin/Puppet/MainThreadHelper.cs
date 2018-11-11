@@ -17,14 +17,14 @@ namespace Puppetry.Puppet
             {
                 try
                 {
-                    GameObject go;
+                    GameObject gameObject;
                     if (!string.IsNullOrEmpty(upath))
-                        go = FindGameObjectHelper.FindGameObjectByUPath(upath);
+                        gameObject = FindGameObjectHelper.FindGameObjectByUPath(upath);
                     else
-                        go = FindGameObjectHelper.FindGameObject(rootName, nameOrPath, parent);
+                        gameObject = FindGameObjectHelper.FindGameObject(rootName, nameOrPath, parent);
 
-                    if (go != null)
-                        response = onComplete(go);
+                    if (gameObject != null)
+                        response = onComplete(gameObject);
                     else
                         response = Constants.ErrorMessages.GameObjectWasNotFound;
                 }

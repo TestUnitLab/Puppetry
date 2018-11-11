@@ -11,6 +11,7 @@ namespace Puppetry.Puppet
         private const string DescendantAxe = "descendant";
         private const string AncestorAxe = "ancestor";
         private const string Active = "active";
+        private const string containsExpression = "contains(";
 
         public static GameObject FindGameObjectByUPath(string upath)
         {
@@ -20,17 +21,23 @@ namespace Puppetry.Puppet
             int? index;
             string name;
             string condition;
-            currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
-            var currentGameObject = GameObject.Find(name);
+            bool fullName;
+            currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name, out fullName);
+
+            GameObject currentGameObject;
+            if (fullName)
+                currentGameObject = GameObject.Find(name);
+            else
+                currentGameObject = null;
 
             while (currentUpath.Length != 0 && currentGameObject != null) //we processed all upath or currentGameObject is null
             {
-                currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
+                currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name, out fullName);
 
                 if (index == null)
-                    currentGameObject = FindGameObjectByExpression(currentGameObject, typeOfSearch, name, condition);
+                    currentGameObject = FindGameObjectByExpression(currentGameObject, typeOfSearch, name, condition, fullName);
                 else
-                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition)[(int) index];
+                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition, fullName)[(int) index];
             }
 
             return currentGameObject;
@@ -45,19 +52,20 @@ namespace Puppetry.Puppet
             int? index;
             string name;
             string condition;
-            currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
+            bool fullName;
+            currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name, out fullName);
             var currentGameObject = GameObject.Find(name);
 
             while (currentUpath.Length != 0 && currentGameObject != null) //we processed all upath or currentGameObject is null
             {
-                currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name);
+                currentUpath = ProcessFirstUPathPart(currentUpath, out typeOfSearch, out index, out condition, out name, out fullName);
 
                 if (currentUpath.Length == 0)
-                    result = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition);
+                    result = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition, fullName);
                 else if (index == null)
-                    currentGameObject = FindGameObjectByExpression(currentGameObject, typeOfSearch, name, condition);
+                    currentGameObject = FindGameObjectByExpression(currentGameObject, typeOfSearch, name, condition, fullName);
                 else
-                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition)[(int) index];
+                    currentGameObject = FindGameObjectsByExpression(currentGameObject, typeOfSearch, name, condition, fullName)[(int) index];
             }
 
             return result;
@@ -99,8 +107,7 @@ namespace Puppetry.Puppet
             }
         }
 
-        private static string ProcessFirstUPathPart(string upath, out string typeOfSearch, out int? index,
-            out string condition, out string name)
+        private static string ProcessFirstUPathPart(string upath, out string typeOfSearch, out int? index, out string condition, out string name, out bool fullName)
         {
             var expression = new Regex(@"^(?<expression>/..[^/]*)").Match(upath).Groups["expression"].ToString();
 
@@ -110,6 +117,7 @@ namespace Puppetry.Puppet
             expression = expression.Replace(typeOfSearch, string.Empty); //remove type of search from the expression
             index = null;
             condition = null;
+            fullName = true;
             while (true)
             {
                 var property = new Regex(@"^.*\[(?<property>.*[^\]])").Match(expression).Groups["property"].ToString();
@@ -128,12 +136,18 @@ namespace Puppetry.Puppet
                     break;
             }
 
+            if (expression.StartsWith(containsExpression) && expression.EndsWith(")"))
+            {
+                fullName = false;
+                //Extract part of name
+                expression = expression.Substring(containsExpression.Length, expression.Length - containsExpression.Length - 1);
+            }
             name = expression;
 
             return resultedUPath;
         }
 
-        private static List<GameObject> FindGameObjectsByExpression(GameObject root, string typeOfSearch, string name, string condition)
+        private static List<GameObject> FindGameObjectsByExpression(GameObject root, string typeOfSearch, string name, string condition, bool fullName)
         {
             var result = new List<GameObject>();
 
@@ -142,13 +156,13 @@ namespace Puppetry.Puppet
                 case "/" + ParentAxe + "::":
                     if (condition != null)
                     {
-                        var examinedGameObject = FindParent(name, root);
+                        var examinedGameObject = FindParent(name, root, fullName);
                         if (IsFulfilledCondition(examinedGameObject, condition))
                             result.Add(examinedGameObject);
                     }
                     else
                     {
-                        result.Add(FindParent(name, root));
+                        result.Add(FindParent(name, root, fullName));
                     }
 
                     break;
@@ -156,7 +170,7 @@ namespace Puppetry.Puppet
                 case "/" + AncestorAxe + "::":
                     if (condition != null)
                     {
-                        var ancestors = FindAncestors(name, root);
+                        var ancestors = FindAncestors(name, root, fullName);
                         foreach (var ancestor in ancestors)
                         {
                             if (IsFulfilledCondition(ancestor, condition))
@@ -167,7 +181,7 @@ namespace Puppetry.Puppet
                     }
                     else
                     {
-                        result = FindAncestors(name, root);
+                        result = FindAncestors(name, root, fullName);
                     }
 
                     break;
@@ -176,7 +190,7 @@ namespace Puppetry.Puppet
                 case "/":
                     if (condition != null)
                     {
-                        var children = FindChildren(name, root);
+                        var children = FindChildren(name, root, fullName);
                         foreach (var child in children)
                         {
                             if (IsFulfilledCondition(child, condition))
@@ -187,7 +201,7 @@ namespace Puppetry.Puppet
                     }
                     else
                     {
-                        result = FindChildren(name, root);
+                        result = FindChildren(name, root, fullName);
                     }
 
                     break;
@@ -196,7 +210,7 @@ namespace Puppetry.Puppet
                 case "//":
                     if (condition != null)
                     {
-                        var descendants = FindDescendants(name, root);
+                        var descendants = FindDescendants(name, root, fullName);
                         foreach (var descendant in descendants)
                         {
                             if (IsFulfilledCondition(descendant, condition))
@@ -207,7 +221,7 @@ namespace Puppetry.Puppet
                     }
                     else
                     {
-                        result = FindDescendants(name, root);
+                        result = FindDescendants(name, root, fullName);
                     }
 
                     break;
@@ -216,7 +230,7 @@ namespace Puppetry.Puppet
             return result;
         }
 
-        private static GameObject FindGameObjectByExpression(GameObject root, string typeOfSearch, string name, string condition)
+        private static GameObject FindGameObjectByExpression(GameObject root, string typeOfSearch, string name, string condition, bool fullName)
         {
             GameObject result = null;
             switch (typeOfSearch)
@@ -224,12 +238,12 @@ namespace Puppetry.Puppet
                 case "/" + ParentAxe + "::":
                     if (condition != null)
                     {
-                        var examinedGameObject = FindParent(name, root);
+                        var examinedGameObject = FindParent(name, root, fullName);
                         result = IsFulfilledCondition(examinedGameObject, condition) ? examinedGameObject : null;
                     }
                     else
                     {
-                        result = FindParent(name, root);
+                        result = FindParent(name, root, fullName);
                     }
 
                     break;
@@ -238,7 +252,7 @@ namespace Puppetry.Puppet
 
                     if (condition != null)
                     {
-                        var ancestors = FindAncestors(name, root);
+                        var ancestors = FindAncestors(name, root, fullName);
                         foreach (var ancestor in ancestors)
                         {
                             if (IsFulfilledCondition(ancestor, condition))
@@ -250,7 +264,7 @@ namespace Puppetry.Puppet
                     }
                     else
                     {
-                        result = FindAncestor(name, root);
+                        result = FindAncestor(name, root, fullName);
                     }
 
                     break;
@@ -259,7 +273,7 @@ namespace Puppetry.Puppet
                 case "/":
                     if (condition != null)
                     {
-                        var children = FindChildren(name, root);
+                        var children = FindChildren(name, root, fullName);
                         foreach (var child in children)
                         {
                             if (IsFulfilledCondition(child, condition))
@@ -271,7 +285,7 @@ namespace Puppetry.Puppet
                     }
                     else
                     {
-                        result = FindChild(name, root);
+                        result = FindChild(name, root, fullName);
                     }
 
                     break;
@@ -280,7 +294,7 @@ namespace Puppetry.Puppet
                 case "//":
                     if (condition != null)
                     {
-                        var descendants = FindDescendants(name, root);
+                        var descendants = FindDescendants(name, root, fullName);
                         foreach (var descendant in descendants)
                         {
                             if (IsFulfilledCondition(descendant, condition))
@@ -292,7 +306,7 @@ namespace Puppetry.Puppet
                     }
                     else
                     {
-                        result = FindDescendant(name, root);
+                        result = FindDescendant(name, root, fullName);
                     }
 
                     break;
@@ -312,45 +326,64 @@ namespace Puppetry.Puppet
             return parent != null ? parent.gameObject : null;
         }
 
-        private static GameObject FindParent(string name, GameObject child)
+        private static GameObject FindParent(string name, GameObject child, bool fullName = true)
         {
             var parent = child.transform.parent;
 
-            if (parent == null || parent.name != name)
+            if (parent == null)
+                return null;
+            else if (fullName && parent.name != name)
+                return null;
+            else if (!fullName && !parent.name.Contains(name))
                 return null;
 
             return parent.gameObject;
         }
 
-        private static GameObject FindAncestor(string name, GameObject child)
+        private static GameObject FindAncestor(string name, GameObject child, bool fullName = true)
         {
-            var gameObject = FindParent(name, child);
+            var gameObject = FindParent(name, child, fullName);
 
             if (gameObject != null)
                 return gameObject;
 
             var parent = child.transform.parent;
 
-            return parent != null ? FindAncestor(name, parent.gameObject) : null;
+            return parent != null ? FindAncestor(name, parent.gameObject, fullName) : null;
         }
 
-        private static GameObject FindChild(string name, GameObject parent)
+        private static GameObject FindChild(string name, GameObject parent, bool fullName = true)
         {
-            var gameObject = parent.transform.Find(name);
+            Transform gameObjectTransform = null;
+            if (fullName)
+                gameObjectTransform = parent.transform.Find(name);
+            else
+            {
+                var count = parent.transform.childCount;
+                for (var i = 0; i < count; i++)
+                {
+                    var child = parent.transform.GetChild(i).gameObject;
+                    if (child.name.Contains(name))
+                    {
+                        gameObjectTransform = child.transform;
+                        break;
+                    }
+                }
+            }
 
-            return gameObject != null ? gameObject.gameObject : null;
+            return gameObjectTransform != null ? gameObjectTransform.gameObject : null;
         }
 
-        private static GameObject FindDescendant(string name, GameObject parent)
+        private static GameObject FindDescendant(string name, GameObject parent, bool fullName = true)
         {
-            var gameObject = FindChild(name, parent);
+            var gameObject = FindChild(name, parent, fullName);
 
             if (gameObject != null)
                 return gameObject;
 
             foreach (Transform child in parent.transform)
             {
-                gameObject = FindDescendant(name, child.gameObject);
+                gameObject = FindDescendant(name, child.gameObject, fullName);
                 if (gameObject != null)
                 {
                     return gameObject;
@@ -360,7 +393,7 @@ namespace Puppetry.Puppet
             return null;
         }
 
-        private static List<GameObject> FindAncestors(string name, GameObject child)
+        private static List<GameObject> FindAncestors(string name, GameObject child, bool fullName = true)
         {
             var ancestorsList = new List<GameObject>();
 
@@ -373,7 +406,7 @@ namespace Puppetry.Puppet
                 if (parent == null)
                     break;
 
-                if (parent.name == name)
+                if ((fullName && parent.name == name) || (!fullName && parent.name.Contains(name)))
                     ancestorsList.Add(parent.gameObject);
 
                 currentGameObject = parent.gameObject;
@@ -382,7 +415,7 @@ namespace Puppetry.Puppet
             return ancestorsList;
         }
 
-        private static List<GameObject> FindChildren(string gameObjectName, GameObject parent)
+        private static List<GameObject> FindChildren(string name, GameObject parent, bool fullName = true)
         {
             var childrenList = new List<GameObject>();
 
@@ -390,29 +423,29 @@ namespace Puppetry.Puppet
             for (var i = 0; i < count; i++)
             {
                 var child = parent.transform.GetChild(i).gameObject;
-                if (child.name == gameObjectName)
+                if ((fullName && child.name == name) || (!fullName && child.name.Contains(name)))
                     childrenList.Add(child);
             }
 
             return childrenList;
         }
 
-        private static List<GameObject> FindDescendants(string name, GameObject parent)
+        private static List<GameObject> FindDescendants(string name, GameObject parent, bool fullName = true)
         {
             var descendantsList = new List<GameObject>();
 
-            FindDescendantsRecursive(name, parent, descendantsList);
+            FindDescendantsRecursive(name, parent, descendantsList, fullName);
 
             return descendantsList;
         }
 
-        private static void FindDescendantsRecursive(string name, GameObject parent, List<GameObject> list)
+        private static void FindDescendantsRecursive(string name, GameObject parent, List<GameObject> list, bool fullName = true)
         {
             var count = parent.transform.childCount;
             for (var i = 0; i < count; i++)
             {
                 var child = parent.transform.GetChild(i).gameObject;
-                if (child.name == name)
+                if ((fullName && child.name == name) || (!fullName && child.name.Contains(name)))
                     list.Add(child);
 
                 FindDescendantsRecursive(name, child, list);
@@ -424,25 +457,34 @@ namespace Puppetry.Puppet
             var currentCondition = condition;
             var typeOfSearch = new Regex(@"^(?<type>)[a-z]*[:]{2}").Match(currentCondition).Groups[0].ToString();
             string name = null;
+            var fullName = true;
             if (string.IsNullOrEmpty(typeOfSearch))
                 typeOfSearch = currentCondition;
             else
+            {
                 name = currentCondition.Replace(typeOfSearch, string.Empty); //remove type of search from the expression
+                if (name.StartsWith(containsExpression) && name.EndsWith(")"))
+                {
+                    fullName = false;
+                    //Extract partName from expression: contains( + partName + )
+                    name = name.Substring(containsExpression.Length, name.Length - containsExpression.Length - 1);
+                }
+            }
 
             var result = false;
             switch (typeOfSearch)
             {
                 case ParentAxe + "::":
-                    result = FindParent(name, gameObject) != null;
+                    result = FindParent(name, gameObject, fullName) != null;
                     break;
                 case ChildAxe + "::":
-                    result = FindChild(name, gameObject) != null;
+                    result = FindChild(name, gameObject, fullName) != null;
                     break;
                 case AncestorAxe + "::":
-                    result = FindAncestor(name, gameObject) != null;
+                    result = FindAncestor(name, gameObject, fullName) != null;
                     break;
                 case DescendantAxe + "::":
-                    result = FindDescendant(name, gameObject) != null;
+                    result = FindDescendant(name, gameObject, fullName) != null;
                     break;
                 case Active:
                     result = gameObject.activeInHierarchy;
