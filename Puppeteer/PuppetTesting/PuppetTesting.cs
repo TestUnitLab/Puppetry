@@ -12,7 +12,7 @@ namespace PuppetTesting
         [OneTimeSetUp]
         public void TestRunInit()
         {
-            Driver.ReleaseAllSessions();
+            Driver.KillAllSessions();
             Configuration.Set(Settings.TimeoutMs, 45000);
         }
 
@@ -68,7 +68,7 @@ namespace PuppetTesting
         [OneTimeTearDown]
         public void TestRunCleanUp()
         {
-            Driver.ReleaseSession();
+            Driver.KillAllSessions();
         }
     }
 }
