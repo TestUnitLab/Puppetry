@@ -480,7 +480,7 @@ namespace Puppetry.PuppetDriver.Editor
         {
             _request.Clear();
             if (!string.IsNullOrEmpty(method)) _request.Add(Parameters.Method, method);
-            if (!string.IsNullOrEmpty(value)) _request.Add(Parameters.Key, key);
+            if (!string.IsNullOrEmpty(key)) _request.Add(Parameters.Key, key);
             if (!string.IsNullOrEmpty(value)) _request.Add(Parameters.Value, value);
             if (!string.IsNullOrEmpty(root)) _request.Add(Parameters.Root, root);
             if (!string.IsNullOrEmpty(name)) _request.Add(Parameters.Name, name);
