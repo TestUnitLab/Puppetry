@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using Newtonsoft.Json;
 using Puppetry.PuppetContracts;
 using static Puppetry.PuppetContracts.Constants;
@@ -38,7 +39,7 @@ namespace Puppetry.PuppetDriver.TcpSocket
             {
                 lock (socket)
                 {
-                    while (true)
+                    for (var i = 0; i < 10; i++)
                     {
                         var response = new Dictionary<string, string>();
                         socket.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(request, Formatting.Indented) + EndOfMessage));
@@ -49,6 +50,7 @@ namespace Puppetry.PuppetDriver.TcpSocket
 
                         if (response.Count > 0)
                             return response;
+                        Thread.Sleep(500);
                     }
                 }
             }

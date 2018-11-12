@@ -63,9 +63,9 @@ namespace Puppetry.Puppet
                     break;
                 case "isrendering":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
-                        go =>
+                        gameObject =>
                         {
-                            var renderer = go.GetComponent<Renderer>();
+                            var renderer = gameObject.GetComponent<Renderer>();
                             if (renderer != null)
                                 return renderer.isVisible.ToString();
 
@@ -74,7 +74,7 @@ namespace Puppetry.Puppet
                         });
                     break;
                 case "count":
-                    response.result = MainThreadHelper.ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, goList => goList.Count.ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, gameObjectsList => gameObjectsList.Count.ToString());
                     break;
                 case "deleteplayerpref":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
@@ -267,23 +267,23 @@ namespace Puppetry.Puppet
             return response;
         }
 
-        private static IEnumerator DragCoroutine(GameObject go, PointerEventData dragPointer, Vector2 screenCoordinates) 
+        private static IEnumerator DragCoroutine(GameObject gameObject, PointerEventData dragPointer, Vector2 screenCoordinates) 
         {
-            var currentCoordinates = ScreenHelper.GetPositionOnScreen(go);
+            var currentCoordinates = ScreenHelper.GetPositionOnScreen(gameObject);
             dragPointer.position = currentCoordinates;
             var dragDelta = ((Vector2)currentCoordinates - screenCoordinates) / 2;
             dragPointer.delta = dragDelta;
 
-            ExecuteEvents.Execute(go, dragPointer, ExecuteEvents.beginDragHandler);
+            ExecuteEvents.Execute(gameObject, dragPointer, ExecuteEvents.beginDragHandler);
 
             for (var i = 0; i < 2; i++) {
-                ExecuteEvents.Execute(go, dragPointer, ExecuteEvents.dragHandler);
+                ExecuteEvents.Execute(gameObject, dragPointer, ExecuteEvents.dragHandler);
 
                 dragPointer.position += dragDelta;
                 yield return null;
             }
 
-            ExecuteEvents.Execute(go, dragPointer, ExecuteEvents.endDragHandler);
+            ExecuteEvents.Execute(gameObject, dragPointer, ExecuteEvents.endDragHandler);
         }
 
         private static void StartPlayMode()
