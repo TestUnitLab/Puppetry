@@ -5,6 +5,7 @@ namespace Puppetry.PuppetContracts
     {
         public const string RegisterEditor = "registereditor";
         public const string CreateSession = "createsession";
+        public const string IsPlayMode = "isplaymode";
         public const string KillSession = "killsession";
         public const string KillAllSessions = "killallsessions";
         public const string Click = "click";
