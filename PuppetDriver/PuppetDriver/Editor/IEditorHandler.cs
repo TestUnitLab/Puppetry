@@ -8,6 +8,8 @@ namespace Puppetry.PuppetDriver.Editor
         string Session { get;}
 
         Socket Socket { get; set; }
+        
+        EditorResponse IsPlayMode();
 
         EditorResponse Click(string root, string name, string parent, string upath);
 

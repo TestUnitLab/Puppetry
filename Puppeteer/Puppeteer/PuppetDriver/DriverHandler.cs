@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Newtonsoft.Json;
@@ -17,6 +16,17 @@ namespace Puppetry.Puppeteer.PuppetDriver
         public DriverHandler()
         {
             StartSession();
+        }
+        
+        internal bool IsPlayMode()
+        {
+            var request = BuildRequest(Methods.IsPlayMode, _sessionId);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+                return false;
+
+            return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
         internal void Click(string root, string name, string parent, string upath, string locatorMessage)
@@ -177,7 +187,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             var response = Post(request);
             
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new PuppetryException($"PlayMode was not started");
+                throw new PuppetryException($"PlayMode was not started with error: {response[Parameters.ErrorMessage]}");
         }
 
         internal void StopPlayMode()
@@ -188,7 +198,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
                 throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new PuppetryException("PlayMode was not stopped");
+                throw new PuppetryException($"PlayMode was not stopped with error: {response[Parameters.ErrorMessage]}");
         }
 
         internal void TakeScreenshot(string path)
@@ -199,7 +209,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
                 throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)
-                throw new PuppetryException("PlayMode was not stopped");
+                throw new PuppetryException($"Screenshot was not taken with error: {response[Parameters.ErrorMessage]}");
         }
 
         internal void ReleaseSession()
@@ -370,13 +380,21 @@ namespace Puppetry.Puppeteer.PuppetDriver
         private static Dictionary<string, string> Post(Dictionary<string, string> request)
         {
             var restClient = new RestClient($"{Configuration.BaseUrl}:{Configuration.Port}/");
+            restClient.Timeout = 10000;
             var restRequest = new RestRequest(Method.POST);
             var json = JsonConvert.SerializeObject(request, Formatting.Indented);
             restRequest.AddParameter("application/json", json, ParameterType.RequestBody);
             
             var restResponse = restClient.Execute(restRequest);
             if (!string.IsNullOrEmpty(restResponse.ErrorMessage))
-                throw new Exception(restResponse.ErrorMessage);
+            {
+                return new Dictionary<string, string>
+                {
+                    {Parameters.StatusCode,  ErrorCodes.PuppetDriverError.ToString()},
+                    {Parameters.ErrorMessage,  restResponse.ErrorMessage},
+                    {Parameters.Result,  ActionResults.Fail}
+                };
+            }
             
             var response = JsonConvert.DeserializeObject<Dictionary<string, string>>(restResponse.Content);
             ValidateResponseStructure(response);

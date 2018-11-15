@@ -70,6 +70,16 @@ namespace PuppetDriver.Controllers
                         response.Add(Parameters.Result, sessionId);
                     }
                     break;
+                
+                case Methods.IsPlayMode:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetEditorHandler(sessionId);
+
+                    result = handler.IsPlayMode();
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
 
                 case Methods.Click:
                     sessionId = request[Parameters.Session];

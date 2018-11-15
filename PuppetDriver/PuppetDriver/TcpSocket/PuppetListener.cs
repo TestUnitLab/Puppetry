@@ -70,7 +70,7 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                     if (!pong.ContainsKey(Parameters.Method) || pong[Parameters.Method] != Methods.Ping || pong[Parameters.Result] != Methods.Pong)
                                         throw new Exception("Unexpected response from socket");
 
-                                    Thread.Sleep(3000);
+                                    Thread.Sleep(5000);
                                 }
 
                                 //ConnectionManager.RemoveEditor(editor);

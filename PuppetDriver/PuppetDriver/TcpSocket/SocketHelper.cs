@@ -39,19 +39,16 @@ namespace Puppetry.PuppetDriver.TcpSocket
             {
                 lock (socket)
                 {
-                    for (var i = 0; i < 10; i++)
+                    var response = new Dictionary<string, string>();
+                    socket.Send(
+                        Encoding.ASCII.GetBytes(
+                            JsonConvert.SerializeObject(request, Formatting.Indented) + EndOfMessage));
+                    if (socket.Poll(-1, SelectMode.SelectRead))
                     {
-                        var response = new Dictionary<string, string>();
-                        socket.Send(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(request, Formatting.Indented) + EndOfMessage));
-                        if (socket.Poll(-1, SelectMode.SelectRead))
-                        {
-                            response = JsonConvert.DeserializeObject<Dictionary<string, string>>(ReadMessage(socket));
-                        }
-
-                        if (response.Count > 0)
-                            return response;
-                        Thread.Sleep(500);
+                        response = JsonConvert.DeserializeObject<Dictionary<string, string>>(ReadMessage(socket));
                     }
+
+                    return response.Count > 0 ? response : null;
                 }
             }
             catch (Exception e)

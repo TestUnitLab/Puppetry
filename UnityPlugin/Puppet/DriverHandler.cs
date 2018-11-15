@@ -63,9 +63,9 @@ namespace Puppetry.Puppet
                     break;
                 case "isrendering":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
-                        gameObject =>
+                        go =>
                         {
-                            var renderer = gameObject.GetComponent<Renderer>();
+                            var renderer = go.GetComponent<Renderer>();
                             if (renderer != null)
                                 return renderer.isVisible.ToString();
 
@@ -74,7 +74,7 @@ namespace Puppetry.Puppet
                         });
                     break;
                 case "count":
-                    response.result = MainThreadHelper.ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, gameObjectsList => gameObjectsList.Count.ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, goList => goList.Count.ToString());
                     break;
                 case "deleteplayerpref":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
@@ -258,6 +258,12 @@ namespace Puppetry.Puppet
                     MainThreadQueue.QueueOnMainThread(() => { TakeScreenshot(path); });
                     response.result = Constants.ErrorMessages.SuccessResult;
                     break;
+                case "isplaymode":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
+                        {
+                            return Application.isPlaying.ToString();
+                        });
+                    break;
 
                 default:
                     response.result = "Unknown method " + request.method + ".";
@@ -267,23 +273,23 @@ namespace Puppetry.Puppet
             return response;
         }
 
-        private static IEnumerator DragCoroutine(GameObject gameObject, PointerEventData dragPointer, Vector2 screenCoordinates) 
+        private static IEnumerator DragCoroutine(GameObject go, PointerEventData dragPointer, Vector2 screenCoordinates) 
         {
-            var currentCoordinates = ScreenHelper.GetPositionOnScreen(gameObject);
+            var currentCoordinates = ScreenHelper.GetPositionOnScreen(go);
             dragPointer.position = currentCoordinates;
             var dragDelta = ((Vector2)currentCoordinates - screenCoordinates) / 2;
             dragPointer.delta = dragDelta;
 
-            ExecuteEvents.Execute(gameObject, dragPointer, ExecuteEvents.beginDragHandler);
+            ExecuteEvents.Execute(go, dragPointer, ExecuteEvents.beginDragHandler);
 
             for (var i = 0; i < 2; i++) {
-                ExecuteEvents.Execute(gameObject, dragPointer, ExecuteEvents.dragHandler);
+                ExecuteEvents.Execute(go, dragPointer, ExecuteEvents.dragHandler);
 
                 dragPointer.position += dragDelta;
                 yield return null;
             }
 
-            ExecuteEvents.Execute(gameObject, dragPointer, ExecuteEvents.endDragHandler);
+            ExecuteEvents.Execute(go, dragPointer, ExecuteEvents.endDragHandler);
         }
 
         private static void StartPlayMode()

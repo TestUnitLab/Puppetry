@@ -22,6 +22,24 @@ namespace Puppetry.PuppetDriver.Editor
             Socket = socket;
             _request = new Dictionary<string, string>();
         }
+        
+        public EditorResponse IsPlayMode()
+        {
+            PrepareRequest(Methods.IsPlayMode);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            EditorResponse result;
+            if (_response == null)
+                result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
+                result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
+                result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
 
         public EditorResponse SendKeys(string value, string root, string name, string parent, string upath)
         {
