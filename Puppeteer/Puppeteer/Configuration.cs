@@ -9,6 +9,7 @@ namespace Puppetry.Puppeteer
             BaseUrl = "http://localhost";
             Port = "7111";
             TimeoutMs = 60000;
+            StartPlayModeTimeoutMs = 240000;
             SessionTimeoutMs = 120000;
             //DriverType = DriverTypes.Unity;
             PollingStratagy = PollingStrategies.Constant;
@@ -18,6 +19,7 @@ namespace Puppetry.Puppeteer
         internal static string Port { get; private set; }
         internal static int TimeoutMs { get; private set; }
         internal static int SessionTimeoutMs { get; private set; }
+        internal static int StartPlayModeTimeoutMs { get; private set; }
         //internal static DriverTypes DriverType { get; private set; }
         internal static PollingStrategies PollingStratagy { get; private set; }
 
@@ -32,6 +34,9 @@ namespace Puppetry.Puppeteer
                     Port = (string)value;
                     break;
                 case Settings.TimeoutMs:
+                    TimeoutMs = (int)value;
+                    break;
+                case Settings.StartPlayModeTimeoutMs:
                     TimeoutMs = (int)value;
                     break;
                 case Settings.SessionTimeoutMs:
@@ -53,6 +58,7 @@ namespace Puppetry.Puppeteer
         Port,
         TimeoutMs,
         SessionTimeoutMs,
+        StartPlayModeTimeoutMs,
         //Driver,
         PollingStrategy
     }
