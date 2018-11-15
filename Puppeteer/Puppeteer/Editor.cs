@@ -9,7 +9,7 @@ namespace Puppetry.Puppeteer
         {
             Driver.Instance.StartPlayMode();
             
-            Wait.For( () => Driver.Instance.IsPlayMode(), () => $"PlayMode was not started in {Configuration.TimeoutMs / 1000} seconds", Configuration.TimeoutMs);
+            Wait.For( () => Driver.Instance.IsPlayMode(), () => $"PlayMode was not started in {Configuration.StartPlayModeTimeoutMs / 1000} seconds", Configuration.TimeoutMs);
         }
 
         public static void StopPlayMode()
