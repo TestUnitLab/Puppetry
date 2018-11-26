@@ -14,6 +14,7 @@ namespace PuppetTesting
         {
             Driver.ReleaseAllSessions();
             Configuration.Set(Settings.TimeoutMs, 45000);
+            Configuration.Set(Settings.StartPlayModeTimeoutMs, 45000);
         }
 
         [SetUp]
