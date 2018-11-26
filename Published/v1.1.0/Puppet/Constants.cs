@@ -8,6 +8,7 @@ namespace Puppetry.Puppet
             public const string SuccessResult = "success";
             public const string PlayModeIsNotStarted = "Play mode is not started";
             public const string GameObjectWasNotFound = "GameObject was not found";
+            public const string MethodIsNotSupported = "Method is not supported";
         }
     }
 }

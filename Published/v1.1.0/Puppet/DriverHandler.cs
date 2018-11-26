@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Puppetry.Puppet
 {
@@ -49,7 +53,7 @@ namespace Puppetry.Puppet
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {
                         var component = gameObject.GetComponent(request.value);
-                        return component != null ? EditorJsonUtility.ToJson(component) : "null";
+                        return component != null ? JsonUtility.ToJson(component) : "null";
                     });
                     break;
 
@@ -91,22 +95,13 @@ namespace Puppetry.Puppet
                     });
                     break;
                 case "getfloatplayerpref":
-                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
-                    {
-                        return PlayerPrefs.GetFloat(request.key).ToString();
-                    });
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => PlayerPrefs.GetFloat(request.key).ToString(CultureInfo.InvariantCulture));
                     break;
                 case "getintplayerpref":
-                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
-                    {
-                        return PlayerPrefs.GetInt(request.key).ToString();
-                    });
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => PlayerPrefs.GetInt(request.key).ToString());
                     break;
                 case "getstringplayerpref":
-                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
-                    {
-                        return PlayerPrefs.GetString(request.key);
-                    });
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => PlayerPrefs.GetString(request.key));
                     break;
                 case "setfloatplayerpref":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
@@ -211,7 +206,7 @@ namespace Puppetry.Puppet
                 case "dragto":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => {
                         var screenCoordinates = new ScreenCoordinates();
-                        EditorJsonUtility.FromJsonOverwrite(request.value, screenCoordinates);
+                        JsonUtility.FromJsonOverwrite(request.value, screenCoordinates);
                         var pointer = new PointerEventData(EventSystem.current);
                         gameObject.GetComponent<MonoBehaviour>().StartCoroutine(DragCoroutine(gameObject, pointer,
                             new Vector2 {x = screenCoordinates.X, y = screenCoordinates.Y}));
@@ -239,16 +234,23 @@ namespace Puppetry.Puppet
                     break;
 
                 case "startplaymode":
+#if UNITY_EDITOR
                     EditorApplication.update += StartPlayMode;
                     response.result = Constants.ErrorMessages.SuccessResult;
+#else
+                    response.result = Constants.ErrorMessages.MethodIsNotSupported;
+#endif    
                     break;
                 case "stopplaymode":
+#if UNITY_EDITOR                    
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
                         //EditorApplication.UnlockReloadAssemblies();
                         EditorApplication.isPlaying = false;
                     });
-
+#else                  
+                    response.result = Constants.ErrorMessages.MethodIsNotSupported;
+#endif    
                     break;
                 case "ping":
                     response.result = "pong";
@@ -257,6 +259,9 @@ namespace Puppetry.Puppet
                     var path = request.value;
                     MainThreadQueue.QueueOnMainThread(() => { TakeScreenshot(path); });
                     response.result = Constants.ErrorMessages.SuccessResult;
+                    break;
+                case "isplaymode":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Application.isPlaying.ToString());
                     break;
 
                 default:
@@ -288,10 +293,12 @@ namespace Puppetry.Puppet
 
         private static void StartPlayMode()
         {
+#if UNITY_EDITOR            
             EditorApplication.update -= StartPlayMode;
             
             //EditorApplication.LockReloadAssemblies();
             EditorApplication.isPlaying = true;
+#endif            
         }
 
         private static void TakeScreenshot(string pathName) 
