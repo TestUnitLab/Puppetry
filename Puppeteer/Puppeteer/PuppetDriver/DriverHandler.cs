@@ -22,7 +22,7 @@ namespace Puppetry.Puppeteer.PuppetDriver
         {
             var request = BuildRequest(Methods.IsPlayMode, _sessionId);
             var response = Post(request);
-
+  
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
                 return false;
 
@@ -186,6 +186,8 @@ namespace Puppetry.Puppeteer.PuppetDriver
             var request = BuildRequest(Methods.StartPlayMode, _sessionId);
             var response = Post(request);
             
+            if (response[Parameters.StatusCode] == ErrorCodes.MethodNotSupported.ToString())
+                throw new MethodIsNotSupportedException("StartPlayMode method is not available");
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"PlayMode was not started with error: {response[Parameters.ErrorMessage]}");
         }
@@ -195,6 +197,8 @@ namespace Puppetry.Puppeteer.PuppetDriver
             var request = BuildRequest(Methods.StopPlayMode, _sessionId);
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MethodNotSupported.ToString())
+                throw new MethodIsNotSupportedException("StopPlayMode method is not available");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
                 throw new PlayModeIsNotStartedException();
             if (response[Parameters.Result] != ActionResults.Success)

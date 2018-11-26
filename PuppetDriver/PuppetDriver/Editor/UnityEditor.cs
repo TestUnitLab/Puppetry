@@ -9,6 +9,7 @@ namespace Puppetry.PuppetDriver.Editor
     {
         private const string NotFoundMessage = "GameObject was not found";
         private const string PlayModeIsNotStarted = "Play mode is not started";
+        private const string MethodIsNotSupported = "Method is not supported";
 
         private Dictionary<string, string> _request;
         private Dictionary<string, string> _response;
@@ -290,6 +291,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.StartPlayMode)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == MethodIsNotSupported)
+                result = new EditorResponse { StatusCode = ErrorCodes.MethodNotSupported, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new EditorResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -306,6 +309,8 @@ namespace Puppetry.PuppetDriver.Editor
                 result = new EditorResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.StopPlayMode)
                 result = new EditorResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == MethodIsNotSupported)
+                result = new EditorResponse { StatusCode = ErrorCodes.MethodNotSupported, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else if (_response[Parameters.Result] == PlayModeIsNotStarted)
                 result = new EditorResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
