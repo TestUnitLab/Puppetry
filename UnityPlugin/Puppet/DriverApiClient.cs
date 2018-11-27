@@ -37,7 +37,7 @@ namespace Puppetry.Puppet
 
         public void ProcessWork()
         {
-            DriverResponse response = new DriverResponse();
+            var response = new DriverResponse();
 
             // Connect to a remote device.  
             try

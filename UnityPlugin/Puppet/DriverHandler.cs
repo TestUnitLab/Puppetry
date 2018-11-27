@@ -25,7 +25,10 @@ namespace Puppetry.Puppet
                 case "registereditor":
                     if (string.IsNullOrEmpty(session))
                     {
+                        #if UNITY_EDITOR
                         SaveSession(request.session);
+                        #endif
+                        
                         response.session = request.session;
                     }
                     else
@@ -334,6 +337,7 @@ namespace Puppetry.Puppet
         private static string GetSession()
         {
             string session = null;
+#if UNITY_EDITOR
             if (File.Exists(Directory.GetCurrentDirectory() + "/session.data"))
             {
                 var bf = new BinaryFormatter();
@@ -342,6 +346,7 @@ namespace Puppetry.Puppet
                 session = ((SessionInfo)bf.Deserialize(file)).Session;
                 file.Close();
             }
+#endif
 
             return session;
         }
