@@ -73,28 +73,28 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                     Thread.Sleep(5000);
                                 }
 
-                                ConnectionManager.DisablePuppet(editor);
+                                //ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (SocketException e)
                             {
                                 Console.WriteLine(e);
-                                ConnectionManager.DisablePuppet(editor);
+                                //ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (IOException e)
                             {
                                 Console.WriteLine(e);
-                                ConnectionManager.DisablePuppet(editor);
+                                //ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (NullReferenceException e)
                             {
                                 Console.WriteLine(e);
-                                ConnectionManager.DisablePuppet(editor);
+                                //ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
