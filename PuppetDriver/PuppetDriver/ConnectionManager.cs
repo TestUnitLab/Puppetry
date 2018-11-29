@@ -3,118 +3,116 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading;
 
-using Puppetry.PuppetDriver.Editor;
+using Puppetry.PuppetDriver.Puppet;
 
 namespace Puppetry.PuppetDriver
 {
     internal static class ConnectionManager
     {
-        internal static int AvailableEditorsCount;
+        internal static ConcurrentDictionary<string, string> MappingPuppetsToSessions;
 
-        internal static ConcurrentDictionary<string, string> MappingEditorsToSessions;
-
-        internal static List<IEditorHandler> AvailiableEditors;
+        internal static List<IPuppetHandler> AvailiablePuppets;
 
         static ConnectionManager()
         {
-            AvailableEditorsCount = 0;
+            //Key is IPuppetHandler.Identificator, Value is sessioId
+            MappingPuppetsToSessions = new ConcurrentDictionary<string, string>();
 
-            //Key is IEditorHandler.Identificator, Value is sessioId
-            MappingEditorsToSessions = new ConcurrentDictionary<string, string>();
-
-            AvailiableEditors = new List<IEditorHandler>();
+            AvailiablePuppets = new List<IPuppetHandler>();
         }
 
-        internal static void AddEditor(IEditorHandler editor)
+        internal static void AddPuppet(IPuppetHandler puppet)
         {
-            lock (AvailiableEditors)
+            lock (AvailiablePuppets)
             {
-                AvailiableEditors.Add(editor);
-            }
-
-            Interlocked.Increment(ref AvailableEditorsCount);
-        }
-
-        internal static void ReconnectEditor(Socket socket, string session)
-        {
-            lock (AvailiableEditors)
-            {
-                AvailiableEditors.First(x => x.Session == session).Socket = socket;
+                AvailiablePuppets.Add(puppet);
             }
         }
 
-        internal static void RemoveEditor(IEditorHandler editor)
+        internal static void ReconnectPuppet(Socket socket, string session)
         {
-            if (editor == null) return;
-
-            lock (AvailiableEditors)
+            lock (AvailiablePuppets)
             {
-                AvailiableEditors.Remove(editor);
+                var puppet = AvailiablePuppets.First(x => x.Session == session);
+                puppet.Socket = socket;
+                puppet.IsAvailable = true;
             }
-
-            Interlocked.Decrement(ref AvailableEditorsCount);
         }
 
-        internal static IEditorHandler GetEditorHandler(string sessionId)
+        internal static void DisablePuppet(IPuppetHandler puppet)
         {
-            for (var i = 0; i < 60; i++)
+            if (puppet == null) return;
+
+            lock (AvailiablePuppets)
             {
-                try
+                AvailiablePuppets.First(p => p.Session == puppet.Session).IsAvailable = false;
+            }
+        }
+
+        internal static IPuppetHandler GetPuppetHandler(string sessionId)
+        {
+            try
+            {
+                lock (AvailiablePuppets)
                 {
-                    if (AvailableEditorsCount <= 0)
-                        throw new Exception("Error: Available Editors is 0");
-
-                    var editorIdentificator = MappingEditorsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
-
-                    lock (AvailiableEditors)
-                    {
-                        return AvailiableEditors.First(x => x.Session == editorIdentificator);
-                    }
+                    if (AvailiablePuppets.Count <= 0)
+                        throw new Exception("Error: Threre is no available Puppet");
                 }
-                catch (Exception)
+
+                var editorIdentificator = MappingPuppetsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
+
+                lock (AvailiablePuppets)
                 {
-                    Thread.Sleep(500);
+                    var puppet =  AvailiablePuppets.First(p => p.Session == editorIdentificator);
+                    if (puppet.IsAvailable)
+                        return puppet;
+                    else
+                        throw new Exception("Error: Mapped puppet is disabled");
                 }
             }
-
-            throw new Exception("No Available Editors was received in 30 sec");
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        internal static void ReleaseEditorHandler(string sessionId)
+        internal static void ReleasePuppetHandler(string sessionId)
         {
-            MappingEditorsToSessions.Remove(MappingEditorsToSessions.First(x => x.Value == sessionId).Key, out var session);
+            MappingPuppetsToSessions.Remove(MappingPuppetsToSessions.First(x => x.Value == sessionId).Key, out var session);
         }
         
-        internal static void ReleaseAllEditorHandlers()
+        internal static void ReleaseAllPuppetHandlers()
         {
-            foreach (var mappedEditorToSession in MappingEditorsToSessions)
+            foreach (var mappedEditorToSession in MappingPuppetsToSessions)
             {
-                MappingEditorsToSessions.Remove(mappedEditorToSession.Key, out var session);
+                MappingPuppetsToSessions.Remove(mappedEditorToSession.Key, out var session);
             }
         }
 
         internal static string StartSession()
         {
-            if (AvailableEditorsCount <= 0)
-                return "Error: Available Editors is 0";
-
-            lock (AvailiableEditors)
+            lock (AvailiablePuppets)
             {
-                foreach (var editor in AvailiableEditors)
+                if (AvailiablePuppets.Count <= 0)
+                    return "Error: Threre is no available Puppet";
+
+                foreach (var availiablePuppet in AvailiablePuppets)
                 {
-                    if (!MappingEditorsToSessions.ContainsKey(editor.Session))
+                    if (!availiablePuppet.IsAvailable) continue;
+
+                    if (!MappingPuppetsToSessions.ContainsKey(availiablePuppet.Session))
                     {
                         var sessionId = Guid.NewGuid().ToString();
-                        var result = MappingEditorsToSessions.TryAdd(editor.Session, sessionId);
+                        var result = MappingPuppetsToSessions.TryAdd(availiablePuppet.Session, sessionId);
 
                         if (result) return sessionId;
                     }
                 }
 
-                if (MappingEditorsToSessions.Count == AvailableEditorsCount)
-                    return "Error: All editors are busy at the moment";
+                if (MappingPuppetsToSessions.Count == AvailiablePuppets.Count)
+                    return "Error: All puppets are busy at the moment";
             }
 
             return "Error: Some error was occured during creating session";

@@ -1,7 +1,7 @@
 ﻿
-namespace Puppetry.PuppetDriver.Editor
+namespace Puppetry.PuppetDriver.Puppet
 {
-    internal class EditorResponse
+    internal class PuppetResponse
     {
         internal bool IsSuccess;
         internal string Result;

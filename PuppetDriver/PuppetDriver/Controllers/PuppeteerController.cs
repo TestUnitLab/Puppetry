@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 using Newtonsoft.Json;
 
-using Puppetry.PuppetDriver.Editor;
+using Puppetry.PuppetDriver.Puppet;
 using Puppetry.PuppetContracts;
 using Puppetry.PuppetDriver;
 
@@ -18,8 +18,8 @@ namespace PuppetDriver.Controllers
         public Task ProcessRequest(HttpContext context)
         { 
             string sessionId;
-            IEditorHandler handler;
-            EditorResponse result;
+            IPuppetHandler handler;
+            PuppetResponse result;
             string gameObjectName = null;
             string gameObjectRootName = null;
             string gameObjectParentName = null;
@@ -73,7 +73,7 @@ namespace PuppetDriver.Controllers
                 
                 case Methods.IsPlayMode:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.IsPlayMode();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -83,7 +83,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.Click:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.Click(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -92,7 +92,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.SendKeys:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.SendKeys(value, gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -102,7 +102,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.Exist:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Exists(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -112,7 +112,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.Active:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Active(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -122,7 +122,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.Swipe:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Swipe(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -132,7 +132,7 @@ namespace PuppetDriver.Controllers
                 
                 case Methods.DragTo:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.DragTo(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -142,7 +142,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.Rendering:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Rendering(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -152,7 +152,7 @@ namespace PuppetDriver.Controllers
                 
                 case Methods.OnScreen:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.OnScreen(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -162,7 +162,7 @@ namespace PuppetDriver.Controllers
                 
                 case Methods.GraphicClickable:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.GraphicClickable(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -172,7 +172,7 @@ namespace PuppetDriver.Controllers
                 
                 case Methods.Count:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Count(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -182,7 +182,7 @@ namespace PuppetDriver.Controllers
                 
                 case Methods.GetComponent:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.GetComponent(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -192,7 +192,7 @@ namespace PuppetDriver.Controllers
                 
                 case Methods.GetCoordinates:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.GetCoordinates(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -202,7 +202,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.StartPlayMode:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.StartPlayMode();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -212,7 +212,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.StopPlayMode:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.StopPlayMode();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
@@ -222,7 +222,7 @@ namespace PuppetDriver.Controllers
 
                 case Methods.TakeScreenshot:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     var fullPath = request[Parameters.Value];
 
                     result = handler.MakeScreenshot(fullPath);
@@ -233,19 +233,19 @@ namespace PuppetDriver.Controllers
 
                 case Methods.KillSession:
                     sessionId = request[Parameters.Session];
-                    ConnectionManager.ReleaseEditorHandler(sessionId);
+                    ConnectionManager.ReleasePuppetHandler(sessionId);
                     response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
                     response.Add(Parameters.Result, ActionResults.Success);
                     break;
                 case Methods.KillAllSessions:
-                    ConnectionManager.ReleaseAllEditorHandlers();
+                    ConnectionManager.ReleaseAllPuppetHandlers();
                     response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
                     response.Add(Parameters.Result, ActionResults.Success);
                     break;
                 
                 case Methods.DeletePlayerPref:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.DeletePlayerPref(key);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -253,7 +253,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.DeleteAllPlayerPrefs:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.DeleteAllPlayerPrefs();
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -261,7 +261,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.GetFloatPlayerPref:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GetFloatPlayerPref(key);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -269,7 +269,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.GetIntPlayerPref:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GetIntPlayerPref(key);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -277,7 +277,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.GetStringPlayerPref:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GetStringPlayerPref(key);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -285,7 +285,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.SetFloatPlayerPref:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.SetFloatPlayerPref(key, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -293,7 +293,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.SetIntPlayerPref:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.SetIntPlayerPref(key, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -301,7 +301,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.SetStringPlayerPref:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.SetStringPlayerPref(key, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
@@ -309,7 +309,7 @@ namespace PuppetDriver.Controllers
                     break;
                 case Methods.PlayerPrefHasKey:
                     sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetEditorHandler(sessionId);
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.PlayerPrefHasKey(key);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);

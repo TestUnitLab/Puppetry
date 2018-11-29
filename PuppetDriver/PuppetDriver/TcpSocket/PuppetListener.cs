@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Puppetry.PuppetContracts;
-using Puppetry.PuppetDriver.Editor;
+using Puppetry.PuppetDriver.Puppet;
 
 namespace Puppetry.PuppetDriver.TcpSocket
 {
@@ -22,7 +22,7 @@ namespace Puppetry.PuppetDriver.TcpSocket
 
                 while (true)
                 {
-                    IEditorHandler editor = null;
+                    IPuppetHandler editor = null;
 
                     Socket client = listener.AcceptSocket();
                     Console.WriteLine("Connection accepted.");
@@ -42,19 +42,19 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                         {
                                             try
                                             {
-                                                ConnectionManager.ReconnectEditor(client, response[Parameters.Session]);
+                                                ConnectionManager.ReconnectPuppet(client, response[Parameters.Session]);
                                             }
                                             catch (InvalidOperationException e)
                                             {
                                                 Console.WriteLine(e);
-                                                editor = new UnityEditor(client, response[Parameters.Session]);
-                                                ConnectionManager.AddEditor(editor);
+                                                editor = new UnityPuppet(client, response[Parameters.Session]);
+                                                ConnectionManager.AddPuppet(editor);
                                             }
                                         }
                                         else
                                         {
-                                            editor = new UnityEditor(client, session);
-                                            ConnectionManager.AddEditor(editor);
+                                            editor = new UnityPuppet(client, session);
+                                            ConnectionManager.AddPuppet(editor);
                                         }
                                     }
                                     else
@@ -73,28 +73,28 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                     Thread.Sleep(5000);
                                 }
 
-                                //ConnectionManager.RemoveEditor(editor);
+                                ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (SocketException e)
                             {
                                 Console.WriteLine(e);
-                                //ConnectionManager.RemoveEditor(editor);
+                                ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (IOException e)
                             {
                                 Console.WriteLine(e);
-                                //ConnectionManager.RemoveEditor(editor);
+                                ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (NullReferenceException e)
                             {
                                 Console.WriteLine(e);
-                                //ConnectionManager.RemoveEditor(editor);
+                                ConnectionManager.DisablePuppet(editor);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
