@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Net.Sockets;
 
 namespace Puppetry.PuppetDriver.Puppet
 {
@@ -6,7 +7,9 @@ namespace Puppetry.PuppetDriver.Puppet
     {
         string Session { get;}
 
-        bool IsAvailable { get; set; }
+        bool Available { get; set; }
+
+        DateTime LastPing { get; set; }
 
         Socket Socket { get; set; }
         

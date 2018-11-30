@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-
+using System.Threading;
 using Puppetry.PuppetDriver.Puppet;
 
 namespace Puppetry.PuppetDriver
@@ -22,6 +22,29 @@ namespace Puppetry.PuppetDriver
             AvailiablePuppets = new List<IPuppetHandler>();
         }
 
+        internal static void RemoveOldPuppets()
+        {
+            var listToRemove = new List<IPuppetHandler>();
+
+            lock (AvailiablePuppets)
+            {
+                var currentDateTime = DateTime.UtcNow;
+                foreach (var puppet in AvailiablePuppets)
+                {
+                    if (!puppet.Available)
+                    {
+                        if (currentDateTime - puppet.LastPing >= TimeSpan.FromMinutes(10))
+                            listToRemove.Add(puppet);
+                    }
+                }
+
+                foreach (var puppetToDelete in listToRemove)
+                {
+                    AvailiablePuppets.Remove(puppetToDelete);
+                }
+            }
+        }
+
         internal static void AddPuppet(IPuppetHandler puppet)
         {
             lock (AvailiablePuppets)
@@ -30,13 +53,15 @@ namespace Puppetry.PuppetDriver
             }
         }
 
-        internal static void ReconnectPuppet(Socket socket, string session)
+        internal static IPuppetHandler ReconnectPuppet(Socket socket, string session)
         {
             lock (AvailiablePuppets)
             {
                 var puppet = AvailiablePuppets.First(x => x.Session == session);
                 puppet.Socket = socket;
-                puppet.IsAvailable = true;
+                puppet.Available = true;
+
+                return puppet;
             }
         }
 
@@ -46,35 +71,43 @@ namespace Puppetry.PuppetDriver
 
             lock (AvailiablePuppets)
             {
-                AvailiablePuppets.First(p => p.Session == puppet.Session).IsAvailable = false;
+                AvailiablePuppets.First(p => p.Session == puppet.Session).Available = false;
             }
         }
 
         internal static IPuppetHandler GetPuppetHandler(string sessionId)
         {
-            try
+            var tryCount = 0;
+            while (true)
             {
-                lock (AvailiablePuppets)
+                try
                 {
-                    if (AvailiablePuppets.Count <= 0)
-                        throw new Exception("Error: Threre is no available Puppet");
+                    lock (AvailiablePuppets)
+                    {
+                        if (AvailiablePuppets.Count <= 0)
+                            throw new Exception("Error: Threre is no available Puppet");
+                    }
+
+                    var editorIdentificator = MappingPuppetsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
+
+                    lock (AvailiablePuppets)
+                    {
+                        var puppet = AvailiablePuppets.First(p => p.Session == editorIdentificator);
+                        if (puppet.Available)
+                            return puppet;
+                        else
+                            throw new Exception("Error: Mapped puppet is disabled");
+                    }
                 }
-
-                var editorIdentificator = MappingPuppetsToSessions.FirstOrDefault(x => x.Value == sessionId).Key;
-
-                lock (AvailiablePuppets)
+                catch (Exception e)
                 {
-                    var puppet =  AvailiablePuppets.First(p => p.Session == editorIdentificator);
-                    if (puppet.IsAvailable)
-                        return puppet;
-                    else
-                        throw new Exception("Error: Mapped puppet is disabled");
+                    Console.WriteLine($"Try number {tryCount} has error {e}");
+                    if (tryCount > 10)
+                        throw;
+
+                    Thread.Sleep(500);
+                    tryCount++;
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
             }
         }
 
@@ -100,7 +133,7 @@ namespace Puppetry.PuppetDriver
 
                 foreach (var availiablePuppet in AvailiablePuppets)
                 {
-                    if (!availiablePuppet.IsAvailable) continue;
+                    if (!availiablePuppet.Available) continue;
 
                     if (!MappingPuppetsToSessions.ContainsKey(availiablePuppet.Session))
                     {

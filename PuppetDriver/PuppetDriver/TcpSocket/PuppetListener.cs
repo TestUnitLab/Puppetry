@@ -22,7 +22,9 @@ namespace Puppetry.PuppetDriver.TcpSocket
 
                 while (true)
                 {
-                    IPuppetHandler editor = null;
+                    ConnectionManager.RemoveOldPuppets();
+
+                    IPuppetHandler puppet = null;
 
                     Socket client = listener.AcceptSocket();
                     Console.WriteLine("Connection accepted.");
@@ -42,19 +44,19 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                         {
                                             try
                                             {
-                                                ConnectionManager.ReconnectPuppet(client, response[Parameters.Session]);
+                                                puppet = ConnectionManager.ReconnectPuppet(client, response[Parameters.Session]);
                                             }
                                             catch (InvalidOperationException e)
                                             {
                                                 Console.WriteLine(e);
-                                                editor = new UnityPuppet(client, response[Parameters.Session]);
-                                                ConnectionManager.AddPuppet(editor);
+                                                puppet = new UnityPuppet(client, response[Parameters.Session]);
+                                                ConnectionManager.AddPuppet(puppet);
                                             }
                                         }
                                         else
                                         {
-                                            editor = new UnityPuppet(client, session);
-                                            ConnectionManager.AddPuppet(editor);
+                                            puppet = new UnityPuppet(client, session);
+                                            ConnectionManager.AddPuppet(puppet);
                                         }
                                     }
                                     else
@@ -69,32 +71,39 @@ namespace Puppetry.PuppetDriver.TcpSocket
                                     var pong = SocketHelper.SendMessage(client, ping);
                                     if (!pong.ContainsKey(Parameters.Method) || pong[Parameters.Method] != Methods.Ping || pong[Parameters.Result] != Methods.Pong)
                                         throw new Exception("Unexpected response from socket");
-
-                                    Thread.Sleep(5000);
+                                    else
+                                    {
+                                        lock (puppet)
+                                        {
+                                            puppet.Available = true;
+                                            puppet.LastPing = DateTime.UtcNow;
+                                        }
+                                        Thread.Sleep(1000);
+                                    }
                                 }
 
-                                //ConnectionManager.DisablePuppet(editor);
+                                ConnectionManager.DisablePuppet(puppet);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (SocketException e)
                             {
                                 Console.WriteLine(e);
-                                //ConnectionManager.DisablePuppet(editor);
+                                ConnectionManager.DisablePuppet(puppet);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (IOException e)
                             {
                                 Console.WriteLine(e);
-                                //ConnectionManager.DisablePuppet(editor);
+                                ConnectionManager.DisablePuppet(puppet);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }
                             catch (NullReferenceException e)
                             {
                                 Console.WriteLine(e);
-                                //ConnectionManager.DisablePuppet(editor);
+                                ConnectionManager.DisablePuppet(puppet);
                                 client.Close();
                                 Console.WriteLine("Socket connection closed.");
                             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using Puppetry.PuppetContracts;
 using Puppetry.PuppetDriver.TcpSocket;
@@ -16,14 +17,16 @@ namespace Puppetry.PuppetDriver.Puppet
 
         public string Session { get; }
         public Socket Socket { get; set; }
-        public bool IsAvailable { get; set; }
+        public bool Available { get; set; }
+        public DateTime LastPing { get; set; }
 
         public UnityPuppet(Socket socket, string session)
         {
             Session = session;
             Socket = socket;
-            IsAvailable = true;
+            Available = true;
             _request = new Dictionary<string, string>();
+            LastPing = DateTime.UtcNow;
         }
         
         public PuppetResponse IsPlayMode()
