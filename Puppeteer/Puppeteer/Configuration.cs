@@ -28,10 +28,10 @@ namespace Puppetry.Puppeteer
             switch (setting)
             {
                 case Settings.BaseUrl:
-                    BaseUrl = (string)value;
+                    BaseUrl = value.ToString();
                     break;
                 case Settings.Port:
-                    Port = (string)value;
+                    Port = value.ToString();
                     break;
                 case Settings.TimeoutMs:
                     TimeoutMs = (int)value;

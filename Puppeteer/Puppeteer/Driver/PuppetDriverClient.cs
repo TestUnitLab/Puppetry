@@ -7,13 +7,13 @@ using RestSharp;
 using Puppetry.PuppetContracts;
 using Puppetry.Puppeteer.Exceptions;
 
-namespace Puppetry.Puppeteer.PuppetDriver
+namespace Puppetry.Puppeteer.Driver
 {
-    internal class DriverHandler
+    internal class PuppetDriverClient
     {
         private string _sessionId;
 
-        public DriverHandler()
+        public PuppetDriverClient()
         {
             StartSession();
         }

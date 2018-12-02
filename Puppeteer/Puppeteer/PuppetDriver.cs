@@ -1,30 +1,31 @@
-﻿using System.Threading;
+﻿using Puppetry.Puppeteer.Driver;
+using System.Threading;
 
-namespace Puppetry.Puppeteer.PuppetDriver
+namespace Puppetry.Puppeteer
 {
-    public static class Driver
+    public static class PuppetDriver
     {
-        private static ThreadLocal<DriverHandler> _handler = new ThreadLocal<DriverHandler>();
+        private static ThreadLocal<PuppetDriverClient> _handler = new ThreadLocal<PuppetDriverClient>();
 
-        public static void ReleaseSession()
+        public static void ReleaseCurrentSession()
         {
             Instance.ReleaseSession();
             Clear();
         }
-        
+
         public static void ReleaseAllSessions()
         {
-            DriverHandler.ReleaseAllSessions();
+            PuppetDriverClient.ReleaseAllSessions();
             Clear();
         }
-        
-        internal static DriverHandler Instance
+
+        internal static PuppetDriverClient Instance
         {
             get
             {
                 if (_handler.Value == null)
                 {
-                    _handler.Value = new DriverHandler();
+                    _handler.Value = new PuppetDriverClient();
                 }
 
                 return _handler.Value;

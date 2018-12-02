@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Puppetry.Puppeteer.Conditions;
-using Puppetry.Puppeteer.PuppetDriver;
 using Puppetry.Puppeteer.Utils;
 
 namespace Puppetry.Puppeteer
@@ -57,36 +56,36 @@ namespace Puppetry.Puppeteer
             return this;
         }
         
-        public bool Exists => Driver.Instance.Exist(Root, Name, Parent, UPath);
+        public bool Exists => PuppetDriver.Instance.Exist(Root, Name, Parent, UPath);
         
-        public bool IsActiveInHierarchy => Driver.Instance.Active(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsActiveInHierarchy => PuppetDriver.Instance.Active(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsRendering => Driver.Instance.IsRendering(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsRendering => PuppetDriver.Instance.IsRendering(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsOnScreen => Driver.Instance.IsOnScreen(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsOnScreen => PuppetDriver.Instance.IsOnScreen(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsGraphicClickable => Driver.Instance.IsGraphicClickable(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsGraphicClickable => PuppetDriver.Instance.IsGraphicClickable(Root, Name, Parent, UPath, LocatorMessage);
         
-        public int Count => Driver.Instance.Count(Root, Name, Parent, UPath);
+        public int Count => PuppetDriver.Instance.Count(Root, Name, Parent, UPath);
 
         public void Click()
         {
-            Driver.Instance.Click(Root, Name, Parent, UPath, LocatorMessage);
+            PuppetDriver.Instance.Click(Root, Name, Parent, UPath, LocatorMessage);
         }
 
         public void SendKeys(string value)
         {
-            Driver.Instance.SendKeys(value, Root, Name, Parent, UPath, LocatorMessage);
+            PuppetDriver.Instance.SendKeys(value, Root, Name, Parent, UPath, LocatorMessage);
         }
 
         public void Swipe(Constants.Directions direction)
         {
-            Driver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower(), LocatorMessage);
+            PuppetDriver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower(), LocatorMessage);
         }
         
         public void DragTo(ScreenCoordinates toCoordinates)
         {
-            Driver.Instance.DragTo(Root, Name, Parent, UPath, JsonConvert.SerializeObject(toCoordinates), LocatorMessage);
+            PuppetDriver.Instance.DragTo(Root, Name, Parent, UPath, JsonConvert.SerializeObject(toCoordinates), LocatorMessage);
         }
         
         public void DragTo(GameObject toGameObject)
@@ -97,12 +96,12 @@ namespace Puppetry.Puppeteer
 
         public string GetComponent(string component)
         {
-            return Driver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
+            return PuppetDriver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
         }
         
         public ScreenCoordinates GetScreenCoordinates()
         {
-            var result = Driver.Instance.GetCoordinates(Root, Name, Parent, UPath, LocatorMessage);
+            var result = PuppetDriver.Instance.GetCoordinates(Root, Name, Parent, UPath, LocatorMessage);
 
             return JsonConvert.DeserializeObject<ScreenCoordinates>(result);
         }
