@@ -19,7 +19,8 @@ namespace Puppetry.PuppetDriver
 
         private static IWebHost BuildWebHost(Dictionary<string, string> settings)
         {
-            const string PortParameter = "p";
+            const string PortParameter = "port";
+            const string BaseUrlParameter = "baseurl";
 
             string baseUrl = "http://localhost";
             string port = "7111";
@@ -28,6 +29,8 @@ namespace Puppetry.PuppetDriver
             {
                 if (settings.ContainsKey(PortParameter))
                     port = settings[PortParameter];
+                if (settings.ContainsKey(BaseUrlParameter))
+                    baseUrl = settings[BaseUrlParameter];
             }
 
             return WebHost.CreateDefaultBuilder()

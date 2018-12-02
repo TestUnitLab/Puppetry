@@ -16,7 +16,7 @@ namespace Puppetry.PuppetDriver.TcpSocket
             try
             {
                 Console.WriteLine("Starting TCP listener...");
-                var listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 6111);
+                var listener = new TcpListener(IPAddress.Any, 6111);
                 listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
                 listener.Start();
 
