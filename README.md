@@ -1,5 +1,5 @@
 # Puppetry
-It is a  framework to test automatically Games written in Unity3d technology
+It is a  framework for automated testing of Games written in Unity3d game engine
 
 Link to wiki with the documentation.
 https://github.com/GameUnitLab/Puppetry/wiki
