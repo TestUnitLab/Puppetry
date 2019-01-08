@@ -18,6 +18,7 @@ namespace Puppetry.Puppeteer
         {
             Root = root;
             Name = name;
+            UPath = $"/{root}//{name}";
             LocatorMessage = $"root: {Root} and name: {Name}";
         }
 
@@ -26,6 +27,7 @@ namespace Puppetry.Puppeteer
             Root = root;
             Name = name;
             Parent = parent;
+            UPath = $"/{root}//{parent}//{name}";
             LocatorMessage = $"root: {Root}, name: {Name} and parent: {Parent}";
         }
 
@@ -41,6 +43,7 @@ namespace Puppetry.Puppeteer
         {
             Root = root;
             Name = name;
+            UPath = $"/{root}//{name}";
             LocatorMessage = $"root: {Root} and name: {Name}";
 
             return this;
@@ -51,9 +54,15 @@ namespace Puppetry.Puppeteer
             Root = root;
             Name = name;
             Parent = parent;
+            UPath = $"/{root}//{parent}//{name}";
             LocatorMessage = $"root: {Root}, name: {Name} and parent: {Parent}";
 
             return this;
+        }
+
+        public GameObject FindRelative(string upath)
+        {
+            return new GameObject().FindByUPath(UPath + upath);
         }
         
         public bool Exists => PuppetDriver.Instance.Exist(Root, Name, Parent, UPath);
