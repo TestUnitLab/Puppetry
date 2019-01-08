@@ -1,5 +1,5 @@
 ﻿
-namespace Puppetry.PuppetDriver.Puppet
+namespace Puppetry.PuppetryDriver.Puppet
 {
     internal class PuppetResponse
     {

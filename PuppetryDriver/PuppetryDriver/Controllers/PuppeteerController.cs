@@ -7,11 +7,10 @@ using Microsoft.AspNetCore.Http;
 
 using Newtonsoft.Json;
 
-using Puppetry.PuppetDriver.Puppet;
+using Puppetry.PuppetryDriver.Puppet;
 using Puppetry.PuppetContracts;
-using Puppetry.PuppetDriver;
 
-namespace PuppetDriver.Controllers
+namespace Puppetry.PuppetryDriver.Controllers
 {
     internal class PuppeteerController
     {

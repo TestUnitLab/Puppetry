@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 
-namespace Puppetry.PuppetDriver.Puppet
+namespace Puppetry.PuppetryDriver.Puppet
 {
     interface IPuppetHandler
     {
