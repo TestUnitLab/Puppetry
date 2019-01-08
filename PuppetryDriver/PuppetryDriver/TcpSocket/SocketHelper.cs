@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Puppetry.PuppetContracts;
 using static Puppetry.PuppetContracts.Constants;
 
-namespace Puppetry.PuppetDriver.TcpSocket
+namespace Puppetry.PuppetryDriver.TcpSocket
 {
     internal static class SocketHelper
     {

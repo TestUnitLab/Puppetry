@@ -5,9 +5,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Puppetry.PuppetContracts;
-using Puppetry.PuppetDriver.Puppet;
+using Puppetry.PuppetryDriver.Puppet;
 
-namespace Puppetry.PuppetDriver.TcpSocket
+namespace Puppetry.PuppetryDriver.TcpSocket
 {
     internal static class PuppetListener
     {

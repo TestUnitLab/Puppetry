@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-using Puppetry.PuppetDriver.TcpSocket;
+using Puppetry.PuppetryDriver.TcpSocket;
 
-namespace Puppetry.PuppetDriver
+namespace Puppetry.PuppetryDriver
 {
     class Program
     {

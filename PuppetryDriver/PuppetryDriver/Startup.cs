@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using PuppetDriver.Controllers;
+using Puppetry.PuppetryDriver.Controllers;
 
-namespace Puppetry.PuppetDriver
+namespace Puppetry.PuppetryDriver
 {
     public class Startup
     {

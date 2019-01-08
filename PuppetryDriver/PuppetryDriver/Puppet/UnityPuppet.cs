@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using Puppetry.PuppetContracts;
-using Puppetry.PuppetDriver.TcpSocket;
+using Puppetry.PuppetryDriver.TcpSocket;
 
-namespace Puppetry.PuppetDriver.Puppet
+namespace Puppetry.PuppetryDriver.Puppet
 {
     internal class UnityPuppet : IPuppetHandler
     {

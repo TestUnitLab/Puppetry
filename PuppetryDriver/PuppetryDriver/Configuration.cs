@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Puppetry.PuppetDriver
+namespace Puppetry.PuppetryDriver
 {
     internal static class Configuration
     {
