@@ -18,6 +18,7 @@ namespace Puppetry.Puppeteer
         {
             Root = root;
             Name = name;
+            UPath = $"/{root}//{name}";
             LocatorMessage = $"root: {Root} and name: {Name}";
         }
 
@@ -26,6 +27,7 @@ namespace Puppetry.Puppeteer
             Root = root;
             Name = name;
             Parent = parent;
+            UPath = $"/{root}//{parent}//{name}";
             LocatorMessage = $"root: {Root}, name: {Name} and parent: {Parent}";
         }
 
@@ -41,6 +43,7 @@ namespace Puppetry.Puppeteer
         {
             Root = root;
             Name = name;
+            UPath = $"/{root}//{name}";
             LocatorMessage = $"root: {Root} and name: {Name}";
 
             return this;
@@ -51,41 +54,47 @@ namespace Puppetry.Puppeteer
             Root = root;
             Name = name;
             Parent = parent;
+            UPath = $"/{root}//{parent}//{name}";
             LocatorMessage = $"root: {Root}, name: {Name} and parent: {Parent}";
 
             return this;
         }
+
+        public GameObject FindRelative(string upath)
+        {
+            return new GameObject().FindByUPath(UPath + upath);
+        }
         
-        public bool Exists => PuppetDriver.Instance.Exist(Root, Name, Parent, UPath);
+        public bool Exists => PuppetryDriver.Instance.Exist(Root, Name, Parent, UPath);
         
-        public bool IsActiveInHierarchy => PuppetDriver.Instance.Active(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsActiveInHierarchy => PuppetryDriver.Instance.Active(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsRendering => PuppetDriver.Instance.IsRendering(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsRendering => PuppetryDriver.Instance.IsRendering(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsOnScreen => PuppetDriver.Instance.IsOnScreen(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsOnScreen => PuppetryDriver.Instance.IsOnScreen(Root, Name, Parent, UPath, LocatorMessage);
         
-        public bool IsGraphicClickable => PuppetDriver.Instance.IsGraphicClickable(Root, Name, Parent, UPath, LocatorMessage);
+        public bool IsGraphicClickable => PuppetryDriver.Instance.IsGraphicClickable(Root, Name, Parent, UPath, LocatorMessage);
         
-        public int Count => PuppetDriver.Instance.Count(Root, Name, Parent, UPath);
+        public int Count => PuppetryDriver.Instance.Count(Root, Name, Parent, UPath);
 
         public void Click()
         {
-            PuppetDriver.Instance.Click(Root, Name, Parent, UPath, LocatorMessage);
+            PuppetryDriver.Instance.Click(Root, Name, Parent, UPath, LocatorMessage);
         }
 
         public void SendKeys(string value)
         {
-            PuppetDriver.Instance.SendKeys(value, Root, Name, Parent, UPath, LocatorMessage);
+            PuppetryDriver.Instance.SendKeys(value, Root, Name, Parent, UPath, LocatorMessage);
         }
 
         public void Swipe(Constants.Directions direction)
         {
-            PuppetDriver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower(), LocatorMessage);
+            PuppetryDriver.Instance.Swipe(Root, Name, Parent, UPath, direction.ToString().ToLower(), LocatorMessage);
         }
         
         public void DragTo(ScreenCoordinates toCoordinates)
         {
-            PuppetDriver.Instance.DragTo(Root, Name, Parent, UPath, JsonConvert.SerializeObject(toCoordinates), LocatorMessage);
+            PuppetryDriver.Instance.DragTo(Root, Name, Parent, UPath, JsonConvert.SerializeObject(toCoordinates), LocatorMessage);
         }
         
         public void DragTo(GameObject toGameObject)
@@ -96,12 +105,12 @@ namespace Puppetry.Puppeteer
 
         public string GetComponent(string component)
         {
-            return PuppetDriver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
+            return PuppetryDriver.Instance.GetComponent(Root, Name, Parent, UPath, component, LocatorMessage);
         }
         
         public ScreenCoordinates GetScreenCoordinates()
         {
-            var result = PuppetDriver.Instance.GetCoordinates(Root, Name, Parent, UPath, LocatorMessage);
+            var result = PuppetryDriver.Instance.GetCoordinates(Root, Name, Parent, UPath, LocatorMessage);
 
             return JsonConvert.DeserializeObject<ScreenCoordinates>(result);
         }

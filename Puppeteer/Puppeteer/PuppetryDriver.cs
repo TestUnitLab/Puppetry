@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Puppetry.Puppeteer
 {
-    public static class PuppetDriver
+    public static class PuppetryDriver
     {
         private static ThreadLocal<PuppetDriverClient> _handler = new ThreadLocal<PuppetDriverClient>();
 
