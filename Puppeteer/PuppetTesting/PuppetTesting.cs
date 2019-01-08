@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using Puppetry.Puppeteer;
 using Puppetry.Puppeteer.Conditions;
-using Puppetry.Puppeteer.PuppetDriver;
 
 namespace PuppetTesting
 {
@@ -12,7 +11,7 @@ namespace PuppetTesting
         [OneTimeSetUp]
         public void TestRunInit()
         {
-            Driver.ReleaseAllSessions();
+            PuppetryDriver.ReleaseAllSessions();
             Configuration.Set(Settings.TimeoutMs, 45000);
             Configuration.Set(Settings.StartPlayModeTimeoutMs, 45000);
         }
@@ -62,14 +61,14 @@ namespace PuppetTesting
         [TearDown]
         public void CleanUp()
         {
-            Game.MakeScreenshot("D:\\ScreenShots\\Test.png");
+            //Game.MakeScreenshot("D:\\ScreenShots\\Test.png");
             Editor.StopPlayMode();
         }
 
         [OneTimeTearDown]
         public void TestRunCleanUp()
         {
-            Driver.ReleaseAllSessions();
+            PuppetryDriver.ReleaseAllSessions();
         }
     }
 }

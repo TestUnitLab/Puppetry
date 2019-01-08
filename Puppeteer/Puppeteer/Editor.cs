@@ -6,14 +6,14 @@ namespace Puppetry.Puppeteer
     {
         public static void StartPlayMode()
         {
-            PuppetDriver.Instance.StartPlayMode();
+            PuppetryDriver.Instance.StartPlayMode();
             
-            Wait.For( () => PuppetDriver.Instance.IsPlayMode(), () => $"PlayMode was not started in {Configuration.StartPlayModeTimeoutMs / 1000} seconds", Configuration.TimeoutMs);
+            Wait.For( () => PuppetryDriver.Instance.IsPlayMode(), () => $"PlayMode was not started in {Configuration.StartPlayModeTimeoutMs / 1000} seconds", Configuration.TimeoutMs);
         }
 
         public static void StopPlayMode()
         {
-            PuppetDriver.Instance.StopPlayMode();
+            PuppetryDriver.Instance.StopPlayMode();
         }
     }
 }
