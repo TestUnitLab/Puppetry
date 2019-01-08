@@ -1,5 +1,5 @@
 ﻿
-namespace Puppetry.PuppetContracts
+namespace Puppetry.Contracts
 {
     public static class Methods
     {
@@ -14,6 +14,7 @@ namespace Puppetry.PuppetContracts
         public const string Active = "active";
         public const string OnScreen = "onscreen";
         public const string GraphicClickable = "graphicclickable";
+        public const string PhysicClickable = "physicclickable";
         public const string Swipe = "swipe";
         public const string DragTo = "dragto";
         public const string StartPlayMode = "startplaymode";

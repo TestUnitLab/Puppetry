@@ -52,6 +52,9 @@ namespace Puppetry.Puppet
                 case "graphicclickable":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsGraphicClickable(gameObject).ToString());
                     break;
+                case "physicclickable":
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsPhysicClickable(gameObject).ToString());
+                    break;
                 case "getcomponent":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
                     {

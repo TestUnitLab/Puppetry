@@ -1,5 +1,5 @@
 ﻿
-namespace Puppetry.PuppetContracts
+namespace Puppetry.Contracts
 {
     public static class EditorTypes
     {

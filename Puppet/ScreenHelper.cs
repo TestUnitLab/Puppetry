@@ -9,24 +9,12 @@ namespace Puppetry.Puppet
     {
         public static bool IsGraphicClickable(GameObject gameObject)
         {
-            var result = false;
-            var position = GetPositionOnScreen(gameObject);
+            return IsRaycasted<GraphicRaycaster>(gameObject);
+        }
 
-            if (IsOnScreen(gameObject))
-            {
-                var graphicRaycaster = gameObject.GetComponentInParent<GraphicRaycaster>();
-                var ped = new PointerEventData(null);
-                ped.position = position;
-                var hits = new List<RaycastResult>();
-                graphicRaycaster.Raycast(ped, hits);
-
-                if (hits.Count > 0 && hits[0].gameObject.name == gameObject.name)
-                {
-                    result = true;
-                }
-            }
-
-            return result;
+        public static bool IsPhysicClickable(GameObject gameObject)
+        {
+            return IsRaycasted<PhysicsRaycaster>(gameObject);
         }
 
         public static bool IsOnScreen(GameObject gameObject)
@@ -72,6 +60,28 @@ namespace Puppetry.Puppet
             }
 
             return camera.WorldToScreenPoint(gameObject.transform.position);
+        }
+
+        private static bool IsRaycasted<T>(GameObject gameObject) where T : BaseRaycaster
+        {
+            var result = false;
+            var position = GetPositionOnScreen(gameObject);
+
+            if (IsOnScreen(gameObject))
+            {
+                var raycaster = gameObject.GetComponentInParent<T>();
+                var ped = new PointerEventData(null);
+                ped.position = position;
+                var hits = new List<RaycastResult>();
+                raycaster.Raycast(ped, hits);
+
+                if (hits.Count > 0 && hits[0].gameObject.name == gameObject.name)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }
