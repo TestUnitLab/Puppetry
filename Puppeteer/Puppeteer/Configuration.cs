@@ -37,7 +37,7 @@ namespace Puppetry.Puppeteer
                     TimeoutMs = (int)value;
                     break;
                 case Settings.StartPlayModeTimeoutMs:
-                    TimeoutMs = (int)value;
+                    StartPlayModeTimeoutMs = (int)value;
                     break;
                 case Settings.SessionTimeoutMs:
                     SessionTimeoutMs = (int)value;

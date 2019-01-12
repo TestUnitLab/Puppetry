@@ -8,22 +8,27 @@ namespace Puppetry.Puppeteer.Utils
     {
         public static void For(Func<bool> condition, string errorMessage, int waitTimeout)
         {
-            if (!TryToWaitFor(condition, waitTimeout))
+            if (!TryToWaitFor(condition, waitTimeout, out var exception))
             {
+                if (exception != null)
+                    throw exception;
                 throw new Exceptions.TimeoutException(errorMessage);
             }
         }
 
         public static void For(Func<bool> condition, Func<string> errorMessage, int waitTimeout)
         {
-            if (!TryToWaitFor(condition, waitTimeout))
+            if (!TryToWaitFor(condition, waitTimeout, out var exception))
             {
+                if (exception != null)
+                    throw exception;
                 throw new Exceptions.TimeoutException(errorMessage.Invoke());
             }
         }
 
-        private static bool TryToWaitFor(Func<bool> condition, int waitTimeout)
+        private static bool TryToWaitFor(Func<bool> condition, int waitTimeout, out Exception currentException)
         {
+            currentException = null;
             var isSuccess = false;
             var alreadyWaited = 0;
             var timeToWait = Configuration.PollingStratagy == PollingStrategies.Progressive ? 0 : 500;
@@ -38,8 +43,9 @@ namespace Puppetry.Puppeteer.Utils
                 {
                     result = condition.Invoke();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    currentException = e;
                     result = false;
                 }
                 

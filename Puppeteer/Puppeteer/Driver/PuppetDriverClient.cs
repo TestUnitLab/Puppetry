@@ -37,7 +37,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
@@ -50,7 +50,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"Keys {value} were not sent to GameObject with {locatorMessage}");
         }
@@ -63,7 +63,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
@@ -76,7 +76,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
@@ -87,7 +87,7 @@ namespace Puppetry.Puppeteer.Driver
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -100,7 +100,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -113,7 +113,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -126,7 +126,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -139,7 +139,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
@@ -150,7 +150,7 @@ namespace Puppetry.Puppeteer.Driver
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return int.TryParse(response[Parameters.Result], out var result) ? result : -1;
         }
@@ -163,7 +163,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return response[Parameters.Result];
         }
@@ -176,7 +176,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
 
             return response[Parameters.Result];
         }
@@ -200,7 +200,7 @@ namespace Puppetry.Puppeteer.Driver
             if (response[Parameters.StatusCode] == ErrorCodes.MethodNotSupported.ToString())
                 throw new MethodIsNotSupportedException("StopPlayMode method is not available");
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"PlayMode was not stopped with error: {response[Parameters.ErrorMessage]}");
         }
@@ -211,7 +211,7 @@ namespace Puppetry.Puppeteer.Driver
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
-                throw new PlayModeIsNotStartedException();
+                throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"Screenshot was not taken with error: {response[Parameters.ErrorMessage]}");
         }
