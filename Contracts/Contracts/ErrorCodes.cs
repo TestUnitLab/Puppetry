@@ -9,7 +9,7 @@ namespace Puppetry.Contracts
         public const int UnexpectedResponse = 7;
         public const int NoSuchGameObjectFound = 9;
         public const int MethodNodeIsNotPresent = 11;
-        public const int PlayModeIsNotStarted = 12;
+        public const int MainThreadIsUnavailable = 12;
         public const int PuppetDriverError = 20;
     }
 }
