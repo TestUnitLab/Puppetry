@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using Puppetry.PuppetContracts;
+using Puppetry.Contracts;
 using Puppetry.PuppetryDriver.TcpSocket;
 
 namespace Puppetry.PuppetryDriver.Puppet
@@ -9,7 +9,7 @@ namespace Puppetry.PuppetryDriver.Puppet
     internal class UnityPuppet : IPuppetHandler
     {
         private const string NotFoundMessage = "GameObject was not found";
-        private const string PlayModeIsNotStarted = "Play mode is not started";
+        private const string MainThreadIsUnavailable = "Main Thread is unavailable or overloaded";
         private const string MethodIsNotSupported = "Method is not supported";
 
         private Dictionary<string, string> _request;
@@ -39,8 +39,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -59,8 +59,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse {StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -79,8 +79,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -97,8 +97,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -117,8 +117,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -137,8 +137,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -157,8 +157,28 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else
+                result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
+
+            return result;
+        }
+        
+        public PuppetResponse PhysicClickable(string root, string name, string parent, string upath)
+        {
+            PrepareRequest(Methods.PhysicClickable, upath: upath, root: root, name: name, parent: parent);
+
+            _response = SocketHelper.SendMessage(Socket, _request);
+            PuppetResponse result;
+            if (_response == null)
+                result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
+            else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
+                result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
+            else if (_response[Parameters.Result] == NotFoundMessage)
+                result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -177,8 +197,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -197,8 +217,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -215,8 +235,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.Exist)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -235,8 +255,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else if (!bool.TryParse(_response[Parameters.Result], out var r))
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = $"Unexpected response: {_response[Parameters.Result]} was received" };
             else
@@ -257,8 +277,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -277,8 +297,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == NotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -316,8 +336,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
             else if (_response[Parameters.Result] == MethodIsNotSupported)
                 result = new PuppetResponse { StatusCode = ErrorCodes.MethodNotSupported, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -334,8 +354,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -352,8 +372,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -370,8 +390,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -388,8 +408,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -406,8 +426,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -424,8 +444,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -442,8 +462,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -460,8 +480,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -478,8 +498,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 
@@ -496,8 +516,8 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.PuppetDriverError, IsSuccess = false, ErrorMessage = "Communication Error exception in PuppetDriver" };
             else if (!_response.ContainsKey(Parameters.Method) && _response[Parameters.Method] != Methods.TakeScreenshot)
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = "Unexpected request was received" };
-            else if (_response[Parameters.Result] == PlayModeIsNotStarted)
-                result = new PuppetResponse { StatusCode = ErrorCodes.PlayModeIsNotStarted, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
+            else if (_response[Parameters.Result] == MainThreadIsUnavailable)
+                result = new PuppetResponse { StatusCode = ErrorCodes.MainThreadIsUnavailable, IsSuccess = false, ErrorMessage = _response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = _response[Parameters.Result] };
 

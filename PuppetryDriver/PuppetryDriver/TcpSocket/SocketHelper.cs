@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using Newtonsoft.Json;
-using Puppetry.PuppetContracts;
-using static Puppetry.PuppetContracts.Constants;
+using Puppetry.Contracts;
+using static Puppetry.Contracts.Constants;
 
 namespace Puppetry.PuppetryDriver.TcpSocket
 {

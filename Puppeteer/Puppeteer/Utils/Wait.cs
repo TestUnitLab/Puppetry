@@ -10,9 +10,7 @@ namespace Puppetry.Puppeteer.Utils
         {
             if (!TryToWaitFor(condition, waitTimeout, out var exception))
             {
-                if (exception != null)
-                    throw exception;
-                throw new Exceptions.TimeoutException(errorMessage);
+                throw new Exceptions.TimeoutException(errorMessage + (exception != null ? $"\nWith reason: {exception.Message}" : string.Empty));
             }
         }
 
@@ -20,9 +18,7 @@ namespace Puppetry.Puppeteer.Utils
         {
             if (!TryToWaitFor(condition, waitTimeout, out var exception))
             {
-                if (exception != null)
-                    throw exception;
-                throw new Exceptions.TimeoutException(errorMessage.Invoke());
+                throw new Exceptions.TimeoutException(errorMessage.Invoke() + (exception != null ? $"\nWith reason: {exception.Message}" : string.Empty));
             }
         }
 

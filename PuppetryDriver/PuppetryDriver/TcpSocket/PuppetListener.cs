@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Puppetry.PuppetContracts;
+using Puppetry.Contracts;
 using Puppetry.PuppetryDriver.Puppet;
 
 namespace Puppetry.PuppetryDriver.TcpSocket

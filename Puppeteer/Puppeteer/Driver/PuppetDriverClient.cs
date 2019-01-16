@@ -4,7 +4,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using RestSharp;
 
-using Puppetry.PuppetContracts;
+using Puppetry.Contracts;
 using Puppetry.Puppeteer.Exceptions;
 
 namespace Puppetry.Puppeteer.Driver
@@ -23,7 +23,7 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.IsPlayMode, _sessionId);
             var response = Post(request);
   
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 return false;
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
@@ -36,7 +36,7 @@ namespace Puppetry.Puppeteer.Driver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
@@ -49,7 +49,7 @@ namespace Puppetry.Puppeteer.Driver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"Keys {value} were not sent to GameObject with {locatorMessage}");
@@ -62,7 +62,7 @@ namespace Puppetry.Puppeteer.Driver
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
@@ -75,7 +75,7 @@ namespace Puppetry.Puppeteer.Driver
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
@@ -86,7 +86,7 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.Exist, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
 
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
@@ -99,7 +99,7 @@ namespace Puppetry.Puppeteer.Driver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
@@ -112,7 +112,7 @@ namespace Puppetry.Puppeteer.Driver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
@@ -125,20 +125,33 @@ namespace Puppetry.Puppeteer.Driver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+
+            return bool.TryParse(response[Parameters.Result], out var result) && result;
+        }
+        
+        internal bool IsHitByPhysicsRaycast(string root, string name, string parent, string upath, string locatorMessage)
+        {
+            var request = BuildRequest(Methods.PhysicClickable, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var response = Post(request);
+            
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        internal bool IsGraphicClickable(string root, string name, string parent, string upath, string locatorMessage)
+        internal bool IsHitByGraphicRaycast(string root, string name, string parent, string upath, string locatorMessage)
         {
             var request = BuildRequest(Methods.GraphicClickable, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return bool.TryParse(response[Parameters.Result], out var result) && result;
@@ -149,7 +162,7 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.Count, _sessionId, upath: upath, root: root, name: name, parent: parent);
             var response = Post(request);
 
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return int.TryParse(response[Parameters.Result], out var result) ? result : -1;
@@ -162,7 +175,7 @@ namespace Puppetry.Puppeteer.Driver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return response[Parameters.Result];
@@ -175,7 +188,7 @@ namespace Puppetry.Puppeteer.Driver
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
                 throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
 
             return response[Parameters.Result];
@@ -199,7 +212,7 @@ namespace Puppetry.Puppeteer.Driver
 
             if (response[Parameters.StatusCode] == ErrorCodes.MethodNotSupported.ToString())
                 throw new MethodIsNotSupportedException("StopPlayMode method is not available");
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"PlayMode was not stopped with error: {response[Parameters.ErrorMessage]}");
@@ -210,7 +223,7 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.TakeScreenshot, _sessionId, value: path);
             var response = Post(request);
 
-            if (response[Parameters.StatusCode] == ErrorCodes.PlayModeIsNotStarted.ToString())
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"Screenshot was not taken with error: {response[Parameters.ErrorMessage]}");

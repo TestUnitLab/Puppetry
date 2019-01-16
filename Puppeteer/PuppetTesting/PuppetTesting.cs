@@ -48,7 +48,7 @@ namespace PuppetTesting
             previousButton.Should(Be.ActiveInHierarchy);
             previousButton.Should(Have.ComponentWithPropertyAndValue("Button", "m_Interactable", "true"));
             var onScreen = previousButton.IsOnScreen;
-            var clickable = previousButton.IsGraphicClickable;
+            var clickable = previousButton.IsHitByGraphicRaycast;
             previousButton.Click();
 
             titleLabel.Should(Be.ActiveInHierarchy);

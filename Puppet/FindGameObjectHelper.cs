@@ -11,7 +11,7 @@ namespace Puppetry.Puppet
         private const string DescendantAxe = "descendant";
         private const string AncestorAxe = "ancestor";
         private const string Active = "active";
-        private const string containsExpression = "contains(";
+        private const string ContainsExpression = "contains(";
 
         public static GameObject FindGameObjectByUPath(string upath)
         {
@@ -136,11 +136,11 @@ namespace Puppetry.Puppet
                     break;
             }
 
-            if (expression.StartsWith(containsExpression) && expression.EndsWith(")"))
+            if (expression.StartsWith(ContainsExpression) && expression.EndsWith(")"))
             {
                 fullName = false;
                 //Extract part of name
-                expression = expression.Substring(containsExpression.Length, expression.Length - containsExpression.Length - 1);
+                expression = expression.Substring(ContainsExpression.Length, expression.Length - ContainsExpression.Length - 1);
             }
             name = expression;
 
@@ -463,11 +463,11 @@ namespace Puppetry.Puppet
             else
             {
                 name = currentCondition.Replace(typeOfSearch, string.Empty); //remove type of search from the expression
-                if (name.StartsWith(containsExpression) && name.EndsWith(")"))
+                if (name.StartsWith(ContainsExpression) && name.EndsWith(")"))
                 {
                     fullName = false;
                     //Extract partName from expression: contains( + partName + )
-                    name = name.Substring(containsExpression.Length, name.Length - containsExpression.Length - 1);
+                    name = name.Substring(ContainsExpression.Length, name.Length - ContainsExpression.Length - 1);
                 }
             }
 

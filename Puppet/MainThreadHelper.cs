@@ -12,7 +12,7 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
+            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try
@@ -50,7 +50,7 @@ namespace Puppetry.Puppet
         {
             var autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
+            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try
@@ -91,7 +91,7 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
+            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try
@@ -122,7 +122,7 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.PlayModeIsNotStarted; // If response was not changed then MainThreadHelper is not initialized.
+            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try

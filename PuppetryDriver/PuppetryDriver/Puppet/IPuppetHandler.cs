@@ -33,6 +33,8 @@ namespace Puppetry.PuppetryDriver.Puppet
         
         PuppetResponse GraphicClickable(string root, string name, string parent, string upath);
         
+        PuppetResponse PhysicClickable(string root, string name, string parent, string upath);
+        
         PuppetResponse Count(string root, string name, string parent, string upath);
         
         PuppetResponse GetComponent(string root, string name, string parent, string upath, string component);

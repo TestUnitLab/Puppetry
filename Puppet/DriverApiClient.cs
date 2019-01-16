@@ -17,9 +17,6 @@ namespace Puppetry.Puppet
 
         private static DriverApiClient _instance;
 
-        public static bool IsRun = false;
-        public static bool WorkDone = false;
-
         public static DriverApiClient Instance
         {
             get
@@ -44,7 +41,15 @@ namespace Puppetry.Puppet
             {
                 _client = new TcpClient();
                 _client.Client.Connect(IPAddress.Parse("127.0.0.1"), 6111);
+            }
+            catch (Exception)
+            {
+                Debug.Log("Puppetry.Puppet is disabled");
+                return;
+            }
 
+            try
+            {
                 while (_client.Connected)
                 {
                     try
@@ -79,8 +84,6 @@ namespace Puppetry.Puppet
 
         private static string ReadData(TcpClient client)
         {
-            string retVal;
-
             NetworkStream stream = client.GetStream();
 
             byte[] myReadBuffer = new byte[1024];
@@ -94,7 +97,7 @@ namespace Puppetry.Puppet
             }
             while (stream.DataAvailable);
 
-            retVal = myCompleteMessage.ToString();
+            var retVal = myCompleteMessage.ToString();
 
             return retVal;
         }

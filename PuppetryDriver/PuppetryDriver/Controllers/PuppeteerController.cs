@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 using Puppetry.PuppetryDriver.Puppet;
-using Puppetry.PuppetContracts;
+using Puppetry.Contracts;
 
 namespace Puppetry.PuppetryDriver.Controllers
 {
@@ -164,6 +164,16 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.GraphicClickable(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                
+                case Methods.PhysicClickable:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
+
+                    result = handler.PhysicClickable(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;

@@ -11,7 +11,7 @@
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.8.0" />
     <PackageReference Include="NUnit.Runners" Version="3.8.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="Puppetry.Contracts" Version="1.0.6" />
+    <PackageReference Include="Puppetry.Contracts" Version="1.0.8" />
     <PackageReference Include="RestSharp" Version="106.5.4" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
