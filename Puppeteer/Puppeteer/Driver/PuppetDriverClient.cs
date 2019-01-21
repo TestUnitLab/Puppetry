@@ -326,12 +326,20 @@ namespace Puppetry.Puppeteer.Driver
         
         public void ClickAnywhere()
         {
-            throw new System.NotImplementedException();
+            var request = BuildRequest("custom", _sessionId, key: "clickanywhere");
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException(response[Parameters.Result]);
         }
 
         public void Zoom(string direction)
         {
-            throw new System.NotImplementedException();
+            var request = BuildRequest("custom", _sessionId, key: "zoom", value: direction);
+            var response = Post(request);
+
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException(response[Parameters.Result]);
         }
 
         private void StartSession()
