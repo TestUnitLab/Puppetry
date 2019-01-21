@@ -269,6 +269,16 @@ namespace Puppetry.Puppet
                 case "isplaymode":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Application.isPlaying.ToString());
                     break;
+				case "custom":
+					if (request.key == "clickanywhere")
+						MainThreadQueue.QueueOnMainThread(() => { TutorialManager.Instance.SendAction(CompleteActionType.TapAnyArea); });
+					else if (request.key == "zoom" && request.value == "in")
+						MainThreadQueue.QueueOnMainThread(() => { TutorialManager.Instance.SendAction(Tutorial.CompleteActionType.ZoomIn); });
+					else if (request.key == "zoom" && request.value == "out")
+						MainThreadQueue.QueueOnMainThread(() => { TutorialManager.Instance.SendAction(Tutorial.CompleteActionType.ZoomOut); });
+					
+                    response.result = Constants.ErrorMessages.SuccessResult;
+                    break;
 
                 default:
                     response.result = "Unknown method " + request.method + ".";
