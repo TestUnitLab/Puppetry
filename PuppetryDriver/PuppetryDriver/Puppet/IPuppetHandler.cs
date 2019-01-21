@@ -64,5 +64,7 @@ namespace Puppetry.PuppetryDriver.Puppet
         PuppetResponse SetStringPlayerPref(string key, string value);
 
         PuppetResponse PlayerPrefHasKey(string key);
+        
+        PuppetResponse Custom(string key, string value);
     }
 }
