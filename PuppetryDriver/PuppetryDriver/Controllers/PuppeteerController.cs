@@ -324,6 +324,14 @@ namespace Puppetry.PuppetryDriver.Controllers
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
+                case Methods.Custom:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
+                    result = handler.Custom(key, value);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
 
                 default:
                     response.Add(Parameters.StatusCode, ErrorCodes.MethodNotSupported.ToString());
