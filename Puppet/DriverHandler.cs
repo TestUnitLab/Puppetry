@@ -269,6 +269,9 @@ namespace Puppetry.Puppet
                 case "isplaymode":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Application.isPlaying.ToString());
                     break;
+				case "custom":
+                    response.result = CustomDriverHandler.Process(request.key, request.value);
+                    break;
 
                 default:
                     response.result = "Unknown method " + request.method + ".";

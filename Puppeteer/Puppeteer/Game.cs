@@ -73,5 +73,10 @@ namespace Puppetry.Puppeteer
 
             throw new PuppetryException(stringResult);
         }
+
+        public static void ExecuteCustomMethod(string method, string value = null)
+        {
+            PuppetryDriver.Instance.GameCustomMethod(method, value);
+        }
     }
 }

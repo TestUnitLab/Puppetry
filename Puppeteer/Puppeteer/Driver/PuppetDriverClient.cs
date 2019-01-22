@@ -232,7 +232,7 @@ namespace Puppetry.Puppeteer.Driver
         internal void ReleaseSession()
         {
             var request = BuildRequest(Methods.KillSession, _sessionId);
-            var response = Post(request);;
+            var response = Post(request);
 
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException("Session was not released");
@@ -241,7 +241,7 @@ namespace Puppetry.Puppeteer.Driver
         internal static void ReleaseAllSessions()
         {
             var request = BuildRequest(Methods.KillAllSessions);
-            var response = Post(request);;
+            var response = Post(request);
 
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException("All Sessions were not released");
@@ -322,6 +322,17 @@ namespace Puppetry.Puppeteer.Driver
             var response = Post(request);
 
             return response[Parameters.Result];
+        }
+        
+        public void GameCustomMethod(string method, string value)
+        {
+            var request = BuildRequest(Methods.Custom, _sessionId, key: method, value: value);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.Result] != ActionResults.Success)
+                throw new PuppetryException(response[Parameters.Result]);
         }
 
         private void StartSession()
