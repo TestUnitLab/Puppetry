@@ -270,14 +270,7 @@ namespace Puppetry.Puppet
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Application.isPlaying.ToString());
                     break;
 				case "custom":
-					if (request.key == "clickanywhere")
-						MainThreadQueue.QueueOnMainThread(() => { TutorialManager.Instance.SendAction(CompleteActionType.TapAnyArea); });
-					else if (request.key == "zoom" && request.value == "in")
-						MainThreadQueue.QueueOnMainThread(() => { TutorialManager.Instance.SendAction(Tutorial.CompleteActionType.ZoomIn); });
-					else if (request.key == "zoom" && request.value == "out")
-						MainThreadQueue.QueueOnMainThread(() => { TutorialManager.Instance.SendAction(Tutorial.CompleteActionType.ZoomOut); });
-					
-                    response.result = Constants.ErrorMessages.SuccessResult;
+                    response.result = CustomDriverHandler.Process(request.key, request.value);
                     break;
 
                 default:
