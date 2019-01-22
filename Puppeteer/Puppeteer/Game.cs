@@ -74,19 +74,9 @@ namespace Puppetry.Puppeteer
             throw new PuppetryException(stringResult);
         }
 
-        public static void ZoomIn()
+        public static void ExecuteCustomMethod(string method, string value = null)
         {
-            PuppetryDriver.Instance.Zoom("in");
-        }
-        
-        public static void ZoomOut()
-        {
-            PuppetryDriver.Instance.Zoom("out");
-        }
-        
-        public static void ClickAnywhere()
-        {
-            PuppetryDriver.Instance.ClickAnywhere();
+            PuppetryDriver.Instance.GameCustomMethod(method, value);
         }
     }
 }

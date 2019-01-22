@@ -324,20 +324,9 @@ namespace Puppetry.Puppeteer.Driver
             return response[Parameters.Result];
         }
         
-        public void ClickAnywhere()
+        public void GameCustomMethod(string method, string value)
         {
-            var request = BuildRequest(Methods.Custom, _sessionId, key: "clickanywhere");
-            var response = Post(request);
-
-            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
-                throw new MainThreadUnavailableException();
-            if (response[Parameters.Result] != ActionResults.Success)
-                throw new PuppetryException(response[Parameters.Result]);
-        }
-
-        public void Zoom(string direction)
-        {
-            var request = BuildRequest(Methods.Custom, _sessionId, key: "zoom", value: direction);
+            var request = BuildRequest(Methods.Custom, _sessionId, key: method, value: value);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
