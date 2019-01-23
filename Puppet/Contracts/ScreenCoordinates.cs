@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Puppetry.Puppet
+namespace Puppetry.Puppet.Contracts
 {
     [Serializable]
     public class ScreenCoordinates

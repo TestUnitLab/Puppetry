@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Puppetry.Puppet.Contracts;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -68,7 +69,7 @@ namespace Puppetry.Puppet
                     {
                         var pointer = new PointerEventData(EventSystem.current);
                         ExecuteEvents.Execute(gameObject, pointer, ExecuteEvents.pointerClickHandler);
-                        return Constants.ErrorMessages.SuccessResult;
+                        return ErrorMessages.SuccessResult;
                     });
                     break;
                 case "isrendering":
@@ -112,7 +113,7 @@ namespace Puppetry.Puppet
                 case "setfloatplayerpref":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
-                        var result = Constants.ErrorMessages.SuccessResult;
+                        var result = ErrorMessages.SuccessResult;
                         try
                         {
                             PlayerPrefs.SetFloat(request.key, float.Parse(request.value));
@@ -128,7 +129,7 @@ namespace Puppetry.Puppet
                 case "setintplayerpref":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
-                        var result = Constants.ErrorMessages.SuccessResult;
+                        var result = ErrorMessages.SuccessResult;
                         try
                         {
                             PlayerPrefs.SetInt(request.key, int.Parse(request.value));
@@ -144,7 +145,7 @@ namespace Puppetry.Puppet
                 case "setstringplayerpref":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
-                        var result = Constants.ErrorMessages.SuccessResult;
+                        var result = ErrorMessages.SuccessResult;
                         try
                         {
                             PlayerPrefs.SetFloat(request.key, float.Parse(request.value));
@@ -205,7 +206,7 @@ namespace Puppetry.Puppet
                         var pointer = new PointerEventData(EventSystem.current);
                         gameObject.GetComponent<MonoBehaviour>().StartCoroutine(DragCoroutine(gameObject, pointer, (Vector2)ScreenHelper.GetPositionOnScreen(gameObject) + swipeDirection * 2));
 
-                        return Constants.ErrorMessages.SuccessResult;
+                        return ErrorMessages.SuccessResult;
                     });
                     break;
                 
@@ -235,16 +236,16 @@ namespace Puppetry.Puppet
                             return "input not found";
                         }
 
-                        return Constants.ErrorMessages.SuccessResult;
+                        return ErrorMessages.SuccessResult;
                     });
                     break;
 
                 case "startplaymode":
 #if UNITY_EDITOR
                     EditorApplication.update += StartPlayMode;
-                    response.result = Constants.ErrorMessages.SuccessResult;
+                    response.result = ErrorMessages.SuccessResult;
 #else
-                    response.result = Constants.ErrorMessages.MethodIsNotSupported;
+                    response.result = ErrorMessages.MethodIsNotSupported;
 #endif    
                     break;
                 case "stopplaymode":
@@ -255,7 +256,7 @@ namespace Puppetry.Puppet
                         EditorApplication.isPlaying = false;
                     });
 #else                  
-                    response.result = Constants.ErrorMessages.MethodIsNotSupported;
+                    response.result = ErrorMessages.MethodIsNotSupported;
 #endif    
                     break;
                 case "ping":
@@ -264,7 +265,7 @@ namespace Puppetry.Puppet
                 case "takescreenshot":
                     var path = request.value;
                     MainThreadQueue.QueueOnMainThread(() => { TakeScreenshot(path); });
-                    response.result = Constants.ErrorMessages.SuccessResult;
+                    response.result = ErrorMessages.SuccessResult;
                     break;
                 case "isplaymode":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Application.isPlaying.ToString());

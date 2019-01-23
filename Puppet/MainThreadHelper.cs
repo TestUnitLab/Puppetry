@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using Puppetry.Puppet.Contracts;
 
 namespace Puppetry.Puppet
 {
@@ -12,7 +13,7 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
+            var response = ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try
@@ -26,11 +27,11 @@ namespace Puppetry.Puppet
                     if (gameObject != null)
                         response = onComplete(gameObject);
                     else
-                        response = Constants.ErrorMessages.GameObjectWasNotFound;
+                        response = ErrorMessages.GameObjectWasNotFound;
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e);
+                    Utils.Logger.Log(e);
                     response = e.Message;
                 }
                 finally
@@ -50,7 +51,7 @@ namespace Puppetry.Puppet
         {
             var autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
+            var response = ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try
@@ -70,7 +71,7 @@ namespace Puppetry.Puppet
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e);
+                    Utils.Logger.Log(e);
                     response = e.Message;
                 }
                 finally
@@ -91,17 +92,17 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
+            var response = ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try
                 {
                     action();
-                    response = Constants.ErrorMessages.SuccessResult;
+                    response = ErrorMessages.SuccessResult;
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e);
+                    Utils.Logger.Log(e);
                     response = e.Message;
                 }
                 finally
@@ -122,7 +123,7 @@ namespace Puppetry.Puppet
             // event used to wait the answer from the main thread.
             AutoResetEvent autoEvent = new AutoResetEvent(false);
 
-            var response = Constants.ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
+            var response = ErrorMessages.MainThreadIsUnavailable; // If response was not changed then MainThreadHelper is not initialized.
             MainThreadQueue.QueueOnMainThread(() =>
             {
                 try
@@ -131,7 +132,7 @@ namespace Puppetry.Puppet
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e);
+                    Utils.Logger.Log(e);
                     response = e.Message;
                 }
                 finally

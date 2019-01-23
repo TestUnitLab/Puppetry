@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Puppetry.Puppet
+namespace Puppetry.Puppet.Utils
 {
     public class Logger
     {
