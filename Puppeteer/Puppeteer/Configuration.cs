@@ -6,7 +6,7 @@ namespace Puppetry.Puppeteer
     {
         static Configuration()
         {
-            BaseUrl = "http://localhost";
+            BaseUrl = "http://127.0.0.1";
             Port = "7111";
             TimeoutMs = 60000;
             StartPlayModeTimeoutMs = 240000;

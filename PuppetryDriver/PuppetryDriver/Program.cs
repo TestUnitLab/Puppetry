@@ -22,7 +22,7 @@ namespace Puppetry.PuppetryDriver
             const string PortParameter = "port";
             const string BaseUrlParameter = "baseurl";
 
-            string baseUrl = "http://localhost";
+            string baseUrl = "http://127.0.0.1";
             string port = "7111";
 
             if (settings.Count > 0)

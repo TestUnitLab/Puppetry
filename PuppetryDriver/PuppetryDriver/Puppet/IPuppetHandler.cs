@@ -15,31 +15,31 @@ namespace Puppetry.PuppetryDriver.Puppet
         
         PuppetResponse IsPlayMode();
 
-        PuppetResponse Click(string root, string name, string parent, string upath);
+        PuppetResponse Click(string upath);
 
-        PuppetResponse SendKeys(string value, string root, string name, string parent, string upath);
+        PuppetResponse SendKeys(string value, string upath);
 
-        PuppetResponse Exists(string root, string name, string parent, string upath);
+        PuppetResponse Exists(string upath);
 
-        PuppetResponse Active(string root, string name, string parent, string upath);
+        PuppetResponse Active(string upath);
 
-        PuppetResponse Swipe(string root, string name, string parent, string upath, string direction);
+        PuppetResponse Swipe(string upath, string direction);
         
-        PuppetResponse DragTo(string root, string name, string parent, string upath, string toCoordinates);
+        PuppetResponse DragTo(string upath, string toCoordinates);
 
-        PuppetResponse Rendering(string root, string name, string parent, string upath);
+        PuppetResponse Rendering(string upath);
         
-        PuppetResponse OnScreen(string root, string name, string parent, string upath);
+        PuppetResponse OnScreen(string upath);
         
-        PuppetResponse GraphicClickable(string root, string name, string parent, string upath);
+        PuppetResponse GraphicClickable(string upath);
         
-        PuppetResponse PhysicClickable(string root, string name, string parent, string upath);
+        PuppetResponse PhysicClickable(string upath);
         
-        PuppetResponse Count(string root, string name, string parent, string upath);
+        PuppetResponse Count(string upath);
         
-        PuppetResponse GetComponent(string root, string name, string parent, string upath, string component);
+        PuppetResponse GetComponent(string upath, string component);
         
-        PuppetResponse GetCoordinates(string root, string name, string parent, string upath);
+        PuppetResponse GetCoordinates(string upath);
 
         PuppetResponse StartPlayMode();
 

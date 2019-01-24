@@ -19,9 +19,6 @@ namespace Puppetry.PuppetryDriver.Controllers
             string sessionId;
             IPuppetHandler handler;
             PuppetResponse result;
-            string gameObjectName = null;
-            string gameObjectRootName = null;
-            string gameObjectParentName = null;
             string upath = null;
             string key = null;
             string value = null;
@@ -46,9 +43,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                 response.Add(Parameters.Result, ActionResults.Fail);
                 return context.Response.WriteAsync(JsonConvert.SerializeObject(response, Formatting.Indented));
             }
-            if (request.ContainsKey(Parameters.Name)) gameObjectName = request[Parameters.Name];
-            if (request.ContainsKey(Parameters.Root)) gameObjectRootName = request[Parameters.Root];
-            if (request.ContainsKey(Parameters.Parent)) gameObjectParentName = request[Parameters.Parent];
             if (request.ContainsKey(Parameters.UPath)) upath = request[Parameters.UPath];
             if (request.ContainsKey(Parameters.Key)) key = request[Parameters.Key];
             if (request.ContainsKey(Parameters.Value)) value = request[Parameters.Value];
@@ -83,7 +77,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                 case Methods.Click:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
-                    result = handler.Click(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.Click(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -93,7 +87,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.SendKeys(value, gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.SendKeys(value, upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -103,7 +97,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.Exists(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.Exists(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -113,7 +107,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.Active(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.Active(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -123,7 +117,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.Swipe(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
+                    result = handler.Swipe(upath, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -133,7 +127,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.DragTo(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
+                    result = handler.DragTo(upath, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -143,7 +137,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.Rendering(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.Rendering(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -153,7 +147,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.OnScreen(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.OnScreen(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -163,7 +157,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.GraphicClickable(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.GraphicClickable(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -173,7 +167,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.PhysicClickable(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.PhysicClickable(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -183,7 +177,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.Count(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.Count(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -193,7 +187,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.GetComponent(gameObjectRootName, gameObjectName, gameObjectParentName, upath, value);
+                    result = handler.GetComponent(upath, value);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
@@ -203,7 +197,7 @@ namespace Puppetry.PuppetryDriver.Controllers
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.GetCoordinates(gameObjectRootName, gameObjectName, gameObjectParentName, upath);
+                    result = handler.GetCoordinates(upath);
                     response.Add(Parameters.StatusCode, result.StatusCode.ToString());
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;

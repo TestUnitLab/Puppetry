@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Puppetry.Puppet.Contracts;
-
+using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -40,24 +40,24 @@ namespace Puppetry.Puppet
                     response.result = "unity";
                     break;
                 case "exist":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath,
                         gameObject => true.ToString());
                     break;
                 case "active":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath,
                         gameObject => gameObject.activeInHierarchy.ToString());
                     break;
                 case "onscreen":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsOnScreen(gameObject).ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => ScreenHelper.IsOnScreen(gameObject).ToString());
                     break;
                 case "graphicclickable":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsGraphicClickable(gameObject).ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => ScreenHelper.IsGraphicClickable(gameObject).ToString());
                     break;
                 case "physicclickable":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => ScreenHelper.IsPhysicClickable(gameObject).ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => ScreenHelper.IsPhysicClickable(gameObject).ToString());
                     break;
                 case "getcomponent":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
                     {
                         var component = gameObject.GetComponent(request.value);
                         return component != null ? JsonUtility.ToJson(component) : "null";
@@ -65,7 +65,7 @@ namespace Puppetry.Puppet
                     break;
 
                 case "click":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
                     {
                         var pointer = new PointerEventData(EventSystem.current);
                         ExecuteEvents.Execute(gameObject, pointer, ExecuteEvents.pointerClickHandler);
@@ -73,7 +73,7 @@ namespace Puppetry.Puppet
                     });
                     break;
                 case "isrendering":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath,
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath,
                         go =>
                         {
                             var renderer = go.GetComponent<Renderer>();
@@ -85,7 +85,7 @@ namespace Puppetry.Puppet
                         });
                     break;
                 case "count":
-                    response.result = MainThreadHelper.ExecuteGameObjectsEmulation(request.root, request.name, request.parent, request.upath, goList => goList.Count.ToString());
+                    response.result = MainThreadHelper.ExecuteGameObjectsEmulation(request.upath, goList => goList.Count.ToString());
                     break;
                 case "deleteplayerpref":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
@@ -174,7 +174,7 @@ namespace Puppetry.Puppet
                     });
                     break;
                 case "getcoordinates":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
                     {
                         var position = ScreenHelper.GetPositionOnScreen(gameObject);
                         var coordinates = new ScreenCoordinates {X = position.x, Y = position.y};
@@ -202,7 +202,7 @@ namespace Puppetry.Puppet
 
                     swipeDirection *= 100;
 
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => {
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => {
                         var pointer = new PointerEventData(EventSystem.current);
                         gameObject.GetComponent<MonoBehaviour>().StartCoroutine(DragCoroutine(gameObject, pointer, (Vector2)ScreenHelper.GetPositionOnScreen(gameObject) + swipeDirection * 2));
 
@@ -211,7 +211,7 @@ namespace Puppetry.Puppet
                     break;
                 
                 case "dragto":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject => {
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => {
                         var screenCoordinates = new ScreenCoordinates();
                         JsonUtility.FromJsonOverwrite(request.value, screenCoordinates);
                         var pointer = new PointerEventData(EventSystem.current);
@@ -224,7 +224,7 @@ namespace Puppetry.Puppet
 
 
                 case "sendkeys":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.root, request.name, request.parent, request.upath, gameObject =>
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
                     {
                         var input = gameObject.GetComponent<InputField>();
                         if (input != null)
@@ -233,7 +233,11 @@ namespace Puppetry.Puppet
                         }
                         else
                         {
-                            return "input not found";
+                            var tmpInput = gameObject.GetComponent<TMP_InputField>();
+                            if (tmpInput != null)
+                                tmpInput.text = request.value;
+                            else
+                                return "input not found";
                         }
 
                         return ErrorMessages.SuccessResult;
@@ -306,7 +310,6 @@ namespace Puppetry.Puppet
 #if UNITY_EDITOR            
             EditorApplication.update -= StartPlayMode;
             
-            //EditorApplication.LockReloadAssemblies();
             EditorApplication.isPlaying = true;
 #endif            
         }

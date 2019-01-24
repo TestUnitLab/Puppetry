@@ -47,9 +47,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
 
-        public PuppetResponse SendKeys(string value, string root, string name, string parent, string upath)
+        public PuppetResponse SendKeys(string value, string upath)
         {
-            PrepareRequest(Methods.SendKeys, upath: upath, root: root, name: name, parent: parent, value: value);
+            PrepareRequest(Methods.SendKeys, upath: upath, value: value);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -67,9 +67,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }       
 
-        public PuppetResponse Click(string root, string name, string parent, string upath)
+        public PuppetResponse Click(string upath)
         {
-            PrepareRequest(Methods.Click, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.Click, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -87,9 +87,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
 
-        public PuppetResponse Exists(string root, string name, string parent, string upath)
+        public PuppetResponse Exists(string upath)
         {
-            PrepareRequest(Methods.Exist, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.Exist, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -105,9 +105,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse Rendering(string root, string name, string parent, string upath)
+        public PuppetResponse Rendering(string upath)
         {
-            PrepareRequest(Methods.Rendering, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.Rendering, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -125,9 +125,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse OnScreen(string root, string name, string parent, string upath)
+        public PuppetResponse OnScreen(string upath)
         {
-            PrepareRequest(Methods.OnScreen, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.OnScreen, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -145,9 +145,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse GraphicClickable(string root, string name, string parent, string upath)
+        public PuppetResponse GraphicClickable(string upath)
         {
-            PrepareRequest(Methods.GraphicClickable, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.GraphicClickable, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -165,9 +165,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse PhysicClickable(string root, string name, string parent, string upath)
+        public PuppetResponse PhysicClickable(string upath)
         {
-            PrepareRequest(Methods.PhysicClickable, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.PhysicClickable, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -185,9 +185,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse GetComponent(string root, string name, string parent, string upath, string component)
+        public PuppetResponse GetComponent(string upath, string component)
         {
-            PrepareRequest(Methods.GetComponent, upath: upath, root: root, name: name, parent: parent, value: component);
+            PrepareRequest(Methods.GetComponent, upath: upath, value: component);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -205,9 +205,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse GetCoordinates(string root, string name, string parent, string upath)
+        public PuppetResponse GetCoordinates(string upath)
         {
-            PrepareRequest(Methods.GetCoordinates, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.GetCoordinates, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -225,9 +225,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse Count(string root, string name, string parent, string upath)
+        public PuppetResponse Count(string upath)
         {
-            PrepareRequest(Methods.Count, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.Count, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -243,9 +243,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
 
-        public PuppetResponse Active(string root, string name, string parent, string upath)
+        public PuppetResponse Active(string upath)
         {
-            PrepareRequest(Methods.Active, upath: upath, root: root, name: name, parent: parent);
+            PrepareRequest(Methods.Active, upath: upath);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -265,9 +265,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
 
-        public PuppetResponse Swipe(string root, string name, string parent, string upath, string direction)
+        public PuppetResponse Swipe(string upath, string direction)
         {
-            PrepareRequest(Methods.Swipe, upath: upath, root: root, name: name, parent: parent, value: direction);
+            PrepareRequest(Methods.Swipe, upath: upath, value: direction);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -285,9 +285,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
         
-        public PuppetResponse DragTo(string root, string name, string parent, string upath, string toCoordinates)
+        public PuppetResponse DragTo(string upath, string toCoordinates)
         {
-            PrepareRequest(Methods.Swipe, upath: upath, root: root, name: name, parent: parent, value: toCoordinates);
+            PrepareRequest(Methods.Swipe, upath: upath, value: toCoordinates);
 
             _response = SocketHelper.SendMessage(Socket, _request);
             PuppetResponse result;
@@ -542,15 +542,12 @@ namespace Puppetry.PuppetryDriver.Puppet
             return result;
         }
 
-        private void PrepareRequest(string method, string upath = null, string root = null, string name = null, string parent = null, string key = null, string value = null)
+        private void PrepareRequest(string method, string upath = null, string key = null, string value = null)
         {
             _request.Clear();
             if (!string.IsNullOrEmpty(method)) _request.Add(Parameters.Method, method);
             if (!string.IsNullOrEmpty(key)) _request.Add(Parameters.Key, key);
             if (!string.IsNullOrEmpty(value)) _request.Add(Parameters.Value, value);
-            if (!string.IsNullOrEmpty(root)) _request.Add(Parameters.Root, root);
-            if (!string.IsNullOrEmpty(name)) _request.Add(Parameters.Name, name);
-            if (!string.IsNullOrEmpty(parent)) _request.Add(Parameters.Parent, parent);
             if (!string.IsNullOrEmpty(upath)) _request.Add(Parameters.UPath, upath);
         }
     }

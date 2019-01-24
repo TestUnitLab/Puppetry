@@ -29,9 +29,9 @@ namespace Puppetry.Puppeteer.Driver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        internal void Click(string root, string name, string parent, string upath, string locatorMessage)
+        internal void Click(string upath, string locatorMessage)
         {
-            var request = BuildRequest(Methods.Click, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.Click, _sessionId, upath: upath);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -42,9 +42,9 @@ namespace Puppetry.Puppeteer.Driver
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
 
-        internal void SendKeys(string value, string root, string name, string parent, string upath, string locatorMessage)
+        internal void SendKeys(string value, string upath, string locatorMessage)
         {
-            var request = BuildRequest(Methods.SendKeys, _sessionId, upath: upath, root: root, name: name, parent: parent, value: value);
+            var request = BuildRequest(Methods.SendKeys, _sessionId, upath: upath, value: value);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -55,9 +55,9 @@ namespace Puppetry.Puppeteer.Driver
                 throw new PuppetryException($"Keys {value} were not sent to GameObject with {locatorMessage}");
         }
 
-        internal void Swipe(string root, string name, string parent, string upath, string direction, string locatorMessage)
+        internal void Swipe(string upath, string direction, string locatorMessage)
         {
-            var request = BuildRequest(Methods.Swipe, _sessionId, upath: upath, root: root, name: name, parent: parent, value: direction);
+            var request = BuildRequest(Methods.Swipe, _sessionId, upath: upath, value: direction);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -68,9 +68,9 @@ namespace Puppetry.Puppeteer.Driver
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
         
-        internal void DragTo(string root, string name, string parent, string upath, string toCoordinates, string locatorMessage)
+        internal void DragTo(string upath, string toCoordinates, string locatorMessage)
         {
-            var request = BuildRequest(Methods.DragTo, _sessionId, upath: upath, root: root, name: name, parent: parent, value: toCoordinates);
+            var request = BuildRequest(Methods.DragTo, _sessionId, upath: upath, value: toCoordinates);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -81,9 +81,9 @@ namespace Puppetry.Puppeteer.Driver
                 throw new PuppetryException($"GameObject with {locatorMessage} was not clicked");
         }
 
-        internal bool Exist(string root, string name, string parent, string upath)
+        internal bool Exist(string upath)
         {
-            var request = BuildRequest(Methods.Exist, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.Exist, _sessionId, upath: upath);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
@@ -92,22 +92,9 @@ namespace Puppetry.Puppeteer.Driver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        internal bool Active(string root, string name, string parent, string upath, string locatorMessage)
+        internal bool Active(string upath, string locatorMessage)
         {
-            var request = BuildRequest(Methods.Active, _sessionId, upath: upath, root: root, name: name, parent: parent);
-            var response = Post(request);
-            
-            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
-                throw new MainThreadUnavailableException();
-
-            return bool.TryParse(response[Parameters.Result], out var result) && result;
-        }
-
-        internal bool IsRendering(string root, string name, string parent, string upath, string locatorMessage)
-        {
-            var request = BuildRequest(Methods.Rendering, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.Active, _sessionId, upath: upath);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -118,9 +105,22 @@ namespace Puppetry.Puppeteer.Driver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        internal bool IsOnScreen(string root, string name, string parent, string upath, string locatorMessage)
+        internal bool IsRendering(string upath, string locatorMessage)
         {
-            var request = BuildRequest(Methods.OnScreen, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.Rendering, _sessionId, upath: upath);
+            var response = Post(request);
+            
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+
+            return bool.TryParse(response[Parameters.Result], out var result) && result;
+        }
+
+        internal bool IsOnScreen(string upath, string locatorMessage)
+        {
+            var request = BuildRequest(Methods.OnScreen, _sessionId, upath: upath);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -131,9 +131,9 @@ namespace Puppetry.Puppeteer.Driver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
         
-        internal bool IsHitByPhysicsRaycast(string root, string name, string parent, string upath, string locatorMessage)
+        internal bool IsHitByPhysicsRaycast(string upath, string locatorMessage)
         {
-            var request = BuildRequest(Methods.PhysicClickable, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.PhysicClickable, _sessionId, upath: upath);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -144,9 +144,9 @@ namespace Puppetry.Puppeteer.Driver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        internal bool IsHitByGraphicRaycast(string root, string name, string parent, string upath, string locatorMessage)
+        internal bool IsHitByGraphicRaycast(string upath, string locatorMessage)
         {
-            var request = BuildRequest(Methods.GraphicClickable, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.GraphicClickable, _sessionId, upath: upath);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -157,9 +157,9 @@ namespace Puppetry.Puppeteer.Driver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
 
-        internal int Count(string root, string name, string parent, string upath)
+        internal int Count(string upath)
         {
-            var request = BuildRequest(Methods.Count, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.Count, _sessionId, upath: upath);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
@@ -168,9 +168,9 @@ namespace Puppetry.Puppeteer.Driver
             return int.TryParse(response[Parameters.Result], out var result) ? result : -1;
         }
 
-        internal string GetComponent(string root, string name, string parent, string upath, string component, string locatorMessage)
+        internal string GetComponent(string upath, string component, string locatorMessage)
         {
-            var request = BuildRequest(Methods.GetComponent, _sessionId, upath: upath, root: root, name: name, parent: parent, value: component);
+            var request = BuildRequest(Methods.GetComponent, _sessionId, upath: upath, value: component);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -181,9 +181,9 @@ namespace Puppetry.Puppeteer.Driver
             return response[Parameters.Result];
         }
         
-        internal string GetCoordinates(string root, string name, string parent, string upath, string locatorMessage)
+        internal string GetCoordinates(string upath, string locatorMessage)
         {
-            var request = BuildRequest(Methods.GetCoordinates, _sessionId, upath: upath, root: root, name: name, parent: parent);
+            var request = BuildRequest(Methods.GetCoordinates, _sessionId, upath: upath);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
@@ -388,17 +388,13 @@ namespace Puppetry.Puppeteer.Driver
 
         }
 
-        private static Dictionary<string, string> BuildRequest(string method, string session = null, string upath = null,
-            string root = null, string name = null, string parent = null, string key = null, string value = null)
+        private static Dictionary<string, string> BuildRequest(string method, string session = null, string upath = null, string key = null, string value = null)
         {
             var request = new Dictionary<string, string>();
             
             request.Add(Parameters.Method, method);
             if (!string.IsNullOrEmpty(session)) request.Add(Parameters.Session, session);
             if (!string.IsNullOrEmpty(upath)) request.Add(Parameters.UPath, upath);
-            if (!string.IsNullOrEmpty(root)) request.Add(Parameters.Root, root);
-            if (!string.IsNullOrEmpty(name)) request.Add(Parameters.Name, name);
-            if (!string.IsNullOrEmpty(parent)) request.Add(Parameters.Parent, parent);
             if (!string.IsNullOrEmpty(key)) request.Add(Parameters.Key, key);
             if (!string.IsNullOrEmpty(value)) request.Add(Parameters.Value, value);
 
