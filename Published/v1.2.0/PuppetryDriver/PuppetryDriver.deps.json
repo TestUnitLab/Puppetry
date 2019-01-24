@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "695e30b353fc3fc6bce2d4d6d06344c1083ed30e"
+    "signature": "674c8be6140d291192f8e5117cb8201b1e59d301"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,7 +9,7 @@
       "PuppetryDriver/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore": "2.2.0",
-          "Puppetry.Contracts": "1.0.8"
+          "Puppetry.Contracts": "1.0.9"
         },
         "runtime": {
           "PuppetryDriver.dll": {}
@@ -676,7 +676,7 @@
           }
         }
       },
-      "Puppetry.Contracts/1.0.8": {
+      "Puppetry.Contracts/1.0.9": {
         "runtime": {
           "lib/netcoreapp2.0/Contracts.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -1167,12 +1167,12 @@
       "path": "newtonsoft.json/11.0.2",
       "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
     },
-    "Puppetry.Contracts/1.0.8": {
+    "Puppetry.Contracts/1.0.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UY3lL7yUPSsAiWABLViVxvxQL2cl+ZvF6VwcSWBbX7f/ghOHqO6zFZCv5eX88wmoNj65a6ijqBzlwSgNMVVvew==",
-      "path": "puppetry.contracts/1.0.8",
-      "hashPath": "puppetry.contracts.1.0.8.nupkg.sha512"
+      "sha512": "sha512-uaMNvkunEcCz9Qx+psSZ4g1lBFUewBGlQQg3HWR3vqU8WOgIGwMvviRqRUT/zYteHjmUj7mQjwMqYljGDlavCQ==",
+      "path": "puppetry.contracts/1.0.9",
+      "hashPath": "puppetry.contracts.1.0.9.nupkg.sha512"
     },
     "System.Buffers/4.5.0": {
       "type": "package",
