@@ -11,12 +11,30 @@ namespace Puppetry.PuppetryDriver.TcpSocket
 {
     internal static class PuppetListener
     {
+        internal static int Port { get; private set; }
+
+        static PuppetListener()
+        {
+            Port = 6111;
+        }
+
+        internal static void Init(Dictionary<string, string> settings)
+        {
+            const string PortParameter = "puppetport";
+
+            if (settings.Count > 0)
+            {
+                if (settings.ContainsKey(PortParameter) && int.TryParse(settings[PortParameter], out var port))
+                    Port = port;
+            }
+        }
+
         internal static void StartListen()
         {
             try
             {
                 Console.WriteLine("Starting TCP listener...");
-                var listener = new TcpListener(IPAddress.Any, 6111);
+                var listener = new TcpListener(IPAddress.Any, Port);
                 listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
                 listener.Start();
 

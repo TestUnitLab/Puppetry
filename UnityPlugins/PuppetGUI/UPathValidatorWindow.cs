@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Puppetry.Puppet.GUI
+namespace Puppetry.Puppet.PuppetGUI
 {
     public class UPathValidatorWindow : EditorWindow
     {

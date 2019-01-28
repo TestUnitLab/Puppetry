@@ -14,13 +14,15 @@ namespace Puppetry.PuppetryDriver
         {
             var settings = Configuration.ProcessComandLineArguments(args);
 
-            Parallel.Invoke(() => BuildWebHost(settings).Run(), StartTcpListner);
+            PuppetListener.Init(settings);
+
+            Parallel.Invoke(() => BuildWebHost(settings).Run(), PuppetListener.StartListen);
         }
 
         private static IWebHost BuildWebHost(Dictionary<string, string> settings)
         {
-            const string PortParameter = "port";
-            const string BaseUrlParameter = "baseurl";
+            const string PortParameter = "puppeteerport";
+            const string BaseUrlParameter = "puppeteerurl";
 
             string baseUrl = "http://127.0.0.1";
             string port = "7111";
@@ -37,11 +39,6 @@ namespace Puppetry.PuppetryDriver
                 .UseStartup<Startup>()
                 .UseUrls($"{baseUrl}:{port}/")
                 .Build();
-        }
-
-        private static void StartTcpListner()
-        {
-            PuppetListener.StartListen();
         }
     }
 }
