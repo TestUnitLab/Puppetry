@@ -1,4 +1,4 @@
-﻿using Puppetry.Puppet.Contracts;
+using Puppetry.Puppet.Contracts;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -11,12 +11,19 @@ namespace Puppetry.Puppet
 {
     public class DriverApiClient : IDisposable
     {
+        public DriverApiClient()
+        {
+            Port = 6112;
+        }
+
         private const string EndOfMessage = "<EOF>";
 
         private Thread _thread;
         private TcpClient _client;
 
         private static DriverApiClient _instance;
+
+        public int Port { get; set; }
 
         public static DriverApiClient Instance
         {
@@ -41,7 +48,7 @@ namespace Puppetry.Puppet
             try
             {
                 _client = new TcpClient();
-                _client.Client.Connect(IPAddress.Parse("127.0.0.1"), 6111);
+                _client.Client.Connect(IPAddress.Any, Port);
             }
             catch (Exception)
             {

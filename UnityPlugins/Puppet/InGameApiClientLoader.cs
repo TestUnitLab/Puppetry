@@ -4,7 +4,13 @@ namespace Puppetry.Puppet
 {
     public class InGameApiClientLoader : MonoBehaviour
     {
-        public void Awake() 
+        public void Init(int port)
+        {
+            DriverApiClient.Instance.Port = port;
+            Init();
+        }
+        
+        public void Init()
         {
             Debug.Log("DriverApiClient is starting...");
             DriverApiClient.Instance.StartClient();
