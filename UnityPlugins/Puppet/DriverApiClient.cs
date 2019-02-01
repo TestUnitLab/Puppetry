@@ -13,7 +13,8 @@ namespace Puppetry.Puppet
     {
         public DriverApiClient()
         {
-            Port = 6112;
+            Port = 6111;
+            IpAddress = "127.0.0.1";
         }
 
         private const string EndOfMessage = "<EOF>";
@@ -24,8 +25,9 @@ namespace Puppetry.Puppet
         private static DriverApiClient _instance;
 
         public int Port { get; set; }
+        public string IpAddress { get; set; }
 
-        public static DriverApiClient Instance
+        public static DriverApiClient Instance                             
         {
             get
             {
@@ -48,7 +50,7 @@ namespace Puppetry.Puppet
             try
             {
                 _client = new TcpClient();
-                _client.Client.Connect(IPAddress.Any, Port);
+                _client.Client.Connect(IPAddress.Parse(IpAddress), Port);
             }
             catch (Exception)
             {

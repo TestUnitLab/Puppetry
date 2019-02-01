@@ -10,6 +10,19 @@ namespace Puppetry.Puppet
             Init();
         }
         
+        public void Init(string ipAddress, int port)
+        {
+            DriverApiClient.Instance.IpAddress = ipAddress;
+            DriverApiClient.Instance.Port = port;
+            Init();
+        }
+        
+        public void Init(string ipAddress)
+        {
+            DriverApiClient.Instance.IpAddress = ipAddress;
+            Init();
+        }
+        
         public void Init()
         {
             Debug.Log("DriverApiClient is starting...");
