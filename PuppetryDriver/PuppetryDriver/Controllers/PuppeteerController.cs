@@ -22,6 +22,7 @@ namespace Puppetry.PuppetryDriver.Controllers
             string upath = null;
             string key = null;
             string value = null;
+            string method = null;
 
             var request = new Dictionary<string, string>();
             var body = new StreamReader(context.Request.Body).ReadToEnd();
@@ -43,11 +44,17 @@ namespace Puppetry.PuppetryDriver.Controllers
                 response.Add(Parameters.Result, ActionResults.Fail);
                 return context.Response.WriteAsync(JsonConvert.SerializeObject(response, Formatting.Indented));
             }
+            else
+            {
+                method = request[Parameters.Method];
+            }
             if (request.ContainsKey(Parameters.UPath)) upath = request[Parameters.UPath];
             if (request.ContainsKey(Parameters.Key)) key = request[Parameters.Key];
             if (request.ContainsKey(Parameters.Value)) value = request[Parameters.Value];
 
-            switch (request[Parameters.Method].ToLowerInvariant())
+            Console.WriteLine($"Request => method : {method}, upath : {upath ?? "null"}, key : {key ?? "null"}, value : {value ?? "null"}");
+
+            switch (method.ToLowerInvariant())
             {
                 case Methods.CreateSession:
                     sessionId = ConnectionManager.StartSession();
