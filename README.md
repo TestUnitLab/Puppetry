@@ -18,3 +18,6 @@ Plugin for Unity to communicate with PuppetDriver and emulate interaction with a
 Copy Puppet folder from UnityPlugin and add it to Game's code base inside Asset folder. Note: Game should be launched after PuppetDriver is started as Puppet is connecting to PuppetDriver
 
 Additional: you can use UnityPlugin/Puppet in Editor and Native Game. To use Puppet in Game, you should add GameObject with component "InGameApiClientLoader" to your scene. InGameApiClientLoader will set up communication between the Game and PuppetDriver
+
+## System requirements
+.Net Core SDK 2.0 or above
