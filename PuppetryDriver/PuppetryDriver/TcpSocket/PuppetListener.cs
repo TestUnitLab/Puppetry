@@ -33,7 +33,7 @@ namespace Puppetry.PuppetryDriver.TcpSocket
         {
             try
             {
-                Console.WriteLine("Starting TCP listener...");
+                Console.WriteLine($"Starting Puppet Listener at {Port} port...");
                 var listener = new TcpListener(IPAddress.Any, Port);
                 listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
                 listener.Start();
@@ -64,9 +64,8 @@ namespace Puppetry.PuppetryDriver.TcpSocket
                                             {
                                                 puppet = ConnectionManager.ReconnectPuppet(client, response[Parameters.Session]);
                                             }
-                                            catch (InvalidOperationException e)
+                                            catch (InvalidOperationException)
                                             {
-                                                Console.WriteLine(e);
                                                 puppet = new UnityPuppet(client, response[Parameters.Session]);
                                                 ConnectionManager.AddPuppet(puppet);
                                             }
