@@ -28,7 +28,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.Message;
+                    response = e.ToString();
                 }
                 finally
                 {
@@ -60,7 +60,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.Message;
+                    response = e.ToString();
                 }
                 finally
                 {
@@ -91,7 +91,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.Message;
+                    response = e.ToString();
                 }
                 finally
                 {
@@ -121,7 +121,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.Message;
+                    response = e.ToString();
                 }
                 finally
                 {

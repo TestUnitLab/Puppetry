@@ -19,15 +19,24 @@ namespace Puppetry.Puppet
 
         public static bool IsOnScreen(GameObject gameObject)
         {
-            var position = GetPositionOnScreen(gameObject);
+            var result = false;
 
-            return (position.x > 0 && position.y > 0 && position.x < Screen.width && position.y < Screen.height &&
-                    position.z >= 0); //Check if camera can see the object))
+            //Check if any camera can see the object))
+            foreach (var camera in Camera.allCameras)
+            {
+                var position = GetPositionOnScreen(gameObject, camera);
+
+                result = (position.x > 0 && position.y > 0 && position.x < Screen.width && position.y < Screen.height && position.z >= 0);
+
+                if (result)
+                    break;
+            }
+
+            return result;
         }
 
-        public static Vector3 GetPositionOnScreen(GameObject gameObject)
+        public static Vector3 GetPositionOnScreen(GameObject gameObject, Camera camera)
         {
-            var camera = Camera.main;
             var canvasParent = gameObject.GetComponentInParent<Canvas>();
             if (canvasParent != null)
             {
@@ -65,7 +74,7 @@ namespace Puppetry.Puppet
         private static bool IsRaycasted<T>(GameObject gameObject) where T : BaseRaycaster
         {
             var result = false;
-            var position = GetPositionOnScreen(gameObject);
+            var position = GetPositionOnScreen(gameObject, Camera.main);
 
             if (IsOnScreen(gameObject))
             {

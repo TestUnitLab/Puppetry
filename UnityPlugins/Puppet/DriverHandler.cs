@@ -176,7 +176,7 @@ namespace Puppetry.Puppet
                 case "getcoordinates":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
                     {
-                        var position = ScreenHelper.GetPositionOnScreen(gameObject);
+                        var position = ScreenHelper.GetPositionOnScreen(gameObject, Camera.main);
                         var coordinates = new ScreenCoordinates {X = position.x, Y = position.y};
                         return JsonUtility.ToJson(coordinates);
                     });
@@ -204,7 +204,7 @@ namespace Puppetry.Puppet
 
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => {
                         var pointer = new PointerEventData(EventSystem.current);
-                        gameObject.GetComponent<MonoBehaviour>().StartCoroutine(DragCoroutine(gameObject, pointer, (Vector2)ScreenHelper.GetPositionOnScreen(gameObject) + swipeDirection * 2));
+                        gameObject.GetComponent<MonoBehaviour>().StartCoroutine(DragCoroutine(gameObject, pointer, (Vector2)ScreenHelper.GetPositionOnScreen(gameObject, Camera.main) + swipeDirection * 2));
 
                         return ErrorMessages.SuccessResult;
                     });
@@ -288,7 +288,7 @@ namespace Puppetry.Puppet
 
         private static IEnumerator DragCoroutine(GameObject go, PointerEventData dragPointer, Vector2 screenCoordinates) 
         {
-            var currentCoordinates = ScreenHelper.GetPositionOnScreen(go);
+            var currentCoordinates = ScreenHelper.GetPositionOnScreen(go, Camera.main);
             dragPointer.position = currentCoordinates;
             var dragDelta = ((Vector2)currentCoordinates - screenCoordinates) / 2;
             dragPointer.delta = dragDelta;
@@ -314,9 +314,29 @@ namespace Puppetry.Puppet
 #endif            
         }
 
-        private static void TakeScreenshot(string pathName) 
+        private static void TakeScreenshot(string pathName)
         {
-            var cam = Camera.main.GetComponent<Camera>();
+            foreach (var camera in Camera.allCameras)
+            {
+                string updatedPathName = null;
+                if (Camera.allCamerasCount == 0)
+                {
+                    updatedPathName = pathName.Replace(".", "ViewedBy" + camera.name + ".");
+                    updatedPathName.Replace(" ", string.Empty);
+                }
+                else
+                {
+                    updatedPathName = pathName;
+                }
+                var screen = GetScreenCapture(camera);
+
+                SaveScreenCapture(screen, updatedPathName);
+            }
+        }
+
+        private static Texture2D GetScreenCapture(Camera camera)
+        {
+            var cam = camera.GetComponent<Camera>();
             var renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
             cam.targetTexture = renderTexture;
             cam.Render();
@@ -328,9 +348,14 @@ namespace Puppetry.Puppet
             screenshot.Apply();
             RenderTexture.active = null;
 
+            return screenshot;
+        }
+
+        private static void SaveScreenCapture(Texture2D screen, string pathName)
+        {
             //Encode screenshot to PNG
-            byte[] bytes = screenshot.EncodeToPNG();
-            UnityEngine.Object.Destroy(screenshot);
+            byte[] bytes = screen.EncodeToPNG();
+            UnityEngine.Object.Destroy(screen);
             File.WriteAllBytes(pathName, bytes);
         }
 
@@ -364,6 +389,31 @@ namespace Puppetry.Puppet
         private static void DeleteSession()
         {
             File.Delete(Directory.GetCurrentDirectory() + "/session.data");
+        }
+
+        private static Texture2D AlphaBlend(this Texture2D aBottom, Texture2D aTop)
+        {
+            if (aBottom.width != aTop.width || aBottom.height != aTop.height)
+                throw new InvalidOperationException("AlphaBlend only works with two equal sized images");
+            var bData = aBottom.GetPixels();
+            var tData = aTop.GetPixels();
+            int count = bData.Length;
+            var rData = new Color[count];
+            for (int i = 0; i < count; i++)
+            {
+                Color B = bData[i];
+                Color T = tData[i];
+                float srcF = T.a;
+                float destF = 1f - T.a;
+                float alpha = srcF + destF * B.a;
+                Color R = (T * srcF + B * B.a * destF) / alpha;
+                R.a = alpha;
+                rData[i] = R;
+            }
+            var result = new Texture2D(aTop.width, aTop.height);
+            result.SetPixels(rData);
+            result.Apply();
+            return result;
         }
     }
 }
