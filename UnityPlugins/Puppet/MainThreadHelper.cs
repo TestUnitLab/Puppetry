@@ -8,6 +8,8 @@ namespace Puppetry.Puppet
 {
     public static class MainThreadHelper
     {
+        private const string Error = "Error while processing:\n";
+
         public static string ExecuteGameObjectEmulation(string upath, Func<GameObject, string> onComplete)
         {
             // event used to wait the answer from the main thread.
@@ -28,7 +30,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.ToString();
+                    response = Error + e.ToString();
                 }
                 finally
                 {
@@ -60,7 +62,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.ToString();
+                    response = Error + e.ToString();
                 }
                 finally
                 {
@@ -91,7 +93,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.ToString();
+                    response = Error + e.ToString();
                 }
                 finally
                 {
@@ -121,7 +123,7 @@ namespace Puppetry.Puppet
                 catch (Exception e)
                 {
                     Utils.Logger.Log(e);
-                    response = e.ToString();
+                    response = Error + e.ToString();
                 }
                 finally
                 {
