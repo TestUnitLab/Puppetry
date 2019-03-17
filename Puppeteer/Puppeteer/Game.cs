@@ -7,7 +7,7 @@ namespace Puppetry.Puppeteer
     {
         public static void MakeScreenshot(string fileName, string folderName)
         {
-            var path = Path.Combine(Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), folderName)).FullName, fileName + ".png");
+            var path = Path.Combine(Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), folderName)).FullName, fileName);
 
             PuppetryDriver.Instance.TakeScreenshot(path);
         }

@@ -268,8 +268,7 @@ namespace Puppetry.Puppet
                     break;
                 case "takescreenshot":
                     var path = request.value;
-                    MainThreadQueue.QueueOnMainThread(() => { TakeScreenshot(path); });
-                    response.result = ErrorMessages.SuccessResult;
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => { TakeScreenshot(path); });
                     break;
                 case "isplaymode":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Application.isPlaying.ToString());
@@ -319,10 +318,10 @@ namespace Puppetry.Puppet
             foreach (var camera in Camera.allCameras)
             {
                 string updatedPathName = null;
-                if (Camera.allCamerasCount == 0)
+                if (Camera.allCamerasCount > 1)
                 {
-                    updatedPathName = pathName.Replace(".", "ViewedBy" + camera.name + ".");
-                    updatedPathName.Replace(" ", string.Empty);
+                    updatedPathName = pathName + "ViewedBy" + camera.name;
+                    updatedPathName = updatedPathName.Replace(" ", string.Empty);
                 }
                 else
                 {
@@ -356,7 +355,7 @@ namespace Puppetry.Puppet
             //Encode screenshot to PNG
             byte[] bytes = screen.EncodeToPNG();
             UnityEngine.Object.Destroy(screen);
-            File.WriteAllBytes(pathName, bytes);
+            File.WriteAllBytes(pathName + ".png", bytes);
         }
 
         private static void SaveSession(string session)
