@@ -21,3 +21,6 @@ Additional: you can use UnityPlugin/Puppet in Editor and Native Game. To use Pup
 
 ## System requirements
 .Net Core SDK 2.0 or above
+
+## Slack channel
+puppetry-help.slack.com
