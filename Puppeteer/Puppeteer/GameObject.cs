@@ -109,7 +109,7 @@ namespace Puppetry.Puppeteer
             Wait.For(() => condition.Invoke(this),
                 () =>
                     $"Timed out after {timeoutMs / 1000} seconds while waiting for Condition: {condition}",
-                Configuration.TimeoutMs);
+                timeoutMs);
         }
 
         public void Should(Condition condition)
@@ -122,7 +122,7 @@ namespace Puppetry.Puppeteer
             Wait.For(() => !condition.Invoke(this),
                 () =>
                     $"Timed out after {timeoutMs / 1000} seconds while waiting for Condition Not fulfilled: {condition}",
-                Configuration.TimeoutMs);
+                timeoutMs);
         }
 
         public void ShouldNot(Condition condition)
