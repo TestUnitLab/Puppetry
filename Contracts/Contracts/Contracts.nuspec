@@ -8,7 +8,7 @@
         <title>Puppetry.Contracts</title>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Contracts Library of Puppetry Framework. Required for Puppetry.Puppeteer and Puppetry.PuppetryDriver</description>
-        <copyright>Copyright GameUnitLab 2018</copyright>
+        <copyright>Copyright TestUnitLab 2018</copyright>
         <dependencies>
 			<dependency id="Microsoft.NetCore.App" version="2.0.0" />
         </dependencies>       
