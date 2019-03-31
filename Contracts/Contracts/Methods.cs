@@ -33,7 +33,8 @@ namespace Puppetry.Contracts
         public const string PlayerPrefHasKey = "playerprefhaskey";
         public const string GetCoordinates = "getcoordinates";
         public const string Count = "count";
-        public const string Scene = "scene";
+        public const string GetScene = "getscene";
+        public const string OpenScene = "openscene";
         public const string Custom = "custom";
         public const string Ping = "ping";
         public const string Pong = "pong";
