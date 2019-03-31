@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Puppeteer", "Puppeteer\Puppeteer.csproj", "{D9CA390F-661E-4D48-9C61-15BC1D5C7077}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuppetTesting", "PuppetTesting\PuppetTesting.csproj", "{8A10DCE1-2AF5-4431-9F4D-DF773463B73F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D9CA390F-661E-4D48-9C61-15BC1D5C7077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9CA390F-661E-4D48-9C61-15BC1D5C7077}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9CA390F-661E-4D48-9C61-15BC1D5C7077}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9CA390F-661E-4D48-9C61-15BC1D5C7077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A10DCE1-2AF5-4431-9F4D-DF773463B73F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A10DCE1-2AF5-4431-9F4D-DF773463B73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A10DCE1-2AF5-4431-9F4D-DF773463B73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A10DCE1-2AF5-4431-9F4D-DF773463B73F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {0145B44B-6240-4BDF-A4CE-F9E345F50309}
+		SolutionGuid = {254C41D9-3F99-4AD3-85C1-4C2A143AC627}
 	EndGlobalSection
 EndGlobal
