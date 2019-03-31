@@ -74,6 +74,16 @@ namespace Puppetry.Puppeteer
             throw new PuppetryException(stringResult);
         }
 
+        public static string GetSceneName()
+        {
+            return PuppetryDriver.Instance.GetSceneName();
+        }
+
+        public static string OpenScene(string scene)
+        {
+            return PuppetryDriver.Instance.OpenScene(scene);
+        }
+
         public static void ExecuteCustomMethod(string method, string value = null)
         {
             PuppetryDriver.Instance.GameCustomMethod(method, value);

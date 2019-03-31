@@ -161,6 +161,16 @@ namespace Puppetry.PuppetryDriver.Puppet
             return ProcessMethod(Methods.Custom, key: key, value: value);
         }
 
+        public PuppetResponse GetSceneName()
+        {
+            return ProcessMethod(Methods.GetScene);
+        }
+
+        public PuppetResponse OpenScene(string key)
+        {
+            return ProcessMethod(Methods.Custom, key: key);
+        }
+
         private PuppetResponse ProcessMethod(string method, string upath = null, string key = null, string value = null)
         {
             var request = PrepareRequest(method, upath, key, value);
