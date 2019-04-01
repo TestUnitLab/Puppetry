@@ -168,7 +168,7 @@ namespace Puppetry.PuppetryDriver.Puppet
 
         public PuppetResponse OpenScene(string key)
         {
-            return ProcessMethod(Methods.Custom, key: key);
+            return ProcessMethod(Methods.OpenScene, key: key);
         }
 
         private PuppetResponse ProcessMethod(string method, string upath = null, string key = null, string value = null)

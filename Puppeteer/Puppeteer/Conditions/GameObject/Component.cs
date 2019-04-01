@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Puppetry.Puppeteer.Conditions
+namespace Puppetry.Puppeteer.Conditions.GameObject
 {
     internal class Component : Condition
     {

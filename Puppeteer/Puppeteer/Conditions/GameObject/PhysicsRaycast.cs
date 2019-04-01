@@ -1,4 +1,4 @@
-﻿namespace Puppetry.Puppeteer.Conditions
+﻿namespace Puppetry.Puppeteer.Conditions.GameObject
 {
     public class PhysicsRaycast : Condition
     {

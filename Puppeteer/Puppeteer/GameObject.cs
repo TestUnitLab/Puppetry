@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Puppetry.Puppeteer.Conditions;
+using Puppetry.Puppeteer.Conditions.GameObject;
 using Puppetry.Puppeteer.Utils;
 
 namespace Puppetry.Puppeteer

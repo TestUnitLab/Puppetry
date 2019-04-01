@@ -381,9 +381,9 @@ namespace Puppetry.Puppeteer.Driver
             return response[Parameters.Result];
         }
 
-        public void OpenScene(string scene)
+        public void OpenScene(string sceneName)
         {
-            var request = BuildRequest(Methods.GetScene, _sessionId);
+            var request = BuildRequest(Methods.OpenScene, _sessionId, key: sceneName);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
