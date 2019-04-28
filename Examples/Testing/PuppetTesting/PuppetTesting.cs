@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Puppetry.Puppeteer;
-using Puppetry.Puppeteer.Conditions;
+using GameObjectConditins = Puppetry.Puppeteer.Conditions.GameObject;
+using GameConditions = Puppetry.Puppeteer.Conditions.Game;
 
 namespace PuppetTesting
 {
@@ -20,6 +21,7 @@ namespace PuppetTesting
         public void Init()
         {
             Editor.StartPlayMode();
+            Game.Should(GameConditions.Have.SceneName("Particles"));
         }
 
         [Test]
@@ -28,13 +30,14 @@ namespace PuppetTesting
             var menuButton = new GameObject().FindByUPath("/MainMenuUI(Clone)//OpenMenuButton");
             var menu = new GameObject().FindByUPath("/MainMenuUI(Clone)//MenuParent");
 
-            menuButton.Should(Be.Present);
-            menuButton.Should(Be.ActiveInHierarchy);
+            menuButton.Should(GameObjectConditins.Be.Present);
+            //Game.Should(GameConditions.Have.SceneName("Name"));
+            menuButton.Should(GameObjectConditins.Be.ActiveInHierarchy);
 
             menuButton.Click();
 
-            menu.Should(Be.Present);
-            menu.Should(Be.ActiveInHierarchy);
+            menu.Should(GameObjectConditins.Be.Present);
+            menu.Should(GameObjectConditins.Be.ActiveInHierarchy);
         }
 
         [Test]
@@ -44,18 +47,25 @@ namespace PuppetTesting
             var previousButton = new GameObject().FindByUPath("/UI//Previous");
             var titleLabel = new GameObject().FindByUPath("/UI//TitleText");
 
-            previousButton.Should(Be.Present);
-            previousButton.Should(Be.ActiveInHierarchy);
-            previousButton.Should(Have.ComponentWithPropertyAndValue("Button", "m_Interactable", "true"));
+            previousButton.Should(GameObjectConditins.Be.Present);
+            previousButton.Should(GameObjectConditins.Be.ActiveInHierarchy);
+            previousButton.Should(GameObjectConditins.Have.ComponentWithPropertyAndValue("Button", "m_Interactable", "true"));
             var onScreen = previousButton.IsOnScreen;
             var clickable = previousButton.IsHitByGraphicRaycast;
             previousButton.Click();
 
-            titleLabel.Should(Be.ActiveInHierarchy);
-            titleLabel.Should(Have.Component("Text"));
-            titleLabel.Should(Have.ComponentWithPropertyAndValue("Text", "m_Text", "\"Flare\""));
+            titleLabel.Should(GameObjectConditins.Be.ActiveInHierarchy);
+            titleLabel.Should(GameObjectConditins.Have.Component("Text"));
+            titleLabel.Should(GameObjectConditins.Have.ComponentWithPropertyAndValue("Text", "m_Text", "\"Flare\""));
             var text = titleLabel.GetComponent("Text");
             Assert.IsTrue(text.Contains("Flare"));
+        }
+
+        [Test]
+        public void TestSceneFunctionality()
+        {
+            Game.OpenScene("Car");
+            Game.Should(GameConditions.Have.SceneName("Car"));
         }
 
         [TearDown]
