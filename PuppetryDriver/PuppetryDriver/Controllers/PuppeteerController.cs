@@ -325,6 +325,22 @@ namespace Puppetry.PuppetryDriver.Controllers
                     response.Add(Parameters.Result, result.Result);
                     response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
+                case Methods.GetScene:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
+                    result = handler.GetSceneName();
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
+                case Methods.OpenScene:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
+                    result = handler.OpenScene(key);
+                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+                    response.Add(Parameters.Result, result.Result);
+                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    break;
                 case Methods.Custom:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);

@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using Puppetry.Puppeteer.Conditions.Game;
 using Puppetry.Puppeteer.Exceptions;
+using Puppetry.Puppeteer.Utils;
 
 namespace Puppetry.Puppeteer
 {
@@ -74,9 +76,45 @@ namespace Puppetry.Puppeteer
             throw new PuppetryException(stringResult);
         }
 
+        public static string GetSceneName()
+        {
+            return PuppetryDriver.Instance.GetSceneName();
+        }
+
+        public static void OpenScene(string scene)
+        {
+            PuppetryDriver.Instance.OpenScene(scene);
+        }
+
         public static void ExecuteCustomMethod(string method, string value = null)
         {
             PuppetryDriver.Instance.GameCustomMethod(method, value);
+        }
+
+        public static void Should(Condition condition, int timeoutMs)
+        {
+            Wait.For(() => condition.Invoke(),
+                () =>
+                    $"Timed out after {timeoutMs / 1000} seconds while waiting for Condition: {condition}",
+                timeoutMs);
+        }
+
+        public static void Should(Condition condition)
+        {
+            Should(condition, Configuration.TimeoutMs);
+        }
+
+        public static void ShouldNot(Condition condition, int timeoutMs)
+        {
+            Wait.For(() => !condition.Invoke(),
+                () =>
+                    $"Timed out after {timeoutMs / 1000} seconds while waiting for Condition Not fulfilled: {condition}",
+                timeoutMs);
+        }
+
+        public static void ShouldNot(Condition condition)
+        {
+            ShouldNot(condition, Configuration.TimeoutMs);
         }
     }
 }

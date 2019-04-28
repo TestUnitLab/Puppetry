@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Puppetry.Puppet.Contracts;
 using TMPro;
 #if UNITY_EDITOR
@@ -81,6 +82,26 @@ namespace Puppetry.Puppet
                                 return renderer.isVisible.ToString();
 
                             return false.ToString();
+
+
+                        });
+                    break;
+                case "getscene":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => SceneManager.GetActiveScene().name);
+                    break;
+                case "openscene":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(
+                        () =>
+                        {
+                            try
+                            {
+                                SceneManager.LoadScene(request.key);
+                                return ErrorMessages.SuccessResult;
+                            }
+                            catch (Exception e)
+                            {
+                                return e.ToString();
+                            }
 
                         });
                     break;

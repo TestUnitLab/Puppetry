@@ -1,10 +1,11 @@
-﻿namespace Puppetry.Puppeteer.Conditions
+﻿
+namespace Puppetry.Puppeteer.Conditions.GameObject
 {
     public abstract class Condition
     {
-        protected GameObject CurentGameObject;
+        protected Puppeteer.GameObject CurentGameObject;
 
-        public abstract bool Invoke<T>(T gameObject) where T : GameObject;
+        public abstract bool Invoke<T>(T gameObject) where T : Puppeteer.GameObject;
 
         protected abstract string DescribeExpected();
 

@@ -225,6 +225,8 @@ namespace Puppetry.Puppeteer.Driver
 
             if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException($"Screenshot was not taken with error: {response[Parameters.ErrorMessage]}");
         }
@@ -234,6 +236,10 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.KillSession, _sessionId);
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException("Session was not released");
         }
@@ -243,6 +249,10 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.KillAllSessions);
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException("All Sessions were not released");
         }
@@ -252,6 +262,10 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.DeletePlayerPref, _sessionId, key: key);            
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException("PlayerPref was not deleted");
         }
@@ -261,6 +275,10 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.DeleteAllPlayerPrefs, _sessionId);            
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException("PlayerPrefs were not deleted");
         }
@@ -270,6 +288,11 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.GetFloatPlayerPref, _sessionId, key: key);
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
+
             return response[Parameters.Result];
         }
 
@@ -277,6 +300,11 @@ namespace Puppetry.Puppeteer.Driver
         {
             var request = BuildRequest(Methods.GetIntPlayerPref, _sessionId, key: key);
             var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
 
             return response[Parameters.Result];
         }
@@ -286,6 +314,11 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.GetStringPlayerPref, _sessionId, key: key);
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
+
             return response[Parameters.Result];
         }
 
@@ -294,7 +327,9 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.SetFloatPlayerPref, _sessionId, key: key, value: value);
             var response = Post(request);
 
-            if (response[Parameters.Result] != ActionResults.Success)
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
                 throw new PuppetryException(response[Parameters.Result]);
         }
 
@@ -303,7 +338,9 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.SetIntPlayerPref, _sessionId, key: key, value: value);
             var response = Post(request);
 
-            if (response[Parameters.Result] != ActionResults.Success)
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
                 throw new PuppetryException(response[Parameters.Result]);
         }
 
@@ -312,7 +349,9 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.SetStringPlayerPref, _sessionId, key: key, value: value);
             var response = Post(request);
 
-            if (response[Parameters.Result] != ActionResults.Success)
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
                 throw new PuppetryException(response[Parameters.Result]);
         }
 
@@ -321,9 +360,38 @@ namespace Puppetry.Puppeteer.Driver
             var request = BuildRequest(Methods.PlayerPrefHasKey, _sessionId, key: key);
             var response = Post(request);
 
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
+
             return response[Parameters.Result];
         }
-        
+
+        public string GetSceneName()
+        {
+            var request = BuildRequest(Methods.GetScene, _sessionId);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
+
+            return response[Parameters.Result];
+        }
+
+        public void OpenScene(string sceneName)
+        {
+            var request = BuildRequest(Methods.OpenScene, _sessionId, key: sceneName);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
+        }
+
         public void GameCustomMethod(string method, string value)
         {
             var request = BuildRequest(Methods.Custom, _sessionId, key: method, value: value);
