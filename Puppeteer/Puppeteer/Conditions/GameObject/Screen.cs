@@ -1,26 +1,26 @@
-﻿namespace Puppetry.Puppeteer.Conditions
-{
-    internal class Active : Condition
+﻿namespace Puppetry.Puppeteer.Conditions.GameObject
+{  
+    public class Screen : Condition
     {
         public override bool Invoke<T>(T gameObject)
         {
             CurentGameObject = gameObject;
-            return gameObject.IsActiveInHierarchy;
+            return gameObject.IsOnScreen;
         }
 
         protected override string DescribeExpected()
         {
-            return $"Active {true}";
+            return "Is on the screen";
         }
 
         protected override string DescribeActual()
         {
-            return $"Active {false}";
+            return "Is not on the screen";
         }
     }
-
+    
     public static partial class Be
     {
-        public static Condition ActiveInHierarchy => new Active();
+        public static Condition OnScreen => new Screen();
     }
 }
