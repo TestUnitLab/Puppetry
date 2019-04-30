@@ -18,7 +18,7 @@ namespace Puppetry.PuppetryDriver.Controllers
         { 
             string sessionId;
             IPuppetHandler handler;
-            PuppetResponse result;
+            PuppetResponse result = null;
             string upath = null;
             string key = null;
             string value = null;
@@ -76,18 +76,12 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.IsPlayMode();
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.Click:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.Click(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.SendKeys:
@@ -95,9 +89,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.SendKeys(value, upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.Exist:
@@ -105,9 +96,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Exists(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.Active:
@@ -115,9 +103,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Active(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.Swipe:
@@ -125,9 +110,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Swipe(upath, value);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
                 case Methods.DragTo:
@@ -135,9 +117,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.DragTo(upath, value);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.Rendering:
@@ -145,9 +124,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Rendering(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
                 case Methods.OnScreen:
@@ -155,9 +131,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.OnScreen(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
                 case Methods.GraphicClickable:
@@ -165,9 +138,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.GraphicClickable(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
                 case Methods.PhysicClickable:
@@ -175,9 +145,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.PhysicClickable(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
                 case Methods.Count:
@@ -185,9 +152,6 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.Count(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
                 case Methods.GetComponent:
@@ -195,50 +159,31 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
                     result = handler.GetComponent(upath, value);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 
                 case Methods.GetCoordinates:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
-
                     result = handler.GetCoordinates(upath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.StartPlayMode:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
-
                     result = handler.StartPlayMode();
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.StopPlayMode:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
-
                     result = handler.StopPlayMode();
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.TakeScreenshot:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     var fullPath = request[Parameters.Value];
-
                     result = handler.MakeScreenshot(fullPath);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
 
                 case Methods.KillSession:
@@ -252,102 +197,70 @@ namespace Puppetry.PuppetryDriver.Controllers
                     response.Add(Parameters.StatusCode, ErrorCodes.Success.ToString());
                     response.Add(Parameters.Result, ActionResults.Success);
                     break;
-                
                 case Methods.DeletePlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.DeletePlayerPref(key);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.DeleteAllPlayerPrefs:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.DeleteAllPlayerPrefs();
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.GetFloatPlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GetFloatPlayerPref(key);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.GetIntPlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GetIntPlayerPref(key);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.GetStringPlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GetStringPlayerPref(key);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.SetFloatPlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.SetFloatPlayerPref(key, value);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.SetIntPlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.SetIntPlayerPref(key, value);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.SetStringPlayerPref:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.SetStringPlayerPref(key, value);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.PlayerPrefHasKey:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.PlayerPrefHasKey(key);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.GetScene:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GetSceneName();
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
                 case Methods.OpenScene:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.OpenScene(key);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
                     break;
-                case Methods.Custom:
+                case Methods.GameCustom:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
-                    result = handler.Custom(key, value);
-                    response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-                    response.Add(Parameters.Result, result.Result);
-                    response[Parameters.ErrorMessage] = result.ErrorMessage;
+                    result = handler.GameCustom(key, value);
+                    break;
+                case Methods.GameObjectCustom:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
+                    result = handler.GameObjectCustom(upath, key, value);
                     break;
 
                 default:
@@ -356,6 +269,10 @@ namespace Puppetry.PuppetryDriver.Controllers
                     response.Add(Parameters.Result, ActionResults.Fail);
                     break;
             }
+
+            if (!response.ContainsKey(Parameters.StatusCode)) response.Add(Parameters.StatusCode, result.StatusCode.ToString());
+            if (!response.ContainsKey(Parameters.StatusCode)) response.Add(Parameters.Result, result.Result);
+            if (result != null && !string.IsNullOrEmpty(result.ErrorMessage)) response[Parameters.ErrorMessage] = result.ErrorMessage;
 
             var json = JsonConvert.SerializeObject(response, Formatting.Indented);
             return context.Response.WriteAsync(json);

@@ -69,6 +69,8 @@ namespace Puppetry.PuppetryDriver.Puppet
 
         PuppetResponse OpenScene(string key);
 
-        PuppetResponse Custom(string key, string value);
+        PuppetResponse GameCustom(string key, string value);
+
+        PuppetResponse GameObjectCustom(string upath, string key, string value);
     }
 }

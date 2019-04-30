@@ -2,7 +2,7 @@
  {
      public static class CustomDriverHandler
      {
-         public static string Process(string key, string value)
+         public static string ProcessGameCustomMethod(string key, string value)
          {
              string result;
              switch (key)
@@ -14,5 +14,18 @@
 
              return result;
          }
-     }
+
+        public static string ProcessGameObjectCustomMethod(string upath, string key, string value)
+        {
+            string result;
+            switch (key)
+            {
+                default:
+                    result = "There are no handler for method: " + key;
+                    break;
+            }
+
+            return result;
+        }
+    }
  }

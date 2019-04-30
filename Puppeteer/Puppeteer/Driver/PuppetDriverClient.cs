@@ -394,13 +394,26 @@ namespace Puppetry.Puppeteer.Driver
 
         public void GameCustomMethod(string method, string value)
         {
-            var request = BuildRequest(Methods.Custom, _sessionId, key: method, value: value);
+            var request = BuildRequest(Methods.GameCustom, _sessionId, key: method, value: value);
             var response = Post(request);
 
             if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
                 throw new MainThreadUnavailableException();
             if (response[Parameters.Result] != ActionResults.Success)
                 throw new PuppetryException(response[Parameters.Result]);
+        }
+
+        internal string GameObjectCustomMethod(string upath, string method, string value, string locatorMessage)
+        {
+            var request = BuildRequest(Methods.GameObjectCustom, _sessionId, upath: upath, key: method, value: value);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+
+            return response[Parameters.Result]; ;
         }
 
         private void StartSession()

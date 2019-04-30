@@ -294,8 +294,11 @@ namespace Puppetry.Puppet
                 case "isplaymode":
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Application.isPlaying.ToString());
                     break;
-				case "custom":
-                    response.result = CustomDriverHandler.Process(request.key, request.value);
+				case "gamecustom":
+                    response.result = CustomDriverHandler.ProcessGameCustomMethod(request.key, request.value);
+                    break;
+                case "gameobjectcustom":
+                    response.result = CustomDriverHandler.ProcessGameObjectCustomMethod(request.upath, request.key, request.value);
                     break;
 
                 default:

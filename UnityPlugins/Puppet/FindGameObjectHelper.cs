@@ -71,42 +71,6 @@ namespace Puppetry.Puppet
             return result;
         }
 
-        public static List<GameObject> GetGameObjects(string gameObjectName, string root, string parentName = null)
-        {
-            GameObject parent;
-            if (!string.IsNullOrEmpty(parentName))
-                parent = FindDescendant(parentName, GameObject.Find(root));
-            else
-                parent = GameObject.Find(root);
-            return FindDescendants(gameObjectName, parent);
-        }
-
-        public static GameObject FindGameObject(string root, string nameOrPath, string parentName)
-        {
-            if (string.IsNullOrEmpty(parentName))
-            {
-                return FindDescendant(nameOrPath, GameObject.Find(root));
-            }
-
-            var parentGO = FindDescendant(parentName, GameObject.Find(root));
-            if (parentGO != null)
-            {
-                if (nameOrPath.Contains("/"))
-                {
-                    var transform = parentGO.transform.Find(nameOrPath);
-                    return transform != null ? transform.gameObject : null;
-                }
-                else
-                {
-                    return FindDescendant(nameOrPath, parentGO);
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         private static string ProcessFirstUPathPart(string upath, out string typeOfSearch, out int? index, out string condition, out string name, out bool fullName)
         {
             var expression = new Regex(@"^(?<expression>/..[^/]*)").Match(upath).Groups["expression"].ToString();

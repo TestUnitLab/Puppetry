@@ -94,7 +94,9 @@ namespace Puppetry.Puppeteer
 
         public string GetComponent(string component)
         {
-            return PuppetryDriver.Instance.GetComponent(_uPath, component, LocatorMessage);
+            var result = PuppetryDriver.Instance.GetComponent(_uPath, component, LocatorMessage);
+
+            return result == "null" ? null : result;
         }
         
         public ScreenCoordinates GetScreenCoordinates()
@@ -102,6 +104,11 @@ namespace Puppetry.Puppeteer
             var result = PuppetryDriver.Instance.GetCoordinates(_uPath, LocatorMessage);
 
             return JsonConvert.DeserializeObject<ScreenCoordinates>(result);
+        }
+
+        public string Custom(string method, string value)
+        {
+            return PuppetryDriver.Instance.GameObjectCustomMethod(_uPath, method, value, LocatorMessage);
         }
 
         public void Should(Condition condition, int timeoutMs)

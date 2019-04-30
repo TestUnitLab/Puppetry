@@ -156,9 +156,14 @@ namespace Puppetry.PuppetryDriver.Puppet
             return ProcessMethod(Methods.PlayerPrefHasKey, key: key);
         }
         
-        public PuppetResponse Custom(string key, string value)
+        public PuppetResponse GameCustom(string key, string value)
         {
-            return ProcessMethod(Methods.Custom, key: key, value: value);
+            return ProcessMethod(Methods.GameCustom, key: key, value: value);
+        }
+
+        public PuppetResponse GameObjectCustom(string upath, string key, string value)
+        {
+            return ProcessMethod(Methods.GameObjectCustom, upath: upath, key: key, value: value);
         }
 
         public PuppetResponse GetSceneName()
