@@ -35,7 +35,8 @@ namespace Puppetry.Contracts
         public const string Count = "count";
         public const string GetScene = "getscene";
         public const string OpenScene = "openscene";
-        public const string Custom = "custom";
+        public const string GameCustom = "gamecustom";
+        public const string GameObjectCustom = "gameobjectcustom";
         public const string Ping = "ping";
         public const string Pong = "pong";
     }
