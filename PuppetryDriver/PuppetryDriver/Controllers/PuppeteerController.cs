@@ -271,7 +271,7 @@ namespace Puppetry.PuppetryDriver.Controllers
             }
 
             if (!response.ContainsKey(Parameters.StatusCode)) response.Add(Parameters.StatusCode, result.StatusCode.ToString());
-            if (!response.ContainsKey(Parameters.StatusCode)) response.Add(Parameters.Result, result.Result);
+            if (!response.ContainsKey(Parameters.Result)) response.Add(Parameters.Result, result.Result);
             if (result != null && !string.IsNullOrEmpty(result.ErrorMessage)) response[Parameters.ErrorMessage] = result.ErrorMessage;
 
             var json = JsonConvert.SerializeObject(response, Formatting.Indented);

@@ -66,6 +66,8 @@ namespace PuppetTesting
         {
             Game.OpenScene("Car");
             Game.Should(GameConditions.Have.SceneName("Car"));
+            Game.OpenScene("Particles");
+            Game.Should(GameConditions.Have.SceneName("Particles"));
         }
 
         [TearDown]
