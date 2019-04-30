@@ -106,7 +106,7 @@ namespace Puppetry.Puppeteer
             return JsonConvert.DeserializeObject<ScreenCoordinates>(result);
         }
 
-        public string Custom(string method, string value)
+        public string ExecuteCustomMethod(string method, string value = null)
         {
             return PuppetryDriver.Instance.GameObjectCustomMethod(_uPath, method, value, LocatorMessage);
         }
