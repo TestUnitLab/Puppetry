@@ -262,6 +262,11 @@ namespace Puppetry.PuppetryDriver.Controllers
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
                     result = handler.GameObjectCustom(upath, key, value);
                     break;
+                case Methods.GetSpriteName:
+                    sessionId = request[Parameters.Session];
+                    handler = ConnectionManager.GetPuppetHandler(sessionId);
+                    result = handler.GetSpriteName(upath);
+                    break;
 
                 default:
                     response.Add(Parameters.StatusCode, ErrorCodes.MethodNotSupported.ToString());

@@ -72,5 +72,7 @@ namespace Puppetry.PuppetryDriver.Puppet
         PuppetResponse GameCustom(string key, string value);
 
         PuppetResponse GameObjectCustom(string upath, string key, string value);
+
+        PuppetResponse GetSpriteName(string upath);
     }
 }

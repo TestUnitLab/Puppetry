@@ -416,6 +416,21 @@ namespace Puppetry.Puppeteer.Driver
             return response[Parameters.Result]; ;
         }
 
+        internal string GetSpriteName(string upath, string locatorMessage)
+        {
+            var request = BuildRequest(Methods.GetSpriteName, _sessionId, upath: upath);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchComponentFound.ToString())
+                throw new NoSuchComponentException($"GameObject with {locatorMessage} doesn't have component with sprite property");
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+
+            return response[Parameters.Result]; ;
+        }
+
         private void StartSession()
         {
             var isSuccess = false;

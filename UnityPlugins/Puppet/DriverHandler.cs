@@ -61,7 +61,11 @@ namespace Puppetry.Puppet
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
                     {
                         var component = gameObject.GetComponent(request.value);
+#if UNITY_EDITOR
+                        return component != null ? EditorJsonUtility.ToJson(component) : "null";
+#else
                         return component != null ? JsonUtility.ToJson(component) : "null";
+#endif
                     });
                     break;
 
@@ -271,18 +275,18 @@ namespace Puppetry.Puppet
                     response.result = ErrorMessages.SuccessResult;
 #else
                     response.result = ErrorMessages.MethodIsNotSupported;
-#endif    
+#endif
                     break;
                 case "stopplaymode":
-#if UNITY_EDITOR                    
+#if UNITY_EDITOR
                     response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() =>
                     {
                         //EditorApplication.UnlockReloadAssemblies();
                         EditorApplication.isPlaying = false;
                     });
-#else                  
+#else
                     response.result = ErrorMessages.MethodIsNotSupported;
-#endif    
+#endif
                     break;
                 case "ping":
                     response.result = "pong";
@@ -299,6 +303,16 @@ namespace Puppetry.Puppet
                     break;
                 case "gameobjectcustom":
                     response.result = CustomDriverHandler.ProcessGameObjectCustomMethod(request.upath, request.key, request.value);
+                    break;
+                case "getspritename":
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
+                    {
+                        var component = gameObject.GetComponent<SpriteRenderer>();
+                        if (component != null)
+                            return component.sprite.name;
+                        else
+                            return "SpriteRenderer component was not found";
+                    });
                     break;
 
                 default:
@@ -330,11 +344,11 @@ namespace Puppetry.Puppet
 
         private static void StartPlayMode()
         {
-#if UNITY_EDITOR            
+#if UNITY_EDITOR
             EditorApplication.update -= StartPlayMode;
             
             EditorApplication.isPlaying = true;
-#endif            
+#endif
         }
 
         private static void TakeScreenshot(string pathName)

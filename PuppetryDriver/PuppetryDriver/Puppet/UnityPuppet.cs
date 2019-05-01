@@ -8,7 +8,8 @@ namespace Puppetry.PuppetryDriver.Puppet
 {
     internal class UnityPuppet : IPuppetHandler
     {
-        private const string NotFoundMessage = "GameObject was not found";
+        private const string GameObjectNotFoundMessage = "GameObject was not found";
+        private const string ComponentNotFoundMessage = "Component was not found";
         private const string MainThreadIsUnavailable = "Main Thread is unavailable or overloaded";
         private const string MethodIsNotSupported = "Method is not supported";
         private const string Error = "Error";
@@ -176,6 +177,11 @@ namespace Puppetry.PuppetryDriver.Puppet
             return ProcessMethod(Methods.OpenScene, key: key);
         }
 
+        public PuppetResponse GetSpriteName(string upath)
+        {
+            return ProcessMethod(Methods.GetSpriteName, upath: upath);
+        }
+
         private PuppetResponse ProcessMethod(string method, string upath = null, string key = null, string value = null)
         {
             var request = PrepareRequest(method, upath, key, value);
@@ -192,8 +198,10 @@ namespace Puppetry.PuppetryDriver.Puppet
                 result = new PuppetResponse { StatusCode = ErrorCodes.UnexpectedResponse, IsSuccess = false, ErrorMessage = response[Parameters.Result] };
             else if (response[Parameters.Result] == MethodIsNotSupported)
                 result = new PuppetResponse { StatusCode = ErrorCodes.MethodNotSupported, IsSuccess = false, ErrorMessage = response[Parameters.Result] };
-            else if (response[Parameters.Result] == NotFoundMessage)
+            else if (response[Parameters.Result] == GameObjectNotFoundMessage)
                 result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchGameObjectFound, IsSuccess = false, ErrorMessage = response[Parameters.Result] };
+            else if (response[Parameters.Result] == ComponentNotFoundMessage)
+                result = new PuppetResponse { StatusCode = ErrorCodes.NoSuchComponentFound, IsSuccess = false, ErrorMessage = response[Parameters.Result] };
             else
                 result = new PuppetResponse { StatusCode = ErrorCodes.Success, IsSuccess = true, Result = response[Parameters.Result] };
 
