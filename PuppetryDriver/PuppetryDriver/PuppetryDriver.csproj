@@ -6,6 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Puppetry.Contracts" Version="1.0.12" />
+    <PackageReference Include="Puppetry.Contracts" Version="1.0.14" />
   </ItemGroup>
 </Project>
