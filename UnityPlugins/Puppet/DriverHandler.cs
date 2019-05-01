@@ -311,7 +311,7 @@ namespace Puppetry.Puppet
                         if (component != null)
                             return component.sprite.name;
                         else
-                            return "SpriteRenderer component was not found";
+                            return "Component was not found";
                     });
                     break;
 
