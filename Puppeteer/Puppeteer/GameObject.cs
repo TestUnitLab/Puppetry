@@ -60,11 +60,12 @@ namespace Puppetry.Puppeteer
         
         public bool IsOnScreen => PuppetryDriver.Instance.IsOnScreen(_uPath, LocatorMessage);
         
-        public bool IsHitByGraphicRaycast => PuppetryDriver.Instance.IsHitByGraphicRaycast(_uPath, LocatorMessage);
-        
-        public bool IsHitByPhysicsRaycast => PuppetryDriver.Instance.IsHitByPhysicsRaycast(_uPath, LocatorMessage);
-        
         public int Count => PuppetryDriver.Instance.Count(_uPath);
+
+        public bool IsHitByRaycast(Constants.Raycasters raycaster)
+        {
+            return PuppetryDriver.Instance.IsHitByRaycast(_uPath, raycaster.ToString().ToLowerInvariant(), LocatorMessage);
+        }
 
         public void Click()
         {

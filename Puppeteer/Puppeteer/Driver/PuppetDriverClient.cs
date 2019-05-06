@@ -131,22 +131,9 @@ namespace Puppetry.Puppeteer.Driver
             return bool.TryParse(response[Parameters.Result], out var result) && result;
         }
         
-        internal bool IsHitByPhysicsRaycast(string upath, string locatorMessage)
+        internal bool IsHitByRaycast(string upath, string raycaster, string locatorMessage)
         {
-            var request = BuildRequest(Methods.PhysicClickable, _sessionId, upath: upath);
-            var response = Post(request);
-            
-            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
-                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
-            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
-                throw new MainThreadUnavailableException();
-
-            return bool.TryParse(response[Parameters.Result], out var result) && result;
-        }
-
-        internal bool IsHitByGraphicRaycast(string upath, string locatorMessage)
-        {
-            var request = BuildRequest(Methods.GraphicClickable, _sessionId, upath: upath);
+            var request = BuildRequest(Methods.Raycasted, _sessionId, upath: upath, value: raycaster);
             var response = Post(request);
             
             if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
