@@ -31,9 +31,7 @@ namespace Puppetry.PuppetryDriver.Puppet
         
         PuppetResponse OnScreen(string upath);
         
-        PuppetResponse GraphicClickable(string upath);
-        
-        PuppetResponse PhysicClickable(string upath);
+        PuppetResponse IsRaycasted(string upath, string raycaster);
         
         PuppetResponse Count(string upath);
         

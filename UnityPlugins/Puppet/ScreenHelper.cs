@@ -1,22 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Puppetry.Puppet
 {
     public static class ScreenHelper
     {
-        public static bool IsGraphicClickable(GameObject gameObject)
-        {
-            return IsRaycasted<GraphicRaycaster>(gameObject);
-        }
-
-        public static bool IsPhysicClickable(GameObject gameObject)
-        {
-            return IsRaycasted<PhysicsRaycaster>(gameObject);
-        }
-
         public static bool IsOnScreen(GameObject gameObject)
         {
             var result = false;
@@ -71,7 +60,7 @@ namespace Puppetry.Puppet
             return camera.WorldToScreenPoint(gameObject.transform.position);
         }
 
-        private static bool IsRaycasted<T>(GameObject gameObject) where T : BaseRaycaster
+        public static bool IsRaycasted<T>(GameObject gameObject) where T : BaseRaycaster
         {
             var result = false;
             var position = GetPositionOnScreen(gameObject, Camera.main);

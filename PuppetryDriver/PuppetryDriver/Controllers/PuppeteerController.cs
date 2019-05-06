@@ -133,18 +133,11 @@ namespace Puppetry.PuppetryDriver.Controllers
                     result = handler.OnScreen(upath);
                     break;
                 
-                case Methods.GraphicClickable:
+                case Methods.Raycasted:
                     sessionId = request[Parameters.Session];
                     handler = ConnectionManager.GetPuppetHandler(sessionId);
 
-                    result = handler.GraphicClickable(upath);
-                    break;
-                
-                case Methods.PhysicClickable:
-                    sessionId = request[Parameters.Session];
-                    handler = ConnectionManager.GetPuppetHandler(sessionId);
-
-                    result = handler.PhysicClickable(upath);
+                    result = handler.IsRaycasted(upath, value);
                     break;
                 
                 case Methods.Count:

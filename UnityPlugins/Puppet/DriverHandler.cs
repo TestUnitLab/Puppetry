@@ -51,11 +51,28 @@ namespace Puppetry.Puppet
                 case "onscreen":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => ScreenHelper.IsOnScreen(gameObject).ToString());
                     break;
-                case "graphicclickable":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => ScreenHelper.IsGraphicClickable(gameObject).ToString());
-                    break;
-                case "physicclickable":
-                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject => ScreenHelper.IsPhysicClickable(gameObject).ToString());
+                case "raycasted":
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>
+                    {
+                        string result = null;
+                        switch (request.value)
+                        {
+                            case "graphicraycaster":
+                                result = ScreenHelper.IsRaycasted<GraphicRaycaster>(gameObject).ToString();
+                                break;
+                            case "physicsraycaster":
+                                result = ScreenHelper.IsRaycasted<PhysicsRaycaster>(gameObject).ToString();
+                                break;
+                            case "physics2draycaster":
+                                result = ScreenHelper.IsRaycasted<Physics2DRaycaster>(gameObject).ToString();
+                                break;
+                            default:
+                                result = "Error: " + request.value +" is invalid raycaster";
+                                break;
+                        }
+
+                        return result;
+                    });
                     break;
                 case "getcomponent":
                     response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath, gameObject =>

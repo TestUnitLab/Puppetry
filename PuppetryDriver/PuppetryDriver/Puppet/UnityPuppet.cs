@@ -57,14 +57,9 @@ namespace Puppetry.PuppetryDriver.Puppet
             return ProcessMethod(Methods.OnScreen, upath: upath);
         }
         
-        public PuppetResponse GraphicClickable(string upath)
+        public PuppetResponse IsRaycasted(string upath, string raycaster)
         {
-            return ProcessMethod(Methods.GraphicClickable, upath: upath);
-        }
-        
-        public PuppetResponse PhysicClickable(string upath)
-        {
-            return ProcessMethod(Methods.PhysicClickable, upath: upath);
+            return ProcessMethod(Methods.Raycasted, upath: upath, value: raycaster);
         }
         
         public PuppetResponse GetComponent(string upath, string component)
