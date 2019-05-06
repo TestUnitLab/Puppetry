@@ -13,8 +13,7 @@ namespace Puppetry.Contracts
         public const string Exist = "exist";
         public const string Active = "active";
         public const string OnScreen = "onscreen";
-        public const string GraphicClickable = "graphicclickable";
-        public const string PhysicClickable = "physicclickable";
+        public const string Raycasted = "raycasted";
         public const string Swipe = "swipe";
         public const string DragTo = "dragto";
         public const string StartPlayMode = "startplaymode";
