@@ -37,6 +37,8 @@ namespace Puppetry.Contracts
         public const string GameCustom = "gamecustom";
         public const string GameObjectCustom = "gameobjectcustom";
         public const string GetSpriteName = "getspritename";
+        public const string SetTimeScale = "settimescale";
+        public const string GetGameObjectInfo = "getgameobjectinfo";
         public const string Ping = "ping";
         public const string Pong = "pong";
     }
