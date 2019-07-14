@@ -62,6 +62,20 @@ namespace Puppetry.Puppeteer
         
         public int Count => PuppetryDriver.Instance.Count(_uPath);
 
+        public string Info => PuppetryDriver.Instance.GetGameObjectInfo(_uPath, LocatorMessage);
+
+        public string SpriteName => PuppetryDriver.Instance.GetSpriteName(_uPath, LocatorMessage);
+
+        public ScreenCoordinates ScreenCoordinates
+        {
+            get
+            {
+                var result = PuppetryDriver.Instance.GetCoordinates(_uPath, LocatorMessage);
+
+                return JsonConvert.DeserializeObject<ScreenCoordinates>(result);
+            }
+        }
+
         public bool IsHitByRaycast(Constants.Raycasters raycaster)
         {
             return PuppetryDriver.Instance.IsHitByRaycast(_uPath, raycaster.ToString().ToLowerInvariant(), LocatorMessage);
@@ -89,7 +103,7 @@ namespace Puppetry.Puppeteer
         
         public void DragTo(GameObject toGameObject)
         {
-            var toCoordinates = toGameObject.GetScreenCoordinates();
+            var toCoordinates = toGameObject.ScreenCoordinates;
             DragTo(toCoordinates);
         }
 
@@ -100,18 +114,6 @@ namespace Puppetry.Puppeteer
             return result == "null" ? null : result;
         }
         
-        public ScreenCoordinates GetScreenCoordinates()
-        {
-            var result = PuppetryDriver.Instance.GetCoordinates(_uPath, LocatorMessage);
-
-            return JsonConvert.DeserializeObject<ScreenCoordinates>(result);
-        }
-
-        public string GetSpriteName()
-        {
-            return PuppetryDriver.Instance.GetSpriteName(_uPath, LocatorMessage);
-        }
-
         public string ExecuteCustomMethod(string method, string value = null)
         {
             return PuppetryDriver.Instance.GameObjectCustomMethod(_uPath, method, value, LocatorMessage);

@@ -72,5 +72,9 @@ namespace Puppetry.PuppetryDriver.Puppet
         PuppetResponse GameObjectCustom(string upath, string key, string value);
 
         PuppetResponse GetSpriteName(string upath);
+
+        PuppetResponse SetTimeScale(string value);
+
+        PuppetResponse GetGameObjectInfo(string upath);
     }
 }

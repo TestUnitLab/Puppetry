@@ -418,6 +418,30 @@ namespace Puppetry.Puppeteer.Driver
             return response[Parameters.Result]; ;
         }
 
+        internal string GetGameObjectInfo(string upath, string locatorMessage)
+        {
+            var request = BuildRequest(Methods.GetGameObjectInfo, _sessionId, upath: upath);
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.NoSuchGameObjectFound.ToString())
+                throw new NoSuchGameObjectException($"GameObject with {locatorMessage} was not found");
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+
+            return response[Parameters.Result]; ;
+        }
+
+        public void SetTimeScale(float timeScale)
+        {
+            var request = BuildRequest(Methods.SetTimeScale, _sessionId, value: timeScale.ToString());
+            var response = Post(request);
+
+            if (response[Parameters.StatusCode] == ErrorCodes.MainThreadIsUnavailable.ToString())
+                throw new MainThreadUnavailableException();
+            if (response[Parameters.StatusCode] != ErrorCodes.Success.ToString())
+                throw new PuppetryException(response[Parameters.Result]);
+        }
+
         private void StartSession()
         {
             var isSuccess = false;

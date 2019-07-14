@@ -177,6 +177,16 @@ namespace Puppetry.PuppetryDriver.Puppet
             return ProcessMethod(Methods.GetSpriteName, upath: upath);
         }
 
+        public PuppetResponse SetTimeScale(string value)
+        {
+            return ProcessMethod(Methods.SetTimeScale, value: value);
+        }
+
+        public PuppetResponse GetGameObjectInfo(string upath)
+        {
+            return ProcessMethod(Methods.GetGameObjectInfo, upath: upath);
+        }
+
         private PuppetResponse ProcessMethod(string method, string upath = null, string key = null, string value = null)
         {
             var request = PrepareRequest(method, upath, key, value);

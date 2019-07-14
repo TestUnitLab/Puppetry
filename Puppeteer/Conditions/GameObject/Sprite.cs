@@ -14,7 +14,7 @@ namespace Puppetry.Puppeteer.Conditions.GameObject
         public override bool Invoke<T>(T gameObject)
         {
             CurentGameObject = gameObject;
-            _actualSpriteName = CurentGameObject.GetSpriteName();
+            _actualSpriteName = CurentGameObject.SpriteName;
 
             return _actualSpriteName == _expectedSpriteName;
         }

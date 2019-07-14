@@ -86,6 +86,11 @@ namespace Puppetry.Puppeteer
             PuppetryDriver.Instance.OpenScene(scene);
         }
 
+        public static void SetTimeScale(float timeScale)
+        {
+            PuppetryDriver.Instance.SetTimeScale(timeScale);
+        }
+
         public static void ExecuteCustomMethod(string method, string value = null)
         {
             PuppetryDriver.Instance.GameCustomMethod(method, value);

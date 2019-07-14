@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Puppetry.Puppet.Contracts;
-using TMPro;
+//using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -275,11 +275,11 @@ namespace Puppetry.Puppet
                         }
                         else
                         {
-                            var tmpInput = gameObject.GetComponent<TMP_InputField>();
+                            /*var tmpInput = gameObject.GetComponent<TMP_InputField>();
                             if (tmpInput != null)
                                 tmpInput.text = request.value;
-                            else
-                                return "input not found";
+                            else*/
+                            return "input not found";
                         }
 
                         return ErrorMessages.SuccessResult;
@@ -330,6 +330,20 @@ namespace Puppetry.Puppet
                         else
                             return "Component was not found";
                     });
+                    break;
+                case "settimescale":
+                    response.result = MainThreadHelper.InvokeOnMainThreadAndWait(() => Time.timeScale = float.Parse(request.value));
+                    break;
+                case "getgameobjectinfo":
+                    response.result = MainThreadHelper.ExecuteGameObjectEmulation(request.upath,
+                        go =>
+                        {
+#if UNITY_EDITOR
+                            return EditorJsonUtility.ToJson(go);
+#else
+                            return JsonUtility.ToJson(go);
+#endif
+                        });
                     break;
 
                 default:
